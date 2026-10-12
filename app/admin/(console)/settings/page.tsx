@@ -1,5 +1,6 @@
 import { siteConfig } from "@/data/site.config";
 import { appUrl } from "@/lib/app-url";
+import { resolveCheckoutExpiryMinutes } from "@/lib/checkout-expiry";
 import { stockMode } from "@/lib/db";
 import { publishableKeyState, stripeMode, webhookSecretProblem } from "@/lib/stripe";
 
@@ -25,6 +26,7 @@ export default function SettingsPage() {
         <p>Support: {siteConfig.supportEmail}</p>
         <p>Currency: {siteConfig.currency}</p>
         <p>Low-stock default: {siteConfig.lowStockDefault}</p>
+        <p>Checkout expiry: {resolveCheckoutExpiryMinutes(siteConfig.checkoutExpiryMinutes)} minutes</p>
       </section>
       <section className="space-y-1 text-sm">
         <h2 className="font-medium">Environment</h2>
