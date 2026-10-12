@@ -6,7 +6,7 @@
  * `npm run import:products` rewrites `products.generated.json`. Values in that
  * file are JSON data, never interpolated into this module.
  */
-import generated from "./products.generated.json";
+import generated from "./products.generated.json" with { type: "json" };
 
 export type ProductVariant = {
   skuId: string;

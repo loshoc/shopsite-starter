@@ -5,7 +5,7 @@ export function parsePriceToCents(raw: string): number | null {
   const [whole, frac = ""] = value.split(".");
   const cents = (frac + "00").slice(0, 2);
   const normalizedWhole = whole.replace(/^0+(?=\d)/, "");
-  const amount = BigInt(normalizedWhole) * 100n + BigInt(cents);
+  const amount = BigInt(normalizedWhole) * BigInt(100) + BigInt(cents);
   if (amount > BigInt(Number.MAX_SAFE_INTEGER)) return null;
   return Number(amount);
 }

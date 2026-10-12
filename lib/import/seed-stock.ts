@@ -1,7 +1,7 @@
 import postgres from "postgres";
 
 import { siteConfig } from "../../data/site.config.ts";
-import { readDevStockQuantities, writeDevStockQuantities } from "../dev-stock.ts";
+import { readStockFile, writeStockFile } from "./stock-file.ts";
 
 export type SeedItem = { skuId: string; qty: number };
 
@@ -41,11 +41,11 @@ export async function seedStockRows(
   if (options.databaseUrl) {
     return { mode: "postgres", counts: await seedPostgres(options.databaseUrl, items, options.force) };
   }
-  const existing = new Map(Object.entries(readDevStockQuantities(options.filePath)));
+  const existing = new Map(Object.entries(readStockFile(options.filePath)));
   const applied = applySeedQuantities(existing, items, options.force);
   const quantities: Record<string, number> = {};
   for (const [skuId, qty] of applied.next) quantities[skuId] = qty;
-  writeDevStockQuantities(quantities, options.filePath);
+  writeStockFile(quantities, options.filePath);
   return { mode: "memory", counts: applied.counts };
 }
 

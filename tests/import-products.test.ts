@@ -5,7 +5,7 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 
-import { readDevStockQuantities } from "../lib/dev-stock.ts";
+import { readStockFile } from "../lib/import/stock-file.ts";
 import { importProductCsv, parsePriceToCents, serializeCatalog } from "../lib/import/pipeline.ts";
 import { renderPattern } from "../lib/import/remote-patterns.ts";
 import { applySeedQuantities, seedStockRows } from "../lib/import/seed-stock.ts";
@@ -184,15 +184,15 @@ test("seed stock does not double and force sets quantity", async () => {
     { force: false, databaseUrl: null, filePath: file },
   );
   assert.equal(again.counts.skipped, 2);
-  assert.equal(readDevStockQuantities(file)["SPOON-CEDAR-01"], 6);
+  assert.equal(readStockFile(file)["SPOON-CEDAR-01"], 6);
   const overwritten = await seedStockRows([{ skuId: "SPOON-CEDAR-01", qty: 1 }], {
     force: true,
     databaseUrl: null,
     filePath: file,
   });
   assert.equal(overwritten.counts.updated, 1);
-  assert.equal(readDevStockQuantities(file)["SPOON-CEDAR-01"], 1);
-  assert.equal(readDevStockQuantities(file)["BOWL-STONE-01"], 4);
+  assert.equal(readStockFile(file)["SPOON-CEDAR-01"], 1);
+  assert.equal(readStockFile(file)["BOWL-STONE-01"], 4);
   fs.rmSync(file, { force: true });
 });
 
