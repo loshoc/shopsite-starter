@@ -49,6 +49,9 @@ build/
 *.tsbuildinfo
 next-env.d.ts
 
+# Local stock seeded by `npm run import:products -- --seed-stock` without Postgres.
+data/dev-stock.json
+
 # -----------------------------------------------------------------------------
 # Logs and coverage
 # -----------------------------------------------------------------------------

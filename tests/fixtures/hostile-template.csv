@@ -1,0 +1,7 @@
+handle,name,description,price,sku,stock,image_1
+quote-bowl,"Oak ""bowl"" `special` ${process.env.SECRET} */","<p onclick=""alert(1)"">Hand thrown.</p><script>alert(1)</script><img src=x onerror=""alert(1)""><a href=""https://cdn.example.com/care"">Care</a><a href=""javascript:alert(1)"">no</a><style>body{color:red}</style>",24.00,BOWL-QUOTE-01,2,https://cdn.example.com/bowl.jpg
+bad-price,Bad price,plain,-5.00,BAD-PRICE-01,1,https://cdn.example.com/bad.jpg
+bad-image,Bad image,plain,10.00,BAD-IMAGE-01,1,http://cdn.example.com/bad.jpg
+bad-nan,Bad nan,plain,NaN,BAD-NAN-01,1,https://cdn.example.com/nan.jpg
+bad-frac,Bad frac,plain,12.999,BAD-FRAC-01,1,https://cdn.example.com/frac.jpg
+bad-exp,Bad exp,plain,1e2,BAD-EXP-01,1,https://cdn.example.com/exp.jpg

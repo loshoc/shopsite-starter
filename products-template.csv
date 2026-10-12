@@ -1,0 +1,5 @@
+handle,name,description,price,sku,stock,image_1,image_2,option1_name,option1_value,option2_name,option2_value,option3_name,option3_value
+cedar-spoon,Cedar tasting spoon,A short spoon carved from fallen cedar.,18.00,SPOON-CEDAR-01,6,/products/cedar-spoon.png,,,,,
+linen-napkin,Linen napkin,Stonewashed linen napkin.,22.00,NAPKIN-LINEN-OAT,10,/products/linen-napkin.png,/products/linen-napkin-fold.png,Color,Oat,,,
+linen-napkin,,,24.00,NAPKIN-LINEN-SAGE,8,,,Color,Sage,,,,
+stone-bowl,Stone fruit bowl,A low bowl for fruit.,36.00,BOWL-STONE-01,4,/products/stone-bowl.png,,,,,

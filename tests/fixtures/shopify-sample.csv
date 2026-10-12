@@ -1,0 +1,7 @@
+Handle,Title,Body (HTML),Vendor,Product Category,Type,Tags,Published,Option1 Name,Option1 Value,Option2 Name,Option2 Value,Option3 Name,Option3 Value,Variant SKU,Variant Grams,Variant Inventory Tracker,Variant Inventory Qty,Variant Inventory Policy,Variant Fulfillment Service,Variant Price,Variant Compare At Price,Variant Requires Shipping,Variant Taxable,Variant Barcode,Image Src,Image Position,Image Alt Text,Gift Card,SEO Title,SEO Description,Google Shopping / Google Product Category,Google Shopping / Gender,Google Shopping / Age Group,Google Shopping / MPN,Google Shopping / Condition,Google Shopping / Custom Product,Variant Image,Variant Weight Unit,Variant Tax Code,Cost per item,Status
+cedar-spoon,Cedar tasting spoon,"<p>A short spoon carved from fallen cedar.</p>
+<p>Oil it monthly.</p>",Paperboat Studio,,Spoon,,true,Title,Default Title,,,,,SPOON-CEDAR-01,,,6,deny,manual,18.00,,true,true,,/products/cedar-spoon.png,1,Cedar tasting spoon,false,,,,,,,,,,,,,active
+linen-napkin,Linen napkin,<p>Stonewashed linen napkin.</p>,Paperboat Studio,,Napkin,,true,Color,Oat,,,,,NAPKIN-LINEN-OAT,,,10,,,22.00,,,,,/products/linen-napkin.png,1,,false,,,,,,,,,,,,,active
+linen-napkin,,,,,,,,Color,Sage,,,,,NAPKIN-LINEN-SAGE,,,8,,,24.00,,,,,,,,,,,,,,,,,,,,,active
+linen-napkin,,,,,,,,,,,,,,,,,,,,,,,,,/products/linen-napkin-fold.png,2,Folded linen napkin,,,,,,,,,,,,,,
+stone-bowl,Stone fruit bowl,<p>A low bowl for fruit.</p>,Paperboat Studio,,Bowl,,true,Title,Default Title,,,,,BOWL-STONE-01,,,4,,,36.00,,,,,/products/stone-bowl.png,1,,,,,,,,,,,,,,,active

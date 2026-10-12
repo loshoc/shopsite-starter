@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getProductBySku, products } from "@/data/products";
+import { getProductBySku, listSellableSkus } from "@/data/products";
 import { listStockRecords, receiveIncoming, saveStockRows, seedStock, stockMode } from "@/lib/db";
 import { rejectsForStock, stockBadge, type LiveQty } from "@/lib/inventory-policy";
 import type { StockDraft, StockStatus } from "@/lib/types";
@@ -59,17 +59,17 @@ export async function checkAvailability(
 export async function listAdminStock(): Promise<{ mode: "memory" | "postgres" | "unavailable"; rows: AdminStockRow[] }> {
   const records = await listStockRecords();
   const bySku = new Map(records.map((row) => [row.skuId, row]));
-  const rows = products.map((product) => {
-    const row = bySku.get(product.skuId);
+  const rows = listSellableSkus().map((item) => {
+    const row = bySku.get(item.skuId);
     const status: LiveQty["status"] = row ? row.status : "missing";
     const qty = row?.qty ?? 0;
     const lowStockThreshold = row?.lowStockThreshold ?? 2;
     return {
-      skuId: product.skuId,
-      name: product.name,
-      priceCents: product.priceCents,
-      catalogueQty: product.stockUnits,
-      featured: Boolean(product.featured),
+      skuId: item.skuId,
+      name: item.name,
+      priceCents: item.priceCents,
+      catalogueQty: item.stockUnits,
+      featured: item.featured,
       qty,
       sold: row?.sold ?? 0,
       incoming: row?.incoming ?? 0,

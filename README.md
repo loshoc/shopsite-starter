@@ -45,9 +45,23 @@ Marketing email, newsletters, audiences, campaigns, and Resend are a separate ad
 
 Admin auth is a shared secret and an httpOnly cookie. Clerk or Auth.js is an upgrade path, not included.
 
+## Import a catalogue
+
+```bash
+npm run import:products -- products-template.csv
+npm run import:products -- path/to/products_export.csv --seed-stock
+npm run import:products -- path/to/products_export.csv --seed-stock --force
+```
+
+`npm run import:shopify` is the same command. The file is detected as a Shopify product export or as `products-template.csv`. The catalogue is written to `data/products.generated.json`. Descriptions are allowlist-sanitized, prices are integer cents, and only https URLs or files under `public/` are accepted. https hosts are written to `images.remotePatterns` in `next.config.ts` as exact host and path entries.
+
+`--seed-stock` inserts a stock row only when that SKU does not already have one. Run it again and the quantity stays the same. `--force` requires `--seed-stock` and sets the quantity (it does not add). Without Postgres, the seed is stored in `data/dev-stock.json` for the local in-memory store.
+
 ## Scripts
 
 - `npm run dev`
 - `npm run build`
 - `npm test`
 - `npm run lint`
+- `npm run import:products -- <file.csv> [--seed-stock] [--force]`
+- `npm run import:shopify -- <file.csv> [--seed-stock] [--force]`
