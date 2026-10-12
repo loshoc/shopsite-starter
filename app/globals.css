@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/*
+  Storefront tokens live on :root. Admin tokens live on .admin so a brand
+  restyle of the shop does not repaint the operations UI.
+*/
+:root {
+  --paper: #f3eee6;
+  --ink: #1b1714;
+  --copper: #9c4324;
+  --moss: #24382c;
+  --sand: #e4d7c4;
+  --foam: #faf7f2;
+}
+
+.admin {
+  --background: #fafafa;
+  --foreground: #18181b;
+  --card: #ffffff;
+  --card-foreground: #18181b;
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #b91c1c;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #a1a1aa;
+  --popover: #ffffff;
+  --popover-foreground: #18181b;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+@theme inline {
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-copper: var(--copper);
+  --color-moss: var(--moss);
+  --color-sand: var(--sand);
+  --color-foam: var(--foam);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
