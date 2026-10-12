@@ -4,9 +4,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import {
+  filterAdminOrders,
+  oversoldBadge,
+  type AdminOrderFilter,
+  type AdminOrderView,
+} from "@/lib/admin-orders";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -19,22 +26,13 @@ import {
 import { formatMoney, formatWhen } from "@/lib/format";
 import type { OrderStatus } from "@/lib/types";
 
-export type ThinOrder = {
-  email: string | null;
-  totalCents: number;
-  currency: string;
-  status: OrderStatus;
-  stripeSessionId: string;
-  dashboardUrl: string;
-  restocked: boolean;
-  createdAt: string;
-};
-
-export function OrdersTable({ orders }: { orders: ThinOrder[] }) {
+export function OrdersTable({ orders }: { orders: AdminOrderView[] }) {
   const router = useRouter();
-  const [target, setTarget] = useState<ThinOrder | null>(null);
+  const [filter, setFilter] = useState<AdminOrderFilter>("all");
+  const [target, setTarget] = useState<AdminOrderView | null>(null);
   const [confirm, setConfirm] = useState(false);
   const [pending, setPending] = useState(false);
+  const visible = filterAdminOrders(orders, filter);
 
   async function restock() {
     if (!target || !confirm) return;
@@ -62,6 +60,29 @@ export function OrdersTable({ orders }: { orders: ThinOrder[] }) {
 
   return (
     <>
+      <div className="flex gap-2" role="group" aria-label="Filter orders">
+        <Button
+          type="button"
+          size="sm"
+          variant={filter === "all" ? "default" : "outline"}
+          aria-pressed={filter === "all"}
+          onClick={() => setFilter("all")}
+        >
+          All
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant={filter === "oversold" ? "default" : "outline"}
+          aria-pressed={filter === "oversold"}
+          onClick={() => setFilter("oversold")}
+        >
+          Oversold
+        </Button>
+      </div>
+      {visible.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No oversold orders.</p>
+      ) : (
       <div className="overflow-x-auto rounded-lg border border-border bg-card">
         <table className="w-full text-sm">
           <thead className="border-b border-border text-left text-xs text-muted-foreground">
@@ -75,12 +96,19 @@ export function OrdersTable({ orders }: { orders: ThinOrder[] }) {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {visible.map((order) => {
+              const badge = oversoldBadge(order.oversold);
+              return (
               <tr key={order.stripeSessionId} className="border-b border-border last:border-0">
                 <td className="px-3 py-3 whitespace-nowrap">{formatWhen(order.createdAt)}</td>
                 <td className="px-3 py-3">{order.email ?? "Guest"}</td>
                 <td className="px-3 py-3 whitespace-nowrap">{formatMoney(order.totalCents, order.currency)}</td>
-                <td className="px-3 py-3">{labelStatus(order.status)}</td>
+                <td className="px-3 py-3">
+                  <span className="inline-flex flex-wrap items-center gap-2">
+                    {labelStatus(order.status)}
+                    {badge ? <Badge tone="bad">{badge}</Badge> : null}
+                  </span>
+                </td>
                 <td className="px-3 py-3">
                   <a className="text-zinc-900 underline" href={order.dashboardUrl} target="_blank" rel="noreferrer">
                     {order.stripeSessionId.slice(0, 14)}…
@@ -106,10 +134,12 @@ export function OrdersTable({ orders }: { orders: ThinOrder[] }) {
                   )}
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
+      )}
       <AlertDialog open={Boolean(target)} onOpenChange={(open) => !open && setTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>

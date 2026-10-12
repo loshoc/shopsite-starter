@@ -6,4 +6,9 @@ export const siteConfig = {
   supportEmail: "support@example.com",
   currency: "usd" as const,
   lowStockDefault: 2,
+  /**
+   * Stripe Checkout session lifetime in minutes.
+   * Session create clamps this to Stripe's 30 minute–24 hour window.
+   */
+  checkoutExpiryMinutes: 60,
 };

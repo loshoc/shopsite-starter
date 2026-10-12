@@ -16,8 +16,16 @@ A partial refund updates the order status and does not change quantity. Admin â†
 
 ## Orders
 
-Admin stores email, total, currency, status, Checkout session id, payment intent id (for the refund lookup), and the reserved SKUs. The orders screen shows email, total, status, and a Dashboard link. It does not show card data or the Stripe payload.
+Admin stores email, total, currency, status, Checkout session id, payment intent id (for the refund lookup), the reserved SKUs, and an `oversold` flag. The orders screen shows email, total, status, an Oversold badge, and a Dashboard link. Filter the list to all orders or oversold only. It does not show card data or the Stripe payload.
+
+## Oversold
+
+A paid webhook (`checkout.session.completed` or `checkout.session.async_payment_succeeded` with `payment_status` `paid`) decrements each line to a floor of 0. If any line asks for more than was on hand, the order row is marked `oversold`. Replaying the same Stripe event does not decrement again or change the flag. Resolve an oversold order by refunding or restocking. A live `unlimited` row is not marked oversold.
+
+## Checkout expiry
+
+`checkoutExpiryMinutes` in `data/site.config.ts` defaults to 60 and sets Stripe Checkout `expires_at`. Stripe allows 30 minutes to 24 hours; values outside that range are clamped. A non-numeric value falls back to 60. Session expiry does not release stock and does not create an order. There is no `checkout.session.expired` stock handler.
 
 ## Not automatic
 
-Claiming stock inside the webhook transaction, shorter Checkout expiry on the last units, and low-stock email are not in this version. Stock is decremented when the paid webhook arrives, after the signature is verified.
+Low-stock email and a shorter Checkout expiry on the last units are not in this version. Stock is decremented when the paid webhook arrives, after the signature is verified.

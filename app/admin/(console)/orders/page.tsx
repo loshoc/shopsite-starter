@@ -1,5 +1,6 @@
 import { ModeBanner } from "@/components/admin/mode-banner";
-import { OrdersTable, type ThinOrder } from "@/components/admin/orders-table";
+import { OrdersTable } from "@/components/admin/orders-table";
+import { presentAdminOrder, type AdminOrderView } from "@/lib/admin-orders";
 import { listOrders, stockMode } from "@/lib/db";
 import { stripeDashboardUrl } from "@/lib/stripe";
 import { InventoryUnavailable } from "@/lib/types";
@@ -16,6 +17,9 @@ export default async function OrdersPage() {
         <p className="text-sm text-muted-foreground">
           Email, total, status, and a Stripe Dashboard link. No card data.
         </p>
+        <p className="text-sm text-muted-foreground">
+          Oversold means a paid order asked for more units than were on hand. Resolve it by refunding or restocking.
+        </p>
       </div>
       <ModeBanner mode={loaded.mode} />
       <OrdersTable orders={loaded.orders} />
@@ -23,21 +27,14 @@ export default async function OrdersPage() {
   );
 }
 
-async function loadOrders(): Promise<{ mode: "memory" | "postgres" | "unavailable"; orders: ThinOrder[] } | null> {
+async function loadOrders(): Promise<{ mode: "memory" | "postgres" | "unavailable"; orders: AdminOrderView[] } | null> {
   try {
     const orders = await listOrders();
     return {
       mode: stockMode(),
-      orders: orders.map((order) => ({
-        email: order.email,
-        totalCents: order.totalCents,
-        currency: order.currency,
-        status: order.status,
-        stripeSessionId: order.stripeSessionId,
-        dashboardUrl: stripeDashboardUrl(order.paymentIntentId, order.stripeSessionId),
-        restocked: order.restocked,
-        createdAt: order.createdAt,
-      })),
+      orders: orders.map((order) =>
+        presentAdminOrder(order, stripeDashboardUrl(order.paymentIntentId, order.stripeSessionId)),
+      ),
     };
   } catch (error) {
     if (error instanceof InventoryUnavailable) return null;
