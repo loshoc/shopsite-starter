@@ -1,4 +1,5 @@
 import { getProductBySku } from "@/data/products";
+import { productionDatabaseProblem } from "@/lib/database-url";
 import { InventoryUnavailable } from "@/lib/types";
 import { checkAvailability } from "@/lib/stock";
 import { createCheckoutSession, stripeSecretProblem } from "@/lib/stripe";
@@ -38,7 +39,11 @@ export async function POST(request: Request) {
     return Response.json({ url });
   } catch (error) {
     if (error instanceof InventoryUnavailable) {
-      return Response.json({ error: "Inventory is unavailable. Checkout was not started." }, { status: 503 });
+      const problem = productionDatabaseProblem();
+      return Response.json(
+        { error: problem ?? "Inventory is unavailable. Checkout was not started." },
+        { status: 503 },
+      );
     }
     console.error("checkout failed", error instanceof Error ? error.name : "error");
     return Response.json({ error: "Checkout could not be started." }, { status: 502 });

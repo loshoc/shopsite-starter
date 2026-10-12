@@ -12,7 +12,7 @@ Edit `.env.local`:
 
 - `ADMIN_SECRET` — at least 32 random characters. The placeholder in `.env.example` is rejected. `openssl rand -base64 32`
 - Stripe test keys and `STRIPE_WEBHOOK_SECRET` from the Dashboard or `stripe listen`
-- `DATABASE_URL` — leave the example placeholder for an in-memory first run, or set a real Postgres URL
+- `DATABASE_URL` — leave the example placeholder for an in-memory first run with `npm run dev`, or set a real Postgres URL. Production refuses to boot, and refuses admin sessions and checkout, until this is a real URL
 - `NEXT_PUBLIC_APP_URL` — `http://localhost:3000` locally, no trailing slash
 
 ```bash
@@ -31,7 +31,7 @@ Forward webhooks while developing:
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ```
 
-With Postgres, open Admin → Stock and seed the catalogue before expecting items to be orderable. A missing stock row is quantity 0. The in-memory fallback seeds demo quantities for a first run and still blocks checkout at zero.
+With Postgres, open Admin → Stock and seed the catalogue before expecting items to be orderable. A missing stock row is quantity 0. `npm run dev` can use the in-memory fallback, which seeds demo quantities and still blocks checkout at zero. Production does not use that fallback.
 
 Buyers set real production Stripe keys and `STRIPE_WEBHOOK_SECRET` before going live. Do not commit `.env.local`.
 

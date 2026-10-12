@@ -23,7 +23,7 @@ export default async function OrdersPage() {
   );
 }
 
-async function loadOrders(): Promise<{ mode: "memory" | "postgres"; orders: ThinOrder[] } | null> {
+async function loadOrders(): Promise<{ mode: "memory" | "postgres" | "unavailable"; orders: ThinOrder[] } | null> {
   try {
     const orders = await listOrders();
     return {

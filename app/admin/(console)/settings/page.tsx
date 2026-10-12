@@ -29,7 +29,14 @@ export default function SettingsPage() {
       <section className="space-y-1 text-sm">
         <h2 className="font-medium">Environment</h2>
         <p>App URL: {origin}</p>
-        <p>Database: {mode === "postgres" ? "Postgres" : "In-memory fallback"}</p>
+        <p>
+          Database:{" "}
+          {mode === "postgres"
+            ? "Postgres"
+            : mode === "memory"
+              ? "In-memory fallback (local development only)"
+              : "Unavailable — set a real DATABASE_URL"}
+        </p>
         <p>Stripe secret: {stripeMode()}</p>
         <p>Publishable key: {publishableKeyState()}</p>
         <p>Webhook secret: {webhookSecretProblem() ? "not configured" : "configured"}</p>

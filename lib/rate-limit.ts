@@ -1,7 +1,13 @@
 /**
  * In-process login limiter: 5 attempts per IP per minute.
- * A multi-instance deploy should move this to a shared store. The check
- * still runs on every login in this process, which covers a single Node server.
+ *
+ * The IP is the first x-forwarded-for hop (clientIp in lib/http.ts), then
+ * x-real-ip. That trust is fine on Vercel, which overwrites the header.
+ * Self-hosting needs a trusted proxy that strips client-supplied forwarded
+ * headers; otherwise a caller can rotate the header and skip this limit.
+ *
+ * Counts are per instance (this process only). A multi-instance deploy
+ * should move the same allow/deny shape to Redis or Upstash.
  */
 const WINDOW_MS = 60_000;
 const MAX_ATTEMPTS = 5;

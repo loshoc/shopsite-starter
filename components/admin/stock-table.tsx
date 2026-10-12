@@ -47,7 +47,7 @@ export function StockTable({
   mode,
   rows,
 }: {
-  mode: "memory" | "postgres";
+  mode: "memory" | "postgres" | "unavailable";
   rows: AdminStockRow[];
 }) {
   const router = useRouter();

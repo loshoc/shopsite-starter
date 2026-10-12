@@ -4,7 +4,7 @@ import postgres from "postgres";
 
 import { products } from "@/data/products";
 import { siteConfig } from "@/data/site.config";
-import { configuredDatabaseUrl } from "@/lib/database-url";
+import { configuredDatabaseUrl, productionDatabaseProblem } from "@/lib/database-url";
 import { classifyRefund, shouldAutoRestock } from "@/lib/inventory-policy";
 import {
   InventoryUnavailable,
@@ -65,13 +65,16 @@ function asReservation(value: unknown): ReservationLine[] {
 }
 
 /**
- * No DATABASE_URL (or the example placeholder) seeds a process-local catalogue
- * so a first run can demo checkout. That seed is not a sold-out bypass:
- * after startup, a missing SKU is qty 0, and requested > qty still rejects.
+ * Local development only. No DATABASE_URL (or the example placeholder) seeds
+ * a process-local catalogue so a first run can demo checkout. That seed is
+ * not a sold-out bypass: after startup, a missing SKU is qty 0, and
+ * requested > qty still rejects. Production never reaches this store.
  * If a real DATABASE_URL is set and Postgres fails, callers get
  * InventoryUnavailable instead of this memory store.
  */
 function memory(): Memory {
+  const problem = productionDatabaseProblem();
+  if (problem) throw new InventoryUnavailable(problem);
   if (!globalStore.__shopsiteMemory) {
     const now = new Date().toISOString();
     const stock = new Map<string, StockRecord>();
@@ -262,7 +265,10 @@ function mapOrder(row: OrderRow): OrderRecord {
   };
 }
 
-export function stockMode(): "memory" | "postgres" {
+export type StockMode = "memory" | "postgres" | "unavailable";
+
+export function stockMode(): StockMode {
+  if (productionDatabaseProblem()) return "unavailable";
   return configuredDatabaseUrl() ? "postgres" : "memory";
 }
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { ADMIN_COOKIE, SESSION_TTL_SECONDS, adminCookieBase, cookieIsSecure } from "@/lib/admin-cookie";
 import { adminConfigProblem, issueAdminSession, secretsEqual } from "@/lib/admin-auth";
+import { productionDatabaseProblem } from "@/lib/database-url";
 import { ADMIN_RESPONSE_HEADERS, adminJson, clientIp } from "@/lib/http";
 import { allowLoginAttempt } from "@/lib/rate-limit";
 import { InventoryUnavailable } from "@/lib/types";
@@ -39,7 +40,8 @@ export async function POST(request: Request) {
     return response;
   } catch (error) {
     if (error instanceof InventoryUnavailable) {
-      return adminJson({ error: "Admin session store is unavailable." }, 503);
+      const problem = productionDatabaseProblem();
+      return adminJson({ error: problem ?? "Admin session store is unavailable." }, 503);
     }
     console.error("admin login failed", error instanceof Error ? error.name : "error");
     return adminJson({ error: "Login failed." }, 500);

@@ -56,7 +56,7 @@ export async function checkAvailability(
   return null;
 }
 
-export async function listAdminStock(): Promise<{ mode: "memory" | "postgres"; rows: AdminStockRow[] }> {
+export async function listAdminStock(): Promise<{ mode: "memory" | "postgres" | "unavailable"; rows: AdminStockRow[] }> {
   const records = await listStockRecords();
   const bySku = new Map(records.map((row) => [row.skuId, row]));
   const rows = products.map((product) => {

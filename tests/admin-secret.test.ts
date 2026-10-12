@@ -4,7 +4,7 @@ import test from "node:test";
 
 import { readSession, signSession } from "../lib/admin-cookie.ts";
 import { adminSecretProblem, safeAdminNext } from "../lib/admin-secret.ts";
-import { configuredDatabaseUrl } from "../lib/database-url.ts";
+import { configuredDatabaseUrl, productionDatabaseProblem } from "../lib/database-url.ts";
 import { ADMIN_RESPONSE_HEADERS } from "../lib/http.ts";
 import { allowLoginAttempt, resetLoginAttempts } from "../lib/rate-limit.ts";
 
@@ -26,6 +26,19 @@ test("database placeholder is not a live connection string", () => {
     configuredDatabaseUrl("postgres://app:secret@db.internal:5432/shop"),
     "postgres://app:secret@db.internal:5432/shop",
   );
+});
+
+test("production refuses a missing or placeholder DATABASE_URL", () => {
+  const example = "postgresql://USER:PASSWORD@HOST:5432/DATABASE";
+  const real = "postgres://app:secret@db.internal:5432/shop";
+  assert.match(productionDatabaseProblem("", "production") ?? "", /local development only/);
+  assert.match(productionDatabaseProblem("   ", "production") ?? "", /DATABASE_URL is required in production/);
+  assert.match(productionDatabaseProblem(example, "production") ?? "", /in-memory fallback is for local development only/);
+  assert.equal(productionDatabaseProblem(real, "production"), null);
+  assert.equal(productionDatabaseProblem("", "development"), null);
+  assert.equal(productionDatabaseProblem(example, "development"), null);
+  assert.equal(productionDatabaseProblem(example, "test"), null);
+  assert.equal(productionDatabaseProblem(real, "development"), null);
 });
 
 test("login allows five attempts per minute and blocks the sixth", () => {

@@ -6,7 +6,7 @@ Live quantity is a stock row, not `stockUnits` in `data/products.ts`. `stockUnit
 
 For each cart line, checkout loads the live row. A missing row is quantity 0 unless the live status is `unlimited`. If requested is greater than live quantity, the API returns 409 and does not create a Stripe Checkout session. Quantity 0 is not a preorder.
 
-If `DATABASE_URL` is unset or still the example placeholder, the process keeps an in-memory stock table seeded once from the catalogue. That seed is not a bypass: after startup, a missing SKU is 0, and a zero row cannot be purchased. If a real `DATABASE_URL` is set and Postgres is down, checkout returns 503 instead of falling back to memory.
+If `DATABASE_URL` is unset or still the example placeholder, local development (`npm run dev`) keeps an in-memory stock table seeded once from the catalogue. That seed is not a bypass: after startup, a missing SKU is 0, and a zero row cannot be purchased. Production does not use that store. A missing or placeholder `DATABASE_URL` refuses boot, admin sessions, and checkout. If a real `DATABASE_URL` is set and Postgres is down, checkout returns 503 instead of falling back to memory.
 
 ## Refunds
 

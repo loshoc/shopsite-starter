@@ -62,8 +62,8 @@ export type StockDraft = {
 export class InventoryUnavailable extends Error {
   readonly code = "inventory_unavailable";
 
-  constructor() {
-    super("Inventory store is unavailable");
+  constructor(message = "Inventory store is unavailable") {
+    super(message);
     this.name = "InventoryUnavailable";
   }
 }

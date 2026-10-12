@@ -14,7 +14,7 @@ export type StoreProduct = Product & {
 
 export async function listStoreProducts(): Promise<{
   products: StoreProduct[];
-  mode: "memory" | "postgres";
+  mode: "memory" | "postgres" | "unavailable";
   unavailable: boolean;
 }> {
   await connection();

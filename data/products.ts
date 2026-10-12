@@ -1,7 +1,7 @@
 /**
  * Catalogue identity only. `stockUnits` is the seed quantity for an empty
  * stock table. It is not live availability. Checkout reads Postgres (or the
- * in-memory fallback) and fails closed when that quantity is short.
+ * local-development in-memory fallback) and fails closed when that quantity is short.
  */
 export type Product = {
   id: string;
