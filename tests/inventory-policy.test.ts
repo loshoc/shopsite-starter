@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  applyOnHand,
   classifyRefund,
   isOrderable,
+  lineIsOversold,
   rejectsForStock,
   shouldAutoRestock,
   stockBadge,
@@ -34,6 +36,15 @@ test("partial refunds do not auto-restock and full refunds may", () => {
   assert.equal(shouldAutoRestock("full"), true);
   assert.equal(classifyRefund(5000, 0, false), "none");
   assert.equal(shouldAutoRestock("none"), false);
+});
+
+test("paid decrement floors at zero and only flags a short line", () => {
+  assert.deepEqual(applyOnHand(1, 1), { qty: 0, oversold: false });
+  assert.deepEqual(applyOnHand(1, 2), { qty: 0, oversold: true });
+  assert.deepEqual(applyOnHand(0, 1), { qty: 0, oversold: true });
+  assert.equal(applyOnHand(4, 9).qty >= 0, true);
+  assert.equal(lineIsOversold("active", 0, 1), true);
+  assert.equal(lineIsOversold("unlimited", 0, 4), false);
 });
 
 test("low and out badges follow live qty", () => {

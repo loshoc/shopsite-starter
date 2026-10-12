@@ -29,6 +29,8 @@ export function verifyStripeEvent(rawBody: string, signature: string | null): Ve
 }
 
 export async function dispatchStripeEvent(event: Stripe.Event): Promise<void> {
+  // checkout.session.expired is ignored on purpose. Expiry does not release
+  // stock and does not create an order row.
   if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
     const session = event.data.object as Stripe.Checkout.Session;
     if (session.payment_status !== "paid") {

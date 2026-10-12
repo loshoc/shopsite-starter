@@ -4,6 +4,7 @@ import Stripe from "stripe";
 
 import { isObviousPlaceholder } from "@/lib/admin-secret";
 import { appUrl } from "@/lib/app-url";
+import { checkoutExpiresAtFromConfig } from "@/lib/checkout-expiry";
 import { getProductBySku } from "@/data/products";
 import { siteConfig } from "@/data/site.config";
 import type { ReservationLine } from "@/lib/types";
@@ -84,6 +85,8 @@ export async function createCheckoutSession(lines: ReservationLine[]): Promise<s
   const origin = appUrl();
   const params: Stripe.Checkout.SessionCreateParams = {
     mode: "payment",
+    // Clamped to Stripe's 30 minute–24 hour window. Expiry does not release stock.
+    expires_at: checkoutExpiresAtFromConfig(siteConfig, Math.floor(Date.now() / 1000)),
     allow_promotion_codes: true,
     billing_address_collection: "auto",
     shipping_address_collection: { allowed_countries: ["US", "CA"] },

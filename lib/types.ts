@@ -27,6 +27,8 @@ export type OrderRecord = {
   reservation: ReservationLine[];
   amountRefundedCents: number;
   restocked: boolean;
+  /** True when a paid line asked for more units than were on hand. */
+  oversold: boolean;
   createdAt: string;
   updatedAt: string;
 };
