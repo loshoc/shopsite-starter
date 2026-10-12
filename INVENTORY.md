@@ -20,11 +20,11 @@ Admin stores email, total, currency, status, Checkout session id, payment intent
 
 ## Oversold
 
-A paid webhook (`checkout.session.completed` or `checkout.session.async_payment_succeeded` with `payment_status` `paid`) decrements each line to a floor of 0. If any line asks for more than was on hand, the order row is marked `oversold`. Replaying the same Stripe event does not decrement again or change the flag. Resolve an oversold order by refunding or restocking. A live `unlimited` row is not marked oversold.
+A paid webhook (`checkout.session.completed` or `checkout.session.async_payment_succeeded` with `payment_status` `paid`) decrements each line to a floor of 0. Lines are locked in `skuId` order so two multi-item carts cannot deadlock. If any line asks for more than was on hand, the order row is marked `oversold`. Replaying the same Stripe event does not decrement again or change the flag. Resolve an oversold order by refunding or restocking. A live `unlimited` row is not marked oversold.
 
 ## Checkout expiry
 
-`checkoutExpiryMinutes` in `data/site.config.ts` defaults to 60 and sets Stripe Checkout `expires_at`. Stripe allows 30 minutes to 24 hours; values outside that range are clamped. A non-numeric value falls back to 60. Session expiry does not release stock and does not create an order. There is no `checkout.session.expired` stock handler.
+`checkoutExpiryMinutes` in `data/site.config.ts` defaults to 60 and sets Stripe Checkout `expires_at`. Stripe allows 30 minutes to 24 hours. The lifetime we send is 31–1440 minutes, so a 30-minute config cannot fall under Stripe's minimum after network delay. `0`, `29`, and `30` all become 31 minutes from now. Values above 1440 minutes clamp to 1440. A non-numeric value falls back to 60. Session expiry does not release stock and does not create an order. There is no `checkout.session.expired` stock handler.
 
 ## Not automatic
 

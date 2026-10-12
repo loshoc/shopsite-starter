@@ -27,7 +27,7 @@ test("changing checkoutExpiryMinutes changes expires_at", () => {
   );
 });
 
-test("checkout expiry clamps 29 and 0 to 30 minutes and 1441 to 1440", () => {
+test("checkout expiry clamps 0, 29, and 30 to 31 minutes and 1441 to 1440", () => {
   const warnings: unknown[][] = [];
   const original = console.warn;
   console.warn = (...args: unknown[]) => {
@@ -35,10 +35,14 @@ test("checkout expiry clamps 29 and 0 to 30 minutes and 1441 to 1440", () => {
   };
   try {
     assert.doesNotThrow(() => {
-      assert.equal(resolveCheckoutExpiryMinutes(29), 30);
-      assert.equal(resolveCheckoutExpiryMinutes(0), 30);
-      assert.equal(checkoutExpiresAt(NOW, 29), NOW + 30 * 60);
-      assert.equal(checkoutExpiresAt(NOW, 0), NOW + 30 * 60);
+      assert.equal(resolveCheckoutExpiryMinutes(0), 31);
+      assert.equal(resolveCheckoutExpiryMinutes(29), 31);
+      assert.equal(resolveCheckoutExpiryMinutes(30), 31);
+      assert.equal(checkoutExpiresAt(NOW, 0), NOW + 31 * 60);
+      assert.equal(checkoutExpiresAt(NOW, 29), NOW + 31 * 60);
+      assert.equal(checkoutExpiresAt(NOW, 30), NOW + 31 * 60);
+      assert.equal(resolveCheckoutExpiryMinutes(31), 31);
+      assert.equal(checkoutExpiresAt(NOW, 31), NOW + 31 * 60);
       assert.equal(resolveCheckoutExpiryMinutes(1441), 1440);
       assert.equal(checkoutExpiresAt(NOW, 1441), NOW + 1440 * 60);
     });
