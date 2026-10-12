@@ -1,25 +1,29 @@
 /**
- * Stripe Checkout `expires_at` is a Unix timestamp and must fall between
- * 30 minutes and 24 hours after the session is created.
+ * Stripe Checkout `expires_at` must be 30 minutes to 24 hours after creation.
  * https://docs.stripe.com/api/checkout/sessions/create#create_checkout_session-expires_at
  *
- * Numeric values outside that window are clamped.
+ * The value we send is clamped to 31–1440 minutes. The extra minute above
+ * Stripe's 30-minute minimum keeps a short config from arriving late and
+ * being rejected. Numeric values outside that window are clamped.
  * Non-numeric values (NaN, strings, undefined, null) fall back to 60 minutes
  * and warn. They do not throw.
  */
 
-export const CHECKOUT_EXPIRY_MIN_MINUTES = 30;
+/** Stripe's own minimum. We do not send this; see CHECKOUT_EXPIRY_FLOOR_MINUTES. */
+export const CHECKOUT_EXPIRY_STRIPE_MIN_MINUTES = 30;
+/** Effective minimum sent as expires_at, one minute above Stripe's floor. */
+export const CHECKOUT_EXPIRY_FLOOR_MINUTES = 31;
 export const CHECKOUT_EXPIRY_MAX_MINUTES = 24 * 60;
 export const CHECKOUT_EXPIRY_DEFAULT_MINUTES = 60;
 
 export function resolveCheckoutExpiryMinutes(value: unknown): number {
   if (typeof value !== "number" || !Number.isFinite(value)) {
     console.warn(
-      `checkoutExpiryMinutes must be a finite number of minutes (${CHECKOUT_EXPIRY_MIN_MINUTES}–${CHECKOUT_EXPIRY_MAX_MINUTES}). Using ${CHECKOUT_EXPIRY_DEFAULT_MINUTES}.`,
+      `checkoutExpiryMinutes must be a finite number of minutes (${CHECKOUT_EXPIRY_FLOOR_MINUTES}–${CHECKOUT_EXPIRY_MAX_MINUTES}). Using ${CHECKOUT_EXPIRY_DEFAULT_MINUTES}.`,
     );
     return CHECKOUT_EXPIRY_DEFAULT_MINUTES;
   }
-  if (value < CHECKOUT_EXPIRY_MIN_MINUTES) return CHECKOUT_EXPIRY_MIN_MINUTES;
+  if (value < CHECKOUT_EXPIRY_FLOOR_MINUTES) return CHECKOUT_EXPIRY_FLOOR_MINUTES;
   if (value > CHECKOUT_EXPIRY_MAX_MINUTES) return CHECKOUT_EXPIRY_MAX_MINUTES;
   return value;
 }

@@ -85,7 +85,7 @@ export async function createCheckoutSession(lines: ReservationLine[]): Promise<s
   const origin = appUrl();
   const params: Stripe.Checkout.SessionCreateParams = {
     mode: "payment",
-    // Clamped to Stripe's 30 minute–24 hour window. Expiry does not release stock.
+    // At least 31 minutes so a delayed request still clears Stripe's 30-minute minimum.
     expires_at: checkoutExpiresAtFromConfig(siteConfig, Math.floor(Date.now() / 1000)),
     allow_promotion_codes: true,
     billing_address_collection: "auto",

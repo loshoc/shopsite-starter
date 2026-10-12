@@ -5,7 +5,7 @@ import postgres from "postgres";
 import { products } from "@/data/products";
 import { siteConfig } from "@/data/site.config";
 import { configuredDatabaseUrl, productionDatabaseProblem } from "@/lib/database-url";
-import { applyOnHand, classifyRefund, lineIsOversold, shouldAutoRestock } from "@/lib/inventory-policy";
+import { applyOnHand, classifyRefund, lineIsOversold, linesInLockOrder, shouldAutoRestock } from "@/lib/inventory-policy";
 import {
   InventoryUnavailable,
   StockNotSeeded,
@@ -36,6 +36,18 @@ let client: Sql | null = null;
 let clientUrl: string | null = null;
 let schemaReady: Promise<void> | null = null;
 let memoryQueue: Promise<void> = Promise.resolve();
+let paidLockObserver: ((skuIds: readonly string[]) => void) | null = null;
+
+/** Records the skuId order used for paid-checkout row locks. Unset in production. */
+export function observePaidLockOrder(observer: ((skuIds: readonly string[]) => void) | null): void {
+  paidLockObserver = observer;
+}
+
+function linesToLock(lines: ReservationLine[]): ReservationLine[] {
+  const ordered = linesInLockOrder(lines);
+  paidLockObserver?.(ordered.map((line) => line.skuId));
+  return ordered;
+}
 
 /** Serializes in-memory paid checkouts so two webhooks cannot both take the last unit. */
 function enqueueMemory<T>(task: () => T): Promise<T> {
@@ -511,7 +523,7 @@ function applyPaidCheckoutMemory(input: PaidCheckout): "duplicate" | "applied" {
   }
   const now = new Date().toISOString();
   let oversold = false;
-  for (const line of input.reservation) {
+  for (const line of linesToLock(input.reservation)) {
     if (applyLineMemory(mem, line, now)) oversold = true;
   }
   const order: OrderRecord = {
@@ -561,7 +573,7 @@ export async function applyPaidCheckout(input: PaidCheckout): Promise<"duplicate
         return;
       }
       let oversold = false;
-      for (const line of input.reservation) {
+      for (const line of linesToLock(input.reservation)) {
         if (await decrementSql(tx, line)) oversold = true;
       }
       await tx`

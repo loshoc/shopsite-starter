@@ -70,6 +70,15 @@ export function applyOnHand(available: number, requested: number): { qty: number
   };
 }
 
+/**
+ * Stock-row lock order. Callers must decrement in this order so two
+ * multi-item checkouts cannot deadlock on `FOR UPDATE`.
+ * The input array is not mutated.
+ */
+export function linesInLockOrder<T extends { skuId: string }>(lines: readonly T[]): T[] {
+  return [...lines].sort((a, b) => (a.skuId < b.skuId ? -1 : a.skuId > b.skuId ? 1 : 0));
+}
+
 /** Unlimited catalogue rows do not flag an order oversold. */
 export function lineIsOversold(status: string, available: number, requested: number): boolean {
   if (status === "unlimited") return false;
