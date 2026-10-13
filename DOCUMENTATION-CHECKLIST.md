@@ -41,3 +41,4 @@ The install path is identical to the README. [PLAYBOOK.md](PLAYBOOK.md) starts a
 - [ ] With Postgres, **Admin → Stock** seed runs before a product is orderable.
 - [ ] Sold-out checkout fails closed. A partial refund does not restock. Oversold means refund or restock by hand.
 - [ ] After deploy, `https://YOUR_DOMAIN/sitemap.xml` is the Search Console URL, and `/robots.txt` disallows `/admin`, `/api`, `/success`, and `/cancel`.
+- [ ] Deploy steps for Vercel and Stripe live in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) and PLAYBOOK **Deploy**.

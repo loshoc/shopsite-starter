@@ -1,6 +1,6 @@
 # ShopSite playbook
 
-A short walk after the README cold start. Install, env, and `npm run dev` stay in the README. Use this page for brand, catalogue, stock, checkout, and SEO.
+A short walk after the README cold start. Install, env, and `npm run dev` stay in the README. Use this page for brand, catalogue, stock, checkout, and SEO. **Deploy** links to the Vercel and Stripe checklist.
 
 Release checks: [DOCUMENTATION-CHECKLIST.md](DOCUMENTATION-CHECKLIST.md).
 
@@ -68,3 +68,13 @@ Set `name` and `tagline` in `data/site.config.ts`. Those fields drive titles and
 `NEXT_PUBLIC_APP_URL` is the public site origin, with no trailing slash. Set it to the real https origin before a Vercel production build. The production build fails when it is missing or a local-only host such as localhost. Vercel preview builds can omit it and use `https://$VERCEL_URL`. Local development: `http://localhost:3000`.
 
 After deploy, submit `https://YOUR_DOMAIN/sitemap.xml` in Google Search Console. `/robots.txt` already blocks `/admin`, `/api`, `/success`, and `/cancel`.
+
+## Deploy
+
+Vercel and Stripe steps are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+
+Set the production environment before the first production build. Vercel bakes `NEXT_PUBLIC_*` values in at build time.
+
+`NEXT_PUBLIC_APP_URL` is fail-closed on that build. It must be the real https origin, with no trailing slash. The production build fails when it is missing or a local-only host (`localhost`, `127.0.0.1`, and similar). Preview builds may omit it and use `https://$VERCEL_URL`.
+
+The Stripe webhook URL is `https://YOUR_DOMAIN/api/webhooks/stripe` on that same origin. After deploy, smoke the home page, a product page, and admin login on the real hostname. Admin login may reject `127.0.0.1`.

@@ -15,6 +15,7 @@ Ship a clean archive of the `0.1.0` tree. Include application source and these r
 - `package.json`, `package-lock.json`
 - `README.md`
 - `PLAYBOOK.md`
+- `DEPLOY-CHECKLIST.md` (Vercel and Stripe steps; the playbook links here)
 - `LICENSE`
 - `CHANGELOG.md`
 - `.env.example`
