@@ -65,3 +65,5 @@ npm run import:products -- path/to/products_export.csv --seed-stock --force
 - `npm run lint`
 - `npm run import:products -- <file.csv> [--seed-stock] [--force]`
 - `npm run import:shopify -- <file.csv> [--seed-stock] [--force]`
+
+Buyer walkthrough (brand, import, stock, checkout, SEO): [PLAYBOOK.md](PLAYBOOK.md).
