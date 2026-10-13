@@ -270,7 +270,11 @@ function validateGroup(
     }
     const classified = classifyImage(image.value, publicDir);
     if (!classified.ok) {
-      groupErrors.push(`Row ${image.line}: Invalid image "${image.value}".`);
+      const message =
+        classified.reason === "host"
+          ? `Row ${image.line}: Image host not allowed "${classified.host}".`
+          : `Row ${image.line}: Invalid image "${image.value}".`;
+      groupErrors.push(message);
       continue;
     }
     if (!images.includes(classified.src)) images.push(classified.src);

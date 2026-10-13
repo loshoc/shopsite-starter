@@ -112,6 +112,103 @@ test("hostile shopify and template fixtures fail identically and keep the title 
   assert.doesNotMatch(renderPattern(shopify.patterns[0]!), /\*/);
 });
 
+test("private, loopback, and metadata image hosts are rejected and omitted from remotePatterns", () => {
+  const hosts = [
+    "localhost",
+    "localhost",
+    "foo.localhost",
+    "127.0.0.1",
+    "127.0.0.2",
+    "::1",
+    "10.1.2.3",
+    "172.16.5.4",
+    "172.31.255.255",
+    "192.168.1.20",
+    "169.254.169.254",
+    "metadata.google.internal",
+    "metadata.google.internal",
+    "foo.metadata.google.internal",
+    "metadata.goog",
+    "metadata.internal",
+    "instance-data.ec2.internal",
+    "::ffff:7f00:1",
+    "::ffff:a00:9",
+    "::ffff:a9fe:a9fe",
+    "::ffff:c0a8:8",
+    "::ffff:ac10:505",
+    "::ffff:0:7f00:1",
+    "127.0.0.1",
+    "127.0.0.1",
+    "127.0.0.1",
+    "0.0.0.0",
+    "fe80::1",
+    "fd00::1",
+    "::7f00:1",
+    "64:ff9b::a01:203",
+    "2002:7f00:1::",
+  ];
+  const errors = hosts.map((host, index) => `Row ${index + 2}: Image host not allowed "${host}".`);
+  const shopify = imported("hostile-private-shopify.csv");
+  const template = imported("hostile-private-template.csv");
+  assert.deepEqual(shopify.errors, errors);
+  assert.deepEqual(template.errors, errors);
+  assert.equal(shopify.products.length, 0);
+  assert.equal(template.products.length, 0);
+  assert.deepEqual(shopify.patterns, []);
+  assert.deepEqual(template.patterns, []);
+  const joined = JSON.stringify(shopify.patterns) + JSON.stringify(template.patterns);
+  for (const host of new Set(hosts)) assert.equal(joined.includes(host), false);
+
+  const mixed = importProductCsv(
+    [
+      "handle,name,description,price,sku,stock,image_1",
+      "public-bowl,Bowl,plain,10.00,PUBLIC-BOWL,1,https://cdn.example.com/bowl.jpg",
+      "loop-v4,Loop,plain,10.00,LOOP-V4,1,https://127.0.0.1/spoon.jpg",
+    ].join("\n"),
+    { publicDir },
+  );
+  assert.deepEqual(mixed.errors, ['Row 3: Image host not allowed "127.0.0.1".']);
+  assert.deepEqual(
+    mixed.patterns.map((pattern) => pattern.hostname),
+    ["cdn.example.com"],
+  );
+
+  const allowed = importProductCsv(
+    [
+      "handle,name,description,price,sku,stock,image_1",
+      "public-cdn,Cdn,plain,10.00,PUBLIC-CDN,1,https://cdn.example.com/bowl.jpg",
+      "public-ip,Ip,plain,10.00,PUBLIC-IP,1,https://8.8.8.8/a.jpg",
+      "edge-172,Edge,plain,10.00,EDGE-172,1,https://172.15.255.255/a.jpg",
+      "edge-172b,Edge,plain,10.00,EDGE-172B,1,https://172.32.0.1/a.jpg",
+      "edge-192,Edge,plain,10.00,EDGE-192,1,https://192.169.0.1/a.jpg",
+      "edge-169,Edge,plain,10.00,EDGE-169,1,https://169.255.1.1/a.jpg",
+      "mapped-public,Mapped,plain,10.00,MAPPED-PUBLIC,1,https://[::ffff:8.8.8.8]/a.jpg",
+    ].join("\n"),
+    { publicDir },
+  );
+  assert.deepEqual(allowed.errors, []);
+  assert.deepEqual(
+    allowed.patterns.map((pattern) => pattern.hostname),
+    ["[::ffff:808:808]", "169.255.1.1", "172.15.255.255", "172.32.0.1", "192.169.0.1", "8.8.8.8", "cdn.example.com"],
+  );
+
+  const catalogPath = path.join(root, "data", "products.generated.json");
+  const configPath = path.join(root, "next.config.ts");
+  const catalogBefore = fs.readFileSync(catalogPath, "utf8");
+  const configBefore = fs.readFileSync(configPath, "utf8");
+  const cli = spawnSync(
+    "node",
+    ["--experimental-strip-types", "scripts/import-products.ts", "tests/fixtures/hostile-private-template.csv"],
+    { cwd: root, encoding: "utf8" },
+  );
+  assert.notEqual(cli.status, 0);
+  assert.match(cli.stderr, /Row 5: Image host not allowed "127\.0\.0\.1"\./);
+  assert.match(cli.stderr, /Image host not allowed "metadata\.google\.internal"\./);
+  assert.doesNotMatch(cli.stdout, /Wrote data\/products\.generated\.json/);
+  assert.equal(fs.readFileSync(catalogPath, "utf8"), catalogBefore);
+  assert.equal(fs.readFileSync(configPath, "utf8"), configBefore);
+});
+
 test("empty files, missing columns, duplicate handles, and conflicts name the row", () => {
   assert.deepEqual(imported("empty.csv").errors, ["Row 1: Empty CSV file."]);
   assert.deepEqual(importProductCsv("\uFEFF\n\n", { publicDir }).errors, ["Row 1: Empty CSV file."]);

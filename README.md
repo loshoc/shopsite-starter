@@ -53,7 +53,7 @@ npm run import:products -- path/to/products_export.csv --seed-stock
 npm run import:products -- path/to/products_export.csv --seed-stock --force
 ```
 
-`npm run import:shopify` is the same command. The file is detected as a Shopify product export or as `products-template.csv`. The catalogue is written to `data/products.generated.json`. Descriptions are allowlist-sanitized, prices are integer cents, and only https URLs or files under `public/` are accepted. https hosts are written to `images.remotePatterns` in `next.config.ts` as exact host and path entries.
+`npm run import:shopify` is the same command. The file is detected as a Shopify product export or as `products-template.csv`. The catalogue is written to `data/products.generated.json`. Descriptions are allowlist-sanitized, prices are integer cents, and only https URLs or files under `public/` are accepted. https hosts are written to `images.remotePatterns` in `next.config.ts` as exact host and path entries. Loopback, private, link-local, and cloud-metadata hosts are rejected and are not written.
 
 `--seed-stock` inserts a stock row only when that SKU does not already have one. Run it again and the quantity stays the same. `--force` requires `--seed-stock` and sets the quantity (it does not add). Without Postgres, the seed is stored in `data/dev-stock.json` for the local in-memory store.
 
