@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: "Checkout canceled" };
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Checkout canceled",
+  path: "/cancel",
+  index: false,
+});
 
 export default function CancelPage() {
   return (

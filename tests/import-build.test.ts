@@ -39,7 +39,11 @@ test("importing the template then building succeeds", { timeout: 240_000 }, () =
     assert.equal(products.products.length, 3);
     assert.ok(products.products.every((product) => product.images.every((image) => image.startsWith("/products/"))));
     assert.doesNotMatch(JSON.stringify(products), /<script/i);
-    const built = spawnSync("npm", ["run", "build"], { cwd: tmp, encoding: "utf8" });
+    const built = spawnSync("npm", ["run", "build"], {
+      cwd: tmp,
+      encoding: "utf8",
+      env: { ...process.env, NEXT_PUBLIC_APP_URL: "https://shop.example.com" },
+    });
     assert.equal(built.status, 0, `${built.stderr}\n${built.stdout}`.slice(-4000));
   } finally {
     fs.rmSync(tmp, { recursive: true, force: true });

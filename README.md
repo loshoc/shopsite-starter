@@ -13,7 +13,7 @@ Edit `.env.local`:
 - `ADMIN_SECRET` — at least 32 random characters. The placeholder in `.env.example` is rejected. `openssl rand -base64 32`
 - Stripe test keys and `STRIPE_WEBHOOK_SECRET` from the Dashboard or `stripe listen`
 - `DATABASE_URL` — leave the example placeholder for an in-memory first run with `npm run dev`, or set a real Postgres URL. Production refuses to boot, and refuses admin sessions and checkout, until this is a real URL
-- `NEXT_PUBLIC_APP_URL` — `http://localhost:3000` locally, no trailing slash
+- `NEXT_PUBLIC_APP_URL` — public site origin, no trailing slash. Required in production: the build fails if it is missing or a local-only host such as localhost. Set it before a Vercel production build. Vercel preview builds can omit it and use `https://$VERCEL_URL`. Local development: `http://localhost:3000`
 
 ```bash
 npm install

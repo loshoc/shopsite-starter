@@ -1,8 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ProductCard } from "@/components/shop/product-card";
 import { siteConfig } from "@/data/site.config";
 import { listStoreProducts } from "@/lib/catalogue";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({ path: "/" });
 
 export default async function HomePage() {
   const catalogue = await listStoreProducts();

@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 
 import { ProductCard } from "@/components/shop/product-card";
 import { listStoreProducts } from "@/lib/catalogue";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Shop" };
+export const metadata: Metadata = pageMetadata({ title: "Shop", path: "/shop" });
 
 export default async function ShopPage() {
   const catalogue = await listStoreProducts();
