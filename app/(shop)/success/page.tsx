@@ -3,9 +3,14 @@ import Link from "next/link";
 
 import { ClearCart } from "@/components/shop/clear-cart";
 import { formatMoney } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
 import { readCheckoutSummary } from "@/lib/stripe";
 
-export const metadata: Metadata = { title: "Order received" };
+export const metadata: Metadata = pageMetadata({
+  title: "Order received",
+  path: "/success",
+  index: false,
+});
 
 export default async function SuccessPage({
   searchParams,

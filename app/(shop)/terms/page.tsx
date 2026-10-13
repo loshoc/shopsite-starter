@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
 import { TextPage } from "@/components/shop/text-page";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Terms" };
+export const metadata: Metadata = pageMetadata({ title: "Terms", path: "/terms" });
 
 export default function TermsPage() {
   return (

@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 
 import { TextPage } from "@/components/shop/text-page";
 import { siteConfig } from "@/data/site.config";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Returns" };
+export const metadata: Metadata = pageMetadata({ title: "Returns", path: "/returns" });
 
 export default function ReturnsPage() {
   return (

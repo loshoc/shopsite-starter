@@ -5,12 +5,24 @@
   restyle of the shop does not repaint the operations UI.
 */
 :root {
-  --paper: #f3eee6;
-  --ink: #1b1714;
-  --copper: #9c4324;
-  --moss: #24382c;
-  --sand: #e4d7c4;
-  --foam: #faf7f2;
+  --bg: #f3eee6;
+  --surface: #faf7f2;
+  --fg: #1b1714;
+  --muted: #6b635b;
+  --border: #e4d7c4;
+  --accent: #1b1714;
+  --accent-fg: #faf7f2;
+  --highlight: #9c4324;
+  --success: #24382c;
+  --danger: #b42318;
+  --ring: #9c4324;
+  /* Temporary aliases so existing storefront classes keep working. */
+  --paper: var(--bg);
+  --foam: var(--surface);
+  --ink: var(--fg);
+  --sand: var(--border);
+  --copper: var(--highlight);
+  --moss: var(--success);
 }
 
 .admin {
@@ -39,6 +51,13 @@
 @theme inline {
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-highlight: var(--highlight);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-accent-fg: var(--accent-fg);
   --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-copper: var(--copper);
@@ -66,6 +85,6 @@
 }
 
 body {
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--fg);
 }
