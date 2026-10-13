@@ -6,6 +6,7 @@ import { isObviousPlaceholder } from "@/lib/admin-secret";
 import { appUrl } from "@/lib/app-url";
 import { checkoutExpiresAtFromConfig } from "@/lib/checkout-expiry";
 import { getProductBySku } from "@/data/products";
+import { descriptionText } from "@/lib/description-text";
 import { siteConfig } from "@/data/site.config";
 import type { ReservationLine } from "@/lib/types";
 
@@ -103,7 +104,7 @@ export async function createCheckoutSession(lines: ReservationLine[]): Promise<s
           unit_amount: product.priceCents,
           product_data: {
             name: product.name,
-            description: product.description,
+            description: descriptionText(product.description),
             metadata: { skuId: product.skuId },
           },
         },

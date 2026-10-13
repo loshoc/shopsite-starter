@@ -2,7 +2,8 @@ import "server-only";
 
 import postgres from "postgres";
 
-import { products } from "@/data/products";
+import { listSellableSkus } from "@/data/products";
+import { readDevStockQuantities } from "@/lib/dev-stock";
 import { siteConfig } from "@/data/site.config";
 import { configuredDatabaseUrl, productionDatabaseProblem } from "@/lib/database-url";
 import { applyOnHand, classifyRefund, lineIsOversold, linesInLockOrder, shouldAutoRestock } from "@/lib/inventory-policy";
@@ -101,16 +102,20 @@ function memory(): Memory {
   if (!globalStore.__shopsiteMemory) {
     const now = new Date().toISOString();
     const stock = new Map<string, StockRecord>();
-    for (const product of products) {
-      stock.set(product.skuId, {
-        skuId: product.skuId,
-        qty: product.stockUnits,
+    for (const item of listSellableSkus()) {
+      stock.set(item.skuId, {
+        skuId: item.skuId,
+        qty: item.stockUnits,
         sold: 0,
         incoming: 0,
         status: "active",
         lowStockThreshold: siteConfig.lowStockDefault,
         updatedAt: now,
       });
+    }
+    for (const [skuId, qty] of Object.entries(readDevStockQuantities())) {
+      const row = stock.get(skuId);
+      if (row) row.qty = qty;
     }
     globalStore.__shopsiteMemory = {
       stock,
@@ -319,11 +324,11 @@ export async function seedStock(): Promise<number> {
     const mem = memory();
     let inserted = 0;
     const now = new Date().toISOString();
-    for (const product of products) {
-      if (mem.stock.has(product.skuId)) continue;
-      mem.stock.set(product.skuId, {
-        skuId: product.skuId,
-        qty: product.stockUnits,
+    for (const item of listSellableSkus()) {
+      if (mem.stock.has(item.skuId)) continue;
+      mem.stock.set(item.skuId, {
+        skuId: item.skuId,
+        qty: item.stockUnits,
         sold: 0,
         incoming: 0,
         status: "active",
@@ -337,12 +342,12 @@ export async function seedStock(): Promise<number> {
   return withDatabase(async (sql) => {
     let inserted = 0;
     await sql.begin(async (tx) => {
-      for (const product of products) {
+      for (const item of listSellableSkus()) {
         const rows = await tx<{ sku_id: string }[]>`
           insert into product_stock (sku_id, qty, sold, incoming, status, low_stock_threshold)
           values (
-            ${product.skuId},
-            ${product.stockUnits},
+            ${item.skuId},
+            ${item.stockUnits},
             0,
             0,
             'active',

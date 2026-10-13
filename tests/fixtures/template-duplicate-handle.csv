@@ -1,0 +1,4 @@
+handle,name,description,price,sku,image_1
+alpha-spoon,Alpha spoon,A spoon,10.00,ALPHA-1,/products/cedar-spoon.png
+beta-bowl,Beta bowl,A bowl,12.00,BETA-1,/products/stone-bowl.png
+alpha-spoon,Alpha again,Again,11.00,ALPHA-2,/products/linen-napkin.png

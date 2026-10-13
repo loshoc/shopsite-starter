@@ -10,6 +10,12 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  images: {
+    remotePatterns: [
+      /* import:remotePatterns */
+      /* import:remotePatterns:end */
+    ],
+  },
   // Cache Components stay off. Live stock, Checkout, and admin sessions are
   // request-dynamic; the flag forces a Suspense model this spine does not need.
   async headers() {

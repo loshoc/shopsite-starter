@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { products } from "@/data/products";
+import { getProductBySku } from "@/data/products";
 import { useCart } from "@/components/shop/cart-provider";
 import { formatMoney } from "@/lib/format";
 
@@ -14,7 +14,7 @@ export function CartDrawer() {
   if (!cart.open) return null;
 
   const lines = cart.items.map((item) => {
-    const product = products.find((entry) => entry.skuId === item.skuId);
+    const product = getProductBySku(item.skuId);
     return { ...item, product };
   });
   const total = lines.reduce((sum, line) => sum + (line.product?.priceCents ?? 0) * line.qty, 0);
