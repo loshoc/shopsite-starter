@@ -10,7 +10,7 @@ export function ProductCard({ product, index }: { product: StoreProduct; index: 
   return (
     <article className="flex flex-col">
       <Link href={`/products/${product.id}`} className="group block">
-        <ProductMedia id={product.id} name={product.name} images={product.images} className="aspect-[4/5] w-full" />
+        <ProductMedia name={product.name} images={product.images} className="aspect-[4/5] w-full" />
         <div className="mt-4 flex items-baseline justify-between gap-3">
           <h2 className="font-serif text-2xl tracking-tight group-hover:text-copper">{product.name}</h2>
           <span className="text-xs tabular-nums text-ink/50">0{index}</span>

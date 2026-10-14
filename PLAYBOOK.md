@@ -46,6 +46,7 @@ npm run import:products -- file.csv --seed-stock --force
 - `--force` requires `--seed-stock`. It **overwrites** quantity with the CSV value. It does not add. Use it only when you mean to replace live counts.
 - A bad row fails the whole import. The message names the row (for example `Row 3: Missing SKU.`). The catalogue file is left unchanged.
 - Warnings can print while the import still succeeds. Errors stop it.
+- A product can import with no images. Cards and the product page show a **Replace me** placeholder until you add a file under `public/` or an https URL. Swap that placeholder for a real photo before you treat the shop as buyer-ready.
 
 ## Stock and admin
 

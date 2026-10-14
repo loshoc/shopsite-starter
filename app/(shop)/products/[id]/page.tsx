@@ -51,11 +51,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       <JsonLd data={productJsonLd(product, pageUrl, siteConfig.currency, origin)} />
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-2">
         <div>
-          <ProductMedia id={product.id} name={product.name} images={product.images} className="min-h-80 w-full" />
+          <ProductMedia name={product.name} images={product.images} className="min-h-80 w-full" />
           {product.images.length > 1 ? (
             <div className="mt-3 grid grid-cols-4 gap-3">
               {product.images.slice(1).map((src) => (
-                <ProductMedia key={src} id={product.id} name={product.name} images={[src]} className="aspect-square w-full" />
+                <ProductMedia key={src} name={product.name} images={[src]} className="aspect-square w-full" />
               ))}
             </div>
           ) : null}
