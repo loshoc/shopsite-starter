@@ -16,13 +16,6 @@
   --success: #24382c;
   --danger: #b42318;
   --ring: #9c4324;
-  /* Temporary aliases so existing storefront classes keep working. */
-  --paper: var(--bg);
-  --foam: var(--surface);
-  --ink: var(--fg);
-  --sand: var(--border);
-  --copper: var(--highlight);
-  --moss: var(--success);
 }
 
 .admin {
@@ -49,8 +42,9 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  /* next/font sets --font-display (Instrument Serif) and --font-body (Inter Tight). */
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-display), ui-serif, Georgia, serif;
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-fg: var(--fg);
@@ -58,12 +52,6 @@
   --color-success: var(--success);
   --color-danger: var(--danger);
   --color-accent-fg: var(--accent-fg);
-  --color-paper: var(--paper);
-  --color-ink: var(--ink);
-  --color-copper: var(--copper);
-  --color-moss: var(--moss);
-  --color-sand: var(--sand);
-  --color-foam: var(--foam);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

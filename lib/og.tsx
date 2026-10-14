@@ -8,14 +8,14 @@ import { theme } from "@/lib/theme";
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
 
-/** OFL Fraunces 144pt Medium. See assets/fonts/OFL.txt. */
-function loadFraunces(): Promise<Buffer> {
-  return readFile(join(process.cwd(), "assets/fonts/Fraunces-Medium.woff"));
+/** OFL Instrument Serif Regular. See assets/fonts/OFL.txt. */
+function loadDisplayFont(): Promise<Buffer> {
+  return readFile(join(process.cwd(), "assets/fonts/InstrumentSerif-Regular.ttf"));
 }
 
-/** 1200×630 card: Fraunces name, 4px highlight rule, muted subtitle. */
+/** 1200×630 card: Instrument Serif name, 4px highlight rule, muted subtitle. */
 export async function renderOgImage(title: string, subtitle: string) {
-  const fraunces = await loadFraunces();
+  const display = await loadDisplayFont();
   return new ImageResponse(
     (
       <div
@@ -32,7 +32,7 @@ export async function renderOgImage(title: string, subtitle: string) {
         <div
           style={{
             display: "flex",
-            fontFamily: "Fraunces",
+            fontFamily: "Instrument Serif",
             fontSize: 96,
             lineHeight: 1,
             color: theme.fg,
@@ -52,7 +52,7 @@ export async function renderOgImage(title: string, subtitle: string) {
         <div
           style={{
             display: "flex",
-            fontFamily: "Fraunces",
+            fontFamily: "Instrument Serif",
             fontSize: 36,
             lineHeight: 1.3,
             color: theme.muted,
@@ -67,10 +67,10 @@ export async function renderOgImage(title: string, subtitle: string) {
       ...ogSize,
       fonts: [
         {
-          name: "Fraunces",
-          data: fraunces,
+          name: "Instrument Serif",
+          data: display,
           style: "normal",
-          weight: 500,
+          weight: 400,
         },
       ],
     },

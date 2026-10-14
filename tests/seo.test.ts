@@ -54,13 +54,35 @@ test("theme hex values mirror the storefront tokens", () => {
   for (const [name, hex] of Object.entries(tokens)) {
     assert.match(root, new RegExp(`--${name}: ${hex};`));
   }
-  assert.match(root, /--paper: var\(--bg\);/);
-  assert.match(root, /--foam: var\(--surface\);/);
-  assert.match(root, /--ink: var\(--fg\);/);
-  assert.match(root, /--sand: var\(--border\);/);
-  assert.match(root, /--copper: var\(--highlight\);/);
-  assert.match(root, /--moss: var\(--success\);/);
+  for (const legacy of ["paper", "foam", "ink", "sand", "copper", "moss"]) {
+    assert.equal(css.includes(`--${legacy}`), false, legacy);
+  }
+  assert.match(css, /--font-sans: var\(--font-body\)/);
+  assert.match(css, /--font-serif: var\(--font-display\)/);
+  assert.equal(css.includes("--font-outfit"), false);
+  assert.equal(css.includes("--font-fraunces"), false);
   assert.match(css, /--color-bg: var\(--bg\);/);
   assert.match(css, /--color-highlight: var\(--highlight\);/);
   assert.equal(css.includes(".admin {\n  --background: #fafafa;"), true);
+});
+
+test("storefront fonts are Instrument Serif and Inter Tight", () => {
+  const fonts = fs.readFileSync(new URL("../app/fonts.ts", import.meta.url), "utf8");
+  const layout = fs.readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
+  const og = fs.readFileSync(new URL("../lib/og.tsx", import.meta.url), "utf8");
+  const license = fs.readFileSync(new URL("../assets/fonts/OFL.txt", import.meta.url), "utf8");
+  assert.match(fonts, /Instrument_Serif\(/);
+  assert.match(fonts, /variable: "--font-display"/);
+  assert.match(fonts, /Inter_Tight\(/);
+  assert.match(fonts, /variable: "--font-body"/);
+  assert.equal(fonts.includes("Fraunces"), false);
+  assert.equal(fonts.includes("Outfit"), false);
+  assert.match(layout, /fontBody\.variable/);
+  assert.match(layout, /fontDisplay\.variable/);
+  assert.equal(layout.includes("Fraunces"), false);
+  assert.equal(layout.includes("Outfit"), false);
+  assert.match(og, /InstrumentSerif-Regular\.ttf/);
+  assert.equal(og.includes("Fraunces"), false);
+  assert.match(license, /Instrument Serif/);
+  assert.equal(license.includes("Fraunces"), false);
 });

@@ -61,14 +61,14 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           ) : null}
         </div>
         <div>
-          <Link href="/shop" className="text-xs uppercase tracking-[0.18em] text-copper">
+          <Link href="/shop" className="text-xs uppercase tracking-[0.18em] text-highlight">
             Back to the shop
           </Link>
           <h1 className="mt-4 font-serif text-5xl tracking-tight">{product.name}</h1>
-          <ProductDescription html={product.description} className="mt-4 text-lg text-ink/75" />
-          {product.details ? <p className="mt-6 text-sm leading-7 text-ink/80">{product.details}</p> : null}
+          <ProductDescription html={product.description} className="mt-4 text-lg text-fg/75" />
+          {product.details ? <p className="mt-6 text-sm leading-7 text-fg/80">{product.details}</p> : null}
           <p className="mt-6 font-serif text-3xl">{formatMoney(product.priceCents)}</p>
-          <p className="mt-2 text-sm text-ink/60">{qtyLabel}</p>
+          <p className="mt-2 text-sm text-fg/60">{qtyLabel}</p>
           <div className="mt-6 space-y-4">
             {product.storeVariants.length > 1 ? (
               product.storeVariants.map((variant) => {
@@ -76,10 +76,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 const variantQty =
                   variant.liveStatus === "unlimited" ? "Made to order" : variant.orderable ? `${variant.liveQty} in stock` : "Sold out";
                 return (
-                  <div key={variant.skuId} className="flex flex-wrap items-center justify-between gap-3 border-t border-sand pt-4">
+                  <div key={variant.skuId} className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
                     <div>
                       <p className="text-sm">{label || variant.skuId}</p>
-                      <p className="text-sm text-ink/60">
+                      <p className="text-sm text-fg/60">
                         {formatMoney(variant.priceCents)} · {variantQty}
                       </p>
                     </div>
