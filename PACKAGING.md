@@ -20,7 +20,7 @@ Ship a clean archive of the `0.1.0` tree. Include application source and these r
 - `CHANGELOG.md`
 - `.env.example`
 - `.gitignore`
-- `products-template.csv` (repo root; made-up demo rows)
+- `products-template.csv` (repo root; made-up housewares demo rows — refresh or drop these after a custom catalogue; see **Scrub before you zip**)
 - `DOCUMENTATION-CHECKLIST.md`
 - `INVENTORY.md` (stock and oversold behavior the playbook points at)
 
@@ -41,7 +41,16 @@ Leave these out. `.gitignore` already excludes them from git; still check the ar
 - `data/dev-stock.json` (local stock from `npm run import:products -- --seed-stock` without Postgres)
 - Logs, coverage, and editor or OS junk (`.idea/`, `.vscode/`, `.DS_Store`)
 
-`.env.example` uses placeholders only. Demo catalogue copy and `products-template.csv` stay made-up.
+`.env.example` uses placeholders only. The unmodified starter keeps made-up catalogue copy, the housewares rows in `products-template.csv`, and the sample PNGs in `public/products/` so cold start still has a catalogue.
+
+### Demo media after a catalogue swap
+
+Cold start uses that housewares sample (`cedar-spoon`, `linen-napkin`, `stone-bowl`). After the store uses a custom catalogue, scrub the sample before you zip or deploy:
+
+- [ ] Replace or delete demo files under `public/products/` (`cedar-spoon.png`, `linen-napkin.png`, `linen-napkin-fold.png`, `stone-bowl.png`). Keep only images the shipped catalogue references.
+- [ ] Refresh `products-template.csv`. Replace the housewares demo rows (cedar-spoon, linen-napkin, stone-bowl) with your products, or drop the file when the archive no longer includes a template.
+
+Run that scrub on a rebranded zip and on the deployed `public/` tree. The playbook points here from **Customize the brand** and **Import products**.
 
 ## Verify the production build
 

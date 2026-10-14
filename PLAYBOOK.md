@@ -24,11 +24,15 @@ Edit `data/site.config.ts`.
 | `lowStockDefault` | Low-stock threshold written when a stock row is created. Default `2`. |
 | `checkoutExpiryMinutes` | Stripe Checkout lifetime in minutes. Default `60`. Values are clamped to **31–1440** (Stripe’s window is 30 minutes to 24 hours; the kit sends at least 31 so a delayed request still clears that floor). |
 
+Changing `data/site.config.ts` leaves the sample catalogue on disk. After the store uses your own products, replace or delete demo files under `public/products/` and refresh `products-template.csv` before you zip or deploy. The checklist is in [PACKAGING.md](PACKAGING.md) under **Scrub before you zip**.
+
 ## Import products
 
 Commands, file detection, image rules, and what gets written are in the README section **Import a catalogue**. Use that section as the source of truth.
 
 `products-template.csv` at the repo root is the starter file. Excel or Google Sheets can edit it; save or download as CSV before you import. The header row is the contract (`handle`, `name`, `description`, `price`, `sku`, `stock`, images, options).
+
+That file and `public/products/` ship the housewares sample (`cedar-spoon`, `linen-napkin`, `stone-bowl`, and the PNGs those rows reference: `cedar-spoon.png`, `linen-napkin.png`, `linen-napkin-fold.png`, `stone-bowl.png`). Replace the rows with your catalogue, then replace or delete those demo files under `public/products/` before you zip or deploy. The checklist is in [PACKAGING.md](PACKAGING.md) under **Scrub before you zip**.
 
 ```bash
 npm run import:products -- file.csv
