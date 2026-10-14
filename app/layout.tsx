@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import { Fraunces, Outfit } from "next/font/google";
 
 import { siteConfig } from "@/data/site.config";
 import { appUrl } from "@/lib/app-url";
 import { siteDescription } from "@/lib/seo";
 
+import { fontInter } from "./fonts";
 import "./globals.css";
-
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
-const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
 
 const description = siteDescription();
 
@@ -33,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${outfit.variable} ${fraunces.variable} h-full`}>
+    <html lang="en" className={`${fontInter.variable} h-full`}>
       <body className="flex min-h-full flex-col font-sans antialiased">{children}</body>
     </html>
   );

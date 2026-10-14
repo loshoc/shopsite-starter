@@ -7,7 +7,7 @@ import { theme } from "../lib/theme.ts";
 import { robotsDisallow, siteDescription, sitemapEntries } from "../lib/seo.ts";
 
 test("default description is Shop {name}. {tagline}.", () => {
-  assert.equal(siteDescription(), `Shop ${siteConfig.name}. Small goods for unhurried rooms.`);
+  assert.equal(siteDescription(), `Shop ${siteConfig.name}. Linen tote, stoneware mug, and wool scarf.`);
   assert.equal(siteDescription({ name: "North", tagline: "Quiet goods" }), "Shop North. Quiet goods.");
   assert.equal(siteDescription({ name: "North", tagline: "Quiet goods..." }), "Shop North. Quiet goods.");
 });
@@ -54,13 +54,36 @@ test("theme hex values mirror the storefront tokens", () => {
   for (const [name, hex] of Object.entries(tokens)) {
     assert.match(root, new RegExp(`--${name}: ${hex};`));
   }
-  assert.match(root, /--paper: var\(--bg\);/);
-  assert.match(root, /--foam: var\(--surface\);/);
-  assert.match(root, /--ink: var\(--fg\);/);
-  assert.match(root, /--sand: var\(--border\);/);
-  assert.match(root, /--copper: var\(--highlight\);/);
-  assert.match(root, /--moss: var\(--success\);/);
+  for (const legacy of ["paper", "foam", "ink", "sand", "copper", "moss"]) {
+    assert.equal(css.includes(`--${legacy}`), false, legacy);
+  }
+  assert.match(css, /--font-sans: var\(--font-body\)/);
+  assert.match(css, /--font-serif: var\(--font-body\)/);
+  assert.equal(css.includes("--font-outfit"), false);
+  assert.equal(css.includes("--font-fraunces"), false);
+  assert.equal(css.includes("#9c4324"), false);
+  assert.equal(css.includes("#f3eee6"), false);
   assert.match(css, /--color-bg: var\(--bg\);/);
   assert.match(css, /--color-highlight: var\(--highlight\);/);
   assert.equal(css.includes(".admin {\n  --background: #fafafa;"), true);
+});
+
+test("storefront font is Inter only", () => {
+  const fonts = fs.readFileSync(new URL("../app/fonts.ts", import.meta.url), "utf8");
+  const layout = fs.readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
+  const og = fs.readFileSync(new URL("../lib/og.tsx", import.meta.url), "utf8");
+  const license = fs.readFileSync(new URL("../assets/fonts/OFL.txt", import.meta.url), "utf8");
+  assert.match(fonts, /import \{ Inter \} from "next\/font\/google"/);
+  assert.match(fonts, /variable: "--font-body"/);
+  for (const dropped of ["Instrument", "Inter_Tight", "Fraunces", "Outfit"]) {
+    assert.equal(fonts.includes(dropped), false, dropped);
+    assert.equal(layout.includes(dropped), false, dropped);
+    assert.equal(og.includes(dropped), false, dropped);
+  }
+  assert.match(layout, /fontInter\.variable/);
+  assert.match(og, /Inter-Medium\.woff/);
+  assert.match(og, /fontFamily: "Inter"/);
+  assert.match(license, /Inter Project Authors/);
+  assert.equal(license.includes("Fraunces"), false);
+  assert.equal(license.includes("Instrument Serif"), false);
 });

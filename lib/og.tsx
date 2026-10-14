@@ -8,14 +8,14 @@ import { theme } from "@/lib/theme";
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
 
-/** OFL Fraunces 144pt Medium. See assets/fonts/OFL.txt. */
-function loadFraunces(): Promise<Buffer> {
-  return readFile(join(process.cwd(), "assets/fonts/Fraunces-Medium.woff"));
+/** OFL Inter Medium. See assets/fonts/OFL.txt. */
+function loadInter(): Promise<Buffer> {
+  return readFile(join(process.cwd(), "assets/fonts/Inter-Medium.woff"));
 }
 
-/** 1200×630 card: Fraunces name, 4px highlight rule, muted subtitle. */
+/** 1200×630 card: Inter name and muted subtitle on the cool background. */
 export async function renderOgImage(title: string, subtitle: string) {
-  const fraunces = await loadFraunces();
+  const inter = await loadInter();
   return new ImageResponse(
     (
       <div
@@ -32,9 +32,10 @@ export async function renderOgImage(title: string, subtitle: string) {
         <div
           style={{
             display: "flex",
-            fontFamily: "Fraunces",
-            fontSize: 96,
-            lineHeight: 1,
+            fontFamily: "Inter",
+            fontSize: 72,
+            fontWeight: 500,
+            lineHeight: 1.05,
             color: theme.fg,
           }}
         >
@@ -43,20 +44,12 @@ export async function renderOgImage(title: string, subtitle: string) {
         <div
           style={{
             display: "flex",
-            width: 144,
-            height: 4,
-            backgroundColor: theme.highlight,
-            marginTop: 28,
-          }}
-        />
-        <div
-          style={{
-            display: "flex",
-            fontFamily: "Fraunces",
-            fontSize: 36,
-            lineHeight: 1.3,
+            fontFamily: "Inter",
+            fontSize: 32,
+            fontWeight: 500,
+            lineHeight: 1.35,
             color: theme.muted,
-            marginTop: 28,
+            marginTop: 24,
           }}
         >
           {subtitle}
@@ -67,8 +60,8 @@ export async function renderOgImage(title: string, subtitle: string) {
       ...ogSize,
       fonts: [
         {
-          name: "Fraunces",
-          data: fraunces,
+          name: "Inter",
+          data: inter,
           style: "normal",
           weight: 500,
         },

@@ -6,19 +6,16 @@ import type { StoreProduct } from "@/lib/catalogue";
 import { descriptionText } from "@/lib/description-text";
 import { formatMoney } from "@/lib/format";
 
-export function ProductCard({ product, index }: { product: StoreProduct; index: number }) {
+export function ProductCard({ product }: { product: StoreProduct }) {
   return (
     <article className="flex flex-col">
       <Link href={`/products/${product.id}`} className="group block">
         <ProductMedia name={product.name} images={product.images} className="aspect-[4/5] w-full" />
-        <div className="mt-4 flex items-baseline justify-between gap-3">
-          <h2 className="font-serif text-2xl tracking-tight group-hover:text-copper">{product.name}</h2>
-          <span className="text-xs tabular-nums text-ink/50">0{index}</span>
-        </div>
-        <p className="mt-2 text-sm leading-6 text-ink/70">{descriptionText(product.description)}</p>
-        <p className="mt-3 text-sm">{formatMoney(product.priceCents)}</p>
+        <h2 className="mt-3 text-base font-medium group-hover:underline">{product.name}</h2>
+        <p className="mt-1 text-sm leading-6 text-muted">{descriptionText(product.description)}</p>
+        <p className="mt-2 text-sm">{formatMoney(product.priceCents)}</p>
       </Link>
-      <div className="mt-4">
+      <div className="mt-3">
         <AddToCart skuId={product.skuId} disabled={!product.orderable} />
       </div>
     </article>
