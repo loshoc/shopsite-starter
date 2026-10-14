@@ -19,7 +19,7 @@ Edit `data/site.config.ts`.
 | `name` | Store name. Page titles use it (`Store · Page`). |
 | `tagline` | Short line on the home page. With `name`, it is the default meta description: `Shop {name}. {tagline}.` |
 | `description` | Brand sentence in this file. Replace the demo sentence with your own. Titles and the default meta description come from `name` and `tagline`. |
-| `supportEmail` | Address shown on the returns page (`support@example.com` in the demo). |
+| `supportEmail` | Address shown on the returns page. The demo is `support@example.com`. Replace it before go-live. |
 | `currency` | Checkout currency. The demo is `usd`. |
 | `lowStockDefault` | Low-stock threshold written when a stock row is created. Default `2`. |
 | `checkoutExpiryMinutes` | Stripe Checkout lifetime in minutes. Default `60`. Values are clamped to **31–1440** (Stripe’s window is 30 minutes to 24 hours; the kit sends at least 31 so a delayed request still clears that floor). |
@@ -75,9 +75,24 @@ Set `name` and `tagline` in `data/site.config.ts`. Those fields drive titles and
 
 After deploy, submit `https://YOUR_DOMAIN/sitemap.xml` in Google Search Console. `/robots.txt` already blocks `/admin`, `/api`, `/success`, and `/cancel`.
 
+## Legal pages and footer
+
+Do this before go-live. Editing the brand or the catalogue does not replace these files. The starter copy is a shell, not a policy.
+
+- [ ] Replace `/shipping` in `app/(shop)/shipping/page.tsx`.
+- [ ] Replace `/returns` in `app/(shop)/returns/page.tsx`.
+- [ ] Replace `/faq` in `app/(shop)/faq/page.tsx`.
+- [ ] Replace `/privacy` in `app/(shop)/privacy/page.tsx`.
+- [ ] Replace `/terms` in `app/(shop)/terms/page.tsx`.
+- [ ] Replace the kicker in `components/shop/text-page.tsx` (`TODO: Replace me`).
+- [ ] Replace the footer line in `components/shop/footer.tsx` (`TODO: Replace me`).
+- [ ] Set `supportEmail` in `data/site.config.ts` to a real inbox. The demo is `support@example.com`.
+
+Privacy, terms, returns, and shipping say `Policy not set yet`. Write your own pages. Do not ship the shell. Do not state shipping or return timing this kit does not enforce.
+
 ## Deploy
 
-Vercel and Stripe steps are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+Finish **Legal pages and footer** before the first production deploy. Vercel and Stripe steps are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
 Set the production environment before the first production build. Vercel bakes `NEXT_PUBLIC_*` values in at build time.
 
