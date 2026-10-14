@@ -26,6 +26,8 @@ Edit `data/site.config.ts`.
 
 Changing `data/site.config.ts` leaves the sample catalogue on disk. After the store uses your own products, replace or delete demo files under `public/products/` and refresh `products-template.csv` before you zip or deploy. The checklist is in [PACKAGING.md](PACKAGING.md) under **Scrub before you zip**.
 
+Brand edits also leave the legal pages and the footer as starter shells. Replace those before go-live. See **Legal pages and footer**.
+
 ## Import products
 
 Commands, file detection, image rules, and what gets written are in the README section **Import a catalogue**. Use that section as the source of truth.

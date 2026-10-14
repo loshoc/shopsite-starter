@@ -52,6 +52,8 @@ Cold start uses that housewares sample (`cedar-spoon`, `linen-napkin`, `stone-bo
 
 Run that scrub on a rebranded zip and on the deployed `public/` tree. The playbook points here from **Customize the brand** and **Import products**.
 
+### Legal shells
+
 Legal shells stay in the zip. Do not fill them in.
 
 - [ ] `/shipping`, `/returns`, `/faq`, `/privacy`, `/terms`, `components/shop/text-page.tsx`, and `components/shop/footer.tsx` still say `TODO: Replace me`. Policy pages also say `Policy not set yet`. Do not write a privacy, terms, returns, or shipping policy into the zip.
