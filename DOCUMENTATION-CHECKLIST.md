@@ -35,6 +35,7 @@ The install path is identical to the README. [PLAYBOOK.md](PLAYBOOK.md) starts a
 
 - [ ] Brand fields in `data/site.config.ts` match the playbook, including checkout expiry clamped to 31–1440 minutes (default 60).
 - [ ] `products-template.csv` imports with `npm run import:products -- products-template.csv`.
+- [ ] After a custom catalogue, [PACKAGING.md](PACKAGING.md) **Scrub before you zip** says to replace or delete demo `public/products/*` and refresh `products-template.csv` before zip or deploy. The unmodified starter still includes those housewares files for cold start.
 - [ ] `--seed-stock` leaves an existing SKU’s quantity alone. `--force` overwrites it.
 - [ ] A bad CSV row names that row and does not write the catalogue.
 - [ ] `npm run import:shopify` behaves as the same command.
