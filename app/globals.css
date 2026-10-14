@@ -5,17 +5,17 @@
   restyle of the shop does not repaint the operations UI.
 */
 :root {
-  --bg: #f3eee6;
-  --surface: #faf7f2;
-  --fg: #1b1714;
-  --muted: #6b635b;
-  --border: #e4d7c4;
-  --accent: #1b1714;
-  --accent-fg: #faf7f2;
-  --highlight: #9c4324;
-  --success: #24382c;
+  --bg: #fafaf8;
+  --surface: #ffffff;
+  --fg: #111111;
+  --muted: #5c5c5c;
+  --border: #e8e8e8;
+  --accent: #111111;
+  --accent-fg: #ffffff;
+  --highlight: #b42318;
+  --success: #166534;
   --danger: #b42318;
-  --ring: #9c4324;
+  --ring: #111111;
 }
 
 .admin {
@@ -42,9 +42,9 @@
 }
 
 @theme inline {
-  /* next/font sets --font-display (Instrument Serif) and --font-body (Inter Tight). */
+  /* next/font sets --font-body to Inter. Headings use the same family. */
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-display), ui-serif, Georgia, serif;
+  --font-serif: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-fg: var(--fg);

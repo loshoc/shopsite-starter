@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 import { getProductBySku } from "@/data/products";
 import { useCart } from "@/components/shop/cart-provider";
@@ -47,19 +48,26 @@ export function CartDrawer() {
       <button type="button" className="absolute inset-0 bg-fg/30" aria-label="Close bag" onClick={() => cart.setOpen(false)} />
       <aside className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-surface shadow-xl">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
-          <h2 className="font-serif text-2xl">Your bag</h2>
-          <button type="button" className="text-sm text-fg/70" onClick={() => cart.setOpen(false)}>
+          <h2 className="text-xl font-medium">Your bag</h2>
+          <button type="button" className="text-sm text-muted" onClick={() => cart.setOpen(false)}>
             Close
           </button>
         </div>
         <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
-          {lines.length === 0 ? <p className="text-sm text-fg/70">Nothing in the bag yet.</p> : null}
+          {lines.length === 0 ? (
+            <div>
+              <p className="text-sm text-muted">Your bag is empty.</p>
+              <Link href="/shop" className="mt-3 inline-block text-sm underline" onClick={() => cart.setOpen(false)}>
+                Start shopping
+              </Link>
+            </div>
+          ) : null}
           {lines.map((line) => (
             <div key={line.skuId} className="flex items-start justify-between gap-3 border-b border-border pb-4">
               <div>
                 <p className="font-medium">{line.product?.name ?? line.skuId}</p>
-                <p className="text-sm text-fg/60">{line.product ? formatMoney(line.product.priceCents) : "Unavailable"}</p>
-                <label className="mt-2 flex items-center gap-2 text-xs text-fg/60">
+                <p className="text-sm text-muted">{line.product ? formatMoney(line.product.priceCents) : "Unavailable"}</p>
+                <label className="mt-2 flex items-center gap-2 text-xs text-muted">
                   Qty
                   <input
                     className="h-8 w-16 border border-border bg-white px-2"
@@ -71,7 +79,7 @@ export function CartDrawer() {
                   />
                 </label>
               </div>
-              <button type="button" className="text-xs text-highlight" onClick={() => cart.remove(line.skuId)}>
+              <button type="button" className="text-xs text-muted underline" onClick={() => cart.remove(line.skuId)}>
                 Remove
               </button>
             </div>
@@ -82,10 +90,10 @@ export function CartDrawer() {
             <span>Subtotal</span>
             <span>{formatMoney(total)}</span>
           </div>
-          <p className="mt-2 text-xs leading-5 text-fg/60">
+          <p className="mt-2 text-xs leading-5 text-muted">
             Coupons and tax are collected by Stripe Checkout. Guest checkout is fine. Stock is checked again before the session is created.
           </p>
-          {error ? <p className="mt-3 text-sm text-highlight">{error}</p> : null}
+          {error ? <p className="mt-3 text-sm text-danger">{error}</p> : null}
           <button
             type="button"
             disabled={pending || lines.length === 0}

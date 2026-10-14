@@ -4,7 +4,7 @@ import { siteConfig } from "@/data/site.config";
 import { appUrl } from "@/lib/app-url";
 import { siteDescription } from "@/lib/seo";
 
-import { fontBody, fontDisplay } from "./fonts";
+import { fontInter } from "./fonts";
 import "./globals.css";
 
 const description = siteDescription();
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fontBody.variable} ${fontDisplay.variable} h-full`}>
+    <html lang="en" className={`${fontInter.variable} h-full`}>
       <body className="flex min-h-full flex-col font-sans antialiased">{children}</body>
     </html>
   );

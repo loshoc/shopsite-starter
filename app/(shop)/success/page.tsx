@@ -21,28 +21,27 @@ export default async function SuccessPage({
   const summary = sessionId ? await readCheckoutSummary(sessionId) : null;
 
   return (
-    <div className="mx-auto max-w-xl px-5 py-20">
+    <div className="mx-auto max-w-xl px-5 py-16">
       <ClearCart />
-      <p className="text-xs uppercase tracking-[0.2em] text-highlight">Paid</p>
-      <h1 className="mt-3 font-serif text-5xl tracking-tight">Thank you.</h1>
-      <p className="mt-4 text-fg/75">
+      <h1 className="text-3xl font-medium tracking-tight">Thank you.</h1>
+      <p className="mt-3 text-muted">
         Stripe has the payment. This page only shows the email and total, never the card.
       </p>
       {summary ? (
-        <dl className="mt-8 space-y-2 text-sm">
+        <dl className="mt-6 space-y-2 text-sm">
           <div className="flex justify-between gap-4">
-            <dt className="text-fg/60">Email</dt>
+            <dt className="text-muted">Email</dt>
             <dd>{summary.email ?? "Guest"}</dd>
           </div>
           <div className="flex justify-between gap-4">
-            <dt className="text-fg/60">Total</dt>
+            <dt className="text-muted">Total</dt>
             <dd>{formatMoney(summary.totalCents, summary.currency)}</dd>
           </div>
         </dl>
       ) : (
-        <p className="mt-8 text-sm text-fg/70">If Stripe redirected you here, the receipt is in your inbox when email is collected at Checkout.</p>
+        <p className="mt-6 text-sm text-muted">If Stripe redirected you here, the receipt is in your inbox when email is collected at Checkout.</p>
       )}
-      <Link href="/shop" className="mt-8 inline-block text-sm text-highlight">
+      <Link href="/shop" className="mt-6 inline-block text-sm underline">
         Continue browsing
       </Link>
     </div>

@@ -49,7 +49,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   return (
     <>
       <JsonLd data={productJsonLd(product, pageUrl, siteConfig.currency, origin)} />
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-8 md:grid-cols-2">
         <div>
           <ProductMedia name={product.name} images={product.images} className="min-h-80 w-full" />
           {product.images.length > 1 ? (
@@ -61,14 +61,14 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           ) : null}
         </div>
         <div>
-          <Link href="/shop" className="text-xs uppercase tracking-[0.18em] text-highlight">
+          <Link href="/shop" className="text-sm text-muted hover:text-fg">
             Back to the shop
           </Link>
-          <h1 className="mt-4 font-serif text-5xl tracking-tight">{product.name}</h1>
-          <ProductDescription html={product.description} className="mt-4 text-lg text-fg/75" />
-          {product.details ? <p className="mt-6 text-sm leading-7 text-fg/80">{product.details}</p> : null}
-          <p className="mt-6 font-serif text-3xl">{formatMoney(product.priceCents)}</p>
-          <p className="mt-2 text-sm text-fg/60">{qtyLabel}</p>
+          <h1 className="mt-3 text-3xl font-medium tracking-tight">{product.name}</h1>
+          <ProductDescription html={product.description} className="mt-3 text-base text-muted" />
+          {product.details ? <p className="mt-4 text-sm leading-6 text-muted">{product.details}</p> : null}
+          <p className="mt-5 text-2xl font-medium">{formatMoney(product.priceCents)}</p>
+          <p className="mt-2 text-sm text-muted">{qtyLabel}</p>
           <div className="mt-6 space-y-4">
             {product.storeVariants.length > 1 ? (
               product.storeVariants.map((variant) => {
@@ -79,7 +79,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                   <div key={variant.skuId} className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
                     <div>
                       <p className="text-sm">{label || variant.skuId}</p>
-                      <p className="text-sm text-fg/60">
+                      <p className="text-sm text-muted">
                         {formatMoney(variant.priceCents)} · {variantQty}
                       </p>
                     </div>

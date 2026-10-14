@@ -3,15 +3,15 @@
  * `next/og` ImageResponse cannot read CSS variables.
  */
 export const theme = {
-  bg: "#f3eee6",
-  surface: "#faf7f2",
-  fg: "#1b1714",
-  muted: "#6b635b",
-  border: "#e4d7c4",
-  accent: "#1b1714",
-  accentFg: "#faf7f2",
-  highlight: "#9c4324",
-  success: "#24382c",
+  bg: "#fafaf8",
+  surface: "#ffffff",
+  fg: "#111111",
+  muted: "#5c5c5c",
+  border: "#e8e8e8",
+  accent: "#111111",
+  accentFg: "#ffffff",
+  highlight: "#b42318",
+  success: "#166534",
   danger: "#b42318",
-  ring: "#9c4324",
+  ring: "#111111",
 } as const;

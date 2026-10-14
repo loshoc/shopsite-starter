@@ -11,22 +11,22 @@ export function Header() {
   return (
     <header className="border-b border-border/80">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
-        <Link href="/" className="font-serif text-xl tracking-tight">
+        <Link href="/" className="text-sm font-medium">
           {siteConfig.name}
         </Link>
         <nav className="flex items-center gap-5 text-sm">
-          <Link href="/shop" className="hover:text-highlight">
+          <Link href="/shop" className="hover:underline">
             Shop
           </Link>
-          <Link href="/shipping" className="hidden hover:text-highlight sm:inline">
+          <Link href="/shipping" className="hidden hover:underline sm:inline">
             Shipping
           </Link>
-          <Link href="/faq" className="hidden hover:text-highlight sm:inline">
+          <Link href="/faq" className="hidden hover:underline sm:inline">
             FAQ
           </Link>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-full border border-fg/15 px-3 py-1.5 hover:border-highlight"
+            className="inline-flex items-center gap-2 rounded-full border border-fg/15 px-3 py-1.5 hover:border-fg"
             onClick={() => cart.setOpen(true)}
           >
             <ShoppingBag className="size-4" aria-hidden />
