@@ -1,0 +1,17 @@
+/*
+  Warmer paper. Optional recipe, not the ship default.
+  Inter stays the only storefront family.
+*/
+html[data-recipe="sand"] {
+  --bg: #f3eee6;
+  --surface: #faf7f2;
+  --fg: #1b1714;
+  --muted: #6b635b;
+  --border: #e4d7c4;
+  --accent: #1b1714;
+  --accent-fg: #faf7f2;
+  --highlight: #9c4324;
+  --success: #24382c;
+  --danger: #b42318;
+  --ring: #9c4324;
+}

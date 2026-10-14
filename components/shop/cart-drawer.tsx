@@ -70,7 +70,7 @@ export function CartDrawer() {
                 <label className="mt-2 flex items-center gap-2 text-xs text-muted">
                   Qty
                   <input
-                    className="h-8 w-16 border border-border bg-white px-2"
+                    className="h-8 w-16 border border-border bg-surface px-2"
                     type="number"
                     min={1}
                     max={99}

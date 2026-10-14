@@ -13,7 +13,7 @@ const links = [
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-border">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 sm:flex-row sm:items-end sm:justify-between">
+      <div className="shop-footer mx-auto flex max-w-6xl flex-col sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-medium">{siteConfig.name}</p>
           <p className="mt-1 max-w-sm text-sm text-muted">

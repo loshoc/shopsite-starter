@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { recipeDataAttributes } from "@/data/recipe";
 import { siteConfig } from "@/data/site.config";
 import { appUrl } from "@/lib/app-url";
 import { siteDescription } from "@/lib/seo";
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fontInter.variable} h-full`}>
+    <html lang="en" {...recipeDataAttributes()} className={`${fontInter.variable} h-full`}>
       <body className="flex min-h-full flex-col font-sans antialiased">{children}</body>
     </html>
   );

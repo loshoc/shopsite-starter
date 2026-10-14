@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Storefront density, chrome, and color recipes. `data/recipe.ts` sets `data-density`, `data-chrome`, and `data-recipe` on `<html>`. Ship default stays Cool sparse, comfortable, and bare. `ink` and `sand` are optional token files. Open Graph colors follow the active recipe. Version stays 0.1.0.
+
 ## 0.1.0
 
 First buyer tag for the MVP on main (`bdff806`).

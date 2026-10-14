@@ -10,7 +10,7 @@ export function Header() {
   const cart = useCart();
   return (
     <header className="border-b border-border/80">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
+      <div className="shop-bar mx-auto flex max-w-6xl items-center justify-between gap-4">
         <Link href="/" className="text-sm font-medium">
           {siteConfig.name}
         </Link>

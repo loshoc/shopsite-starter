@@ -1,3 +1,4 @@
+/** Brand and operations. Density, chrome, and color recipe live in `data/recipe.ts`. */
 export const siteConfig = {
   name: "Demo Shop",
   tagline: "Linen tote, stoneware mug, and wool scarf.",

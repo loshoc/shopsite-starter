@@ -1,0 +1,17 @@
+/*
+  Cool sparse. Ship default.
+  Hexes match `:root` in `app/globals.css` and `recipePalettes.default`.
+*/
+html[data-recipe="default"] {
+  --bg: #fafaf8;
+  --surface: #ffffff;
+  --fg: #111111;
+  --muted: #5c5c5c;
+  --border: #e8e8e8;
+  --accent: #111111;
+  --accent-fg: #ffffff;
+  --highlight: #b42318;
+  --success: #166534;
+  --danger: #b42318;
+  --ring: #111111;
+}
