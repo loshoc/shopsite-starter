@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { AddToCart } from "@/components/shop/add-to-cart";
+import { DisclosureList } from "@/components/shop/disclosure";
 import { JsonLd } from "@/components/shop/json-ld";
 import { ProductDescription } from "@/components/shop/product-description";
 import { ProductMedia } from "@/components/shop/product-media";
+import { ProductPurchase } from "@/components/shop/product-purchase";
 import { siteConfig } from "@/data/site.config";
 import { getProduct } from "@/data/products";
 import { appUrl } from "@/lib/app-url";
-import { getStoreProduct } from "@/lib/catalogue";
+import { getStoreProduct, type StoreVariant } from "@/lib/catalogue";
 import { descriptionText } from "@/lib/description-text";
-import { formatMoney } from "@/lib/format";
 import { productJsonLd } from "@/lib/json-ld";
 import { metaDescription, pageMetadata, productPath } from "@/lib/seo";
 
@@ -33,18 +33,19 @@ export async function generateMetadata({
   });
 }
 
+function qtyLabel(variant: StoreVariant): string {
+  if (variant.liveStatus === "unlimited") return "Made to order";
+  if (variant.orderable) return `${variant.liveQty} in stock`;
+  return "Sold out";
+}
+
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const product = await getStoreProduct(id);
   if (!product) notFound();
   const origin = appUrl();
   const pageUrl = `${origin}${productPath(product.id)}`;
-  const qtyLabel =
-    product.liveStatus === "unlimited"
-      ? "Made to order"
-      : product.orderable
-        ? `${product.liveQty} in stock`
-        : "Sold out";
+  const details = product.details?.trim() ?? "";
 
   return (
     <>
@@ -66,31 +67,21 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           </Link>
           <h1 className="shop-display mt-3 font-medium tracking-tight">{product.name}</h1>
           <ProductDescription html={product.description} className="mt-3 text-base text-muted" />
-          {product.details ? <p className="mt-4 text-sm leading-6 text-muted">{product.details}</p> : null}
-          <p className="shop-title mt-5 font-medium">{formatMoney(product.priceCents)}</p>
-          <p className="mt-2 text-sm text-muted">{qtyLabel}</p>
-          <div className="mt-6 space-y-4">
-            {product.storeVariants.length > 1 ? (
-              product.storeVariants.map((variant) => {
-                const label = variant.options.map((option) => `${option.name}: ${option.value}`).join(", ");
-                const variantQty =
-                  variant.liveStatus === "unlimited" ? "Made to order" : variant.orderable ? `${variant.liveQty} in stock` : "Sold out";
-                return (
-                  <div key={variant.skuId} className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-                    <div>
-                      <p className="text-sm">{label || variant.skuId}</p>
-                      <p className="text-sm text-muted">
-                        {formatMoney(variant.priceCents)} · {variantQty}
-                      </p>
-                    </div>
-                    <AddToCart skuId={variant.skuId} disabled={!variant.orderable} />
-                  </div>
-                );
-              })
-            ) : (
-              <AddToCart skuId={product.skuId} disabled={!product.orderable} />
-            )}
-          </div>
+          <ProductPurchase
+            name={product.name}
+            variants={product.storeVariants.map((variant) => ({
+              skuId: variant.skuId,
+              priceCents: variant.priceCents,
+              orderable: variant.orderable,
+              qtyLabel: qtyLabel(variant),
+              options: variant.options,
+            }))}
+          />
+          {details ? (
+            <div className="mt-8">
+              <DisclosureList items={[{ id: "details", title: "Details", body: details }]} />
+            </div>
+          ) : null}
         </div>
       </div>
     </>

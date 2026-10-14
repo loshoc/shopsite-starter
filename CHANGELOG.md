@@ -3,6 +3,11 @@
 ## Unreleased
 
 - Storefront density, chrome, and color recipes. `data/recipe.ts` sets `data-density`, `data-chrome`, and `data-recipe` on `<html>`. Ship default stays Cool sparse, comfortable, and bare. `ink` and `sand` are optional token files. Open Graph colors follow the active recipe. Version stays 0.1.0.
+- Product page: variant choices are buttons, there is one Add to bag button, details sit in an accordion, and the buy bar sticks on mobile. Shipping and returns lines show under the button only when `shippingNote` or `returnsNote` is set.
+- Catalogue cards are the image, name, and price, plus a variant hint when options exist. Card frame still follows `data-chrome`.
+- `/faq` is an accordion. It stays on `TODO: Replace me` until `faqs` has a question and an answer.
+- Missing images use a plain grey placeholder.
+- Escape closes the bag and returns focus to the Bag control.
 
 ## 0.1.0
 

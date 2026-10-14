@@ -23,6 +23,9 @@ Edit `data/site.config.ts`.
 | `currency` | Checkout currency. The demo is `usd`. |
 | `lowStockDefault` | Low-stock threshold written when a stock row is created. Default `2`. |
 | `checkoutExpiryMinutes` | Stripe Checkout lifetime in minutes. Default `60`. Values are clamped to **31–1440** (Stripe’s window is 30 minutes to 24 hours; the kit sends at least 31 so a delayed request still clears that floor). |
+| `shippingNote` | Optional line under Add to bag. Leave `""`. The product page hides it until you set one. |
+| `returnsNote` | Optional line under Add to bag. Leave `""`. The product page hides it until you set one. |
+| `faqs` | `{ question, answer }` list for `/faq`. Leave `[]`. A blank question or answer is not shown. |
 
 Density, chrome, and the color recipe are in `data/recipe.ts`. There is no theme switcher. Change the file and rebuild.
 
@@ -58,7 +61,7 @@ npm run import:products -- file.csv --seed-stock --force
 - `--force` requires `--seed-stock`. It **overwrites** quantity with the CSV value. It does not add. Use it only when you mean to replace live counts.
 - A bad row fails the whole import. The message names the row (for example `Row 3: Missing SKU.`). The catalogue file is left unchanged.
 - Warnings can print while the import still succeeds. Errors stop it.
-- A product can import with no images. Cards and the product page show a **Replace me** placeholder until you add a file under `public/` or an https URL. Swap that placeholder for a real photo before you treat the shop as buyer-ready.
+- A product can import with no images. Cards and the product page show a plain grey **Replace me** placeholder until you add a file under `public/` or an https URL. Swap that placeholder for a real photo before you treat the shop as buyer-ready.
 
 ## Stock and admin
 
@@ -102,6 +105,10 @@ Do this before go-live. Editing the brand or the catalogue does not replace thes
 - [ ] Set `supportEmail` in `data/site.config.ts` to a real inbox. The demo is `support@example.com`.
 
 Privacy, terms, returns, and shipping say `Policy not set yet`. Write your own pages. Do not ship the shell. Do not state shipping or return timing this kit does not enforce.
+
+`shippingNote` and `returnsNote` ship empty. The product page does not show a shipping or returns line until you set one. Do not fill them with timing this kit does not enforce.
+
+`faqs` ships empty. `/faq` is an accordion whose only row is `TODO: Replace me` until you add a question and an answer.
 
 ## Deploy
 
