@@ -25,8 +25,11 @@ export function Header() {
             FAQ
           </Link>
           <button
+            id="bag-control"
             type="button"
-            className="inline-flex items-center gap-2 rounded-full border border-fg/15 px-3 py-1.5 hover:border-fg"
+            aria-expanded={cart.open}
+            aria-controls="bag-drawer"
+            className="inline-flex items-center gap-2 rounded-full border border-fg/15 px-3 py-1.5 hover:border-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
             onClick={() => cart.setOpen(true)}
           >
             <ShoppingBag className="size-4" aria-hidden />
