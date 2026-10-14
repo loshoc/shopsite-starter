@@ -8,9 +8,9 @@ export const metadata: Metadata = pageMetadata({ title: "Returns", path: "/retur
 
 export default function ReturnsPage() {
   return (
-    <TextPage title="Returns" lede="Refunds happen in the Stripe Dashboard.">
-      <p>A full refund can return the reserved units to stock. A partial refund does not. An admin restocks a partial refund by hand.</p>
-      <p>Write to {siteConfig.supportEmail} for the human version of this policy.</p>
+    <TextPage title="Returns" lede="Policy not set yet.">
+      <p>TODO: Replace me. This starter page is not a returns policy.</p>
+      <p>Contact {siteConfig.supportEmail}.</p>
     </TextPage>
   );
 }

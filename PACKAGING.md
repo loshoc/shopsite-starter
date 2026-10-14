@@ -52,6 +52,14 @@ Cold start uses that housewares sample (`cedar-spoon`, `linen-napkin`, `stone-bo
 
 Run that scrub on a rebranded zip and on the deployed `public/` tree. The playbook points here from **Customize the brand** and **Import products**.
 
+### Legal shells
+
+Legal shells stay in the zip. Do not fill them in.
+
+- [ ] `/shipping`, `/returns`, `/faq`, `/privacy`, `/terms`, `components/shop/text-page.tsx`, and `components/shop/footer.tsx` still say `TODO: Replace me`. Policy pages also say `Policy not set yet`. Do not write a privacy, terms, returns, or shipping policy into the zip.
+
+Buyers replace those shells and the footer before their own go-live. That pass is PLAYBOOK **Legal pages and footer** and DOCUMENTATION-CHECKLIST **Legal pages and footer**.
+
 ## Verify the production build
 
 Set a real public origin before `npm run build`. No trailing slash. The production build fails when `NEXT_PUBLIC_APP_URL` is missing or a local-only host (`localhost`, `127.0.0.1`, and similar). Preview builds on Vercel may omit it and use `https://$VERCEL_URL`.

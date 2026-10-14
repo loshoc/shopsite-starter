@@ -29,6 +29,17 @@ Vercel preview builds can omit `NEXT_PUBLIC_APP_URL` and use `https://$VERCEL_UR
 - [ ] No live Stripe keys, webhook secrets, or database passwords in markdown or committed env files.
 - [ ] `.env.local` is gitignored and not in the diff.
 
+## Legal pages and footer
+
+Brand and catalogue edits do not clear these. The starter text is a shell.
+
+- [ ] Before go-live, replace `/shipping`, `/returns`, `/faq`, `/privacy`, and `/terms`.
+- [ ] `/shipping`, `/returns`, `/privacy`, and `/terms` no longer say `Policy not set yet` or `TODO: Replace me`.
+- [ ] `/faq` no longer says `TODO: Replace me`.
+- [ ] The kicker in `components/shop/text-page.tsx` and the line in `components/shop/footer.tsx` no longer say `TODO: Replace me`.
+- [ ] `supportEmail` in `data/site.config.ts` is a real inbox, not `support@example.com`.
+- [ ] PLAYBOOK **Legal pages and footer** lists the same files.
+
 ## QA walkthrough
 
 The install path is identical to the README. [PLAYBOOK.md](PLAYBOOK.md) starts after that.

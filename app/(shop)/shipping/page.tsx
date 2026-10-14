@@ -7,9 +7,8 @@ export const metadata: Metadata = pageMetadata({ title: "Shipping", path: "/ship
 
 export default function ShippingPage() {
   return (
-    <TextPage title="Shipping" lede="Demo copy. Replace it with your own promise.">
-      <p>Checkout collects a US or Canadian shipping address. Rates, if you add them, belong in Stripe.</p>
-      <p>This starter does not calculate shipping in the app. The bag subtotal is the catalogue price only.</p>
+    <TextPage title="Shipping" lede="Policy not set yet.">
+      <p>TODO: Replace me. This starter page is not a shipping policy.</p>
     </TextPage>
   );
 }
