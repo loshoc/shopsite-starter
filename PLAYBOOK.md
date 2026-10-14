@@ -1,6 +1,6 @@
 # ShopSite playbook
 
-A short walk after the README cold start. Install, env, and `npm run dev` stay in the README. Use this page for brand, catalogue, stock, checkout, and SEO. **Deploy** links to the Vercel and Stripe checklist.
+A short walk after the README cold start. Install, env, and `npm run dev` stay in the README. Use this page for design, brand, catalogue, stock, checkout, and SEO. **Deploy** links to the Vercel and Stripe checklist.
 
 Release checks: [DOCUMENTATION-CHECKLIST.md](DOCUMENTATION-CHECKLIST.md).
 
@@ -9,6 +9,101 @@ Release checks: [DOCUMENTATION-CHECKLIST.md](DOCUMENTATION-CHECKLIST.md).
 The storefront is the stylish shop: `app/(shop)` and `components/shop`. Change layout, copy, and the catalogue there.
 
 Admin is a separate shadcn console for stock and thin orders. Leave `app/admin/**` and `components/ui/**` alone unless you mean to change operations. Fuller stop-rules for AI edits are in [SKILL.md](SKILL.md).
+
+Color, density, and chrome are a rebuild of `data/recipe.ts`. There is no theme switcher. Rules for a rebrand are in **Design style** and **Dev file map**.
+
+## Design style
+
+Ship default is Cool sparse. Leave it unless the buyer’s brand table below says otherwise.
+
+- Type is Inter only.
+- Color is `#fafaf8` / `#ffffff` / `#111111`. Accent is ink. No terracotta.
+- Density and chrome are `comfortable` and `bare`.
+- Home is the product grid. No manifesto hero.
+- Trust notes and FAQ copy stay empty until the buyer fills them. Empty `shippingNote` and `returnsNote` stay hidden. An empty `faqs` list shows one `TODO: Replace me` row.
+
+### When to flip levers
+
+Set `storefrontRecipe` in `data/recipe.ts` and rebuild. Product, brand, and content only — do not add a switcher.
+
+| Buyer intent | density | chrome | recipe |
+| --- | --- | --- | --- |
+| Quiet goods, fashion, sparse catalogue | comfortable | bare | default |
+| Dense catalogue, many SKUs, electronics | compact | bare or ruled | default |
+| Soft DTC, lifestyle cards | comfortable | soft-card | default or sand |
+| Night, cinematic, jewelry | comfortable | bare or soft-card | ink |
+| Warm boutique (the buyer wants paper and rust) | comfortable | bare | sand |
+
+`default` is Cool sparse (`app/recipes/default.css`, also `:root` in `app/globals.css`). `ink` is dark cinematic. `sand` is warmer paper. Sand is the recipe that brings paper and rust, and only when that row is the buyer’s ask.
+
+### Anti-AI rules
+
+1. Do not ship warm paper and rust as the default.
+2. Do not add a serif display pair. Inter is the only storefront family.
+3. Do not build an eyebrow, big brand name, one-liner, and pill CTA hero.
+4. Do not use soft-bordered cream product cards as the default.
+5. Do not put micro all-caps tracked labels everywhere.
+6. Do not write poetic empty states. The empty bag is a plain line and **Start shopping**.
+7. Placeholders are a plain grey block, not dashed art.
+8. Copy is factual product names and descriptions. Do not write “unhurried”, “atelier”, or “thoughtfully”.
+
+### What to edit first
+
+1. `data/site.config.ts` — name, tagline, trust notes, FAQs.
+2. Catalogue images and copy.
+3. `data/recipe.ts` — only if the brand needs a density, chrome, or recipe shift.
+4. Never add a theme switcher UI.
+
+### Fixture check
+
+Acceptance spot-checks after import. They are not ship defaults.
+
+| Fixture | Look |
+| --- | --- |
+| A premium bag | default · bare · comfortable |
+| B playful bag | soft-card · maybe sand · denser type is fine |
+| C electronics | compact · ruled · default |
+| D sparse | default · bare · minimal home blocks |
+
+## Dev file map
+
+Same order as **What to edit first**, with the files.
+
+### Edit order
+
+1. `data/site.config.ts` — `name`, `tagline`, `description`, `supportEmail`, `shippingNote`, `returnsNote`, `faqs`.
+2. Catalogue — edit `products-template.csv`, then `npm run import:products`. Put images under `public/products/`. The import writes `data/products.generated.json`, which `data/products.ts` loads. Commands and file rules stay in the README section **Import a catalogue**.
+3. Only if the brand needs a shift: `data/recipe.ts` — `storefrontRecipe.id`, `density`, and `chrome`. Rebuild. No runtime switcher.
+4. Legal shells before go-live — `app/(shop)/shipping/page.tsx`, `app/(shop)/returns/page.tsx`, `app/(shop)/faq/page.tsx`, `app/(shop)/privacy/page.tsx`, `app/(shop)/terms/page.tsx`, `components/shop/footer.tsx`, `components/shop/text-page.tsx`.
+
+### Levers
+
+| Lever | File | Notes |
+| --- | --- | --- |
+| Color recipe | `data/recipe.ts` and `app/recipes/{default,ink,sand}.css` | Ship default is Cool sparse. `:root` in `app/globals.css` mirrors `default` (`#fafaf8` / `#ffffff` / `#111111`). |
+| Density / chrome | `data/recipe.ts` → `data-density` and `data-chrome` on `<html>` | Classes include `shop-pad`, `shop-grid`, `shop-card`, `shop-split`. `comfortable` is the Cool sparse rhythm (section padding, card gap, type step). `bare` is flush images, no card border. `ruled` is a hairline. `soft-card` is a soft shadow on the surface color. |
+| Fonts | `app/fonts.ts` → `app/layout.tsx` | Inter only (`--font-body`). |
+| OG colors | `lib/theme.ts` | Follows the active recipe id. Open Graph image rendering cannot read CSS variables. |
+| Trust under CTA | `siteConfig.shippingNote` / `returnsNote` | Empty means hidden. |
+| FAQ accordion | `siteConfig.faqs` | Empty means one `TODO: Replace me` row. A blank question or answer is not shown. |
+| Grey placeholders | `components/shop/product-image-placeholder.tsx` | Plain grey block and “Replace me”. |
+| Bag empty / Esc | `components/shop/cart-drawer.tsx` | Empty bag is a plain line and Start shopping. Esc closes the drawer and returns focus to the Bag control. |
+| PDP sticky buy / variants | `components/shop/product-purchase.tsx` | Mobile buy bar and variant choice. |
+| Cards (no CTA) | `components/shop/product-card.tsx` | Image, name, price, and an optional variant hint. No add-to-bag button on the card. |
+
+### Do not touch
+
+On a rebrand, leave these alone:
+
+- `app/admin/**`, `components/ui/**`, Stripe, checkout, the webhook, and the `package.json` version.
+- Do not add a theme switcher UI.
+- Do not change Inter or the Cool sparse defaults unless the buyer’s brand table says so.
+
+Admin keeps its own tokens on `.admin`. A shop restyle does not repaint the operations UI.
+
+### How design and dev meet
+
+Use the intent table in **Design style** and set `storefrontRecipe` only. The anti-AI rules stay as listed there. Fixtures A–D are acceptance spot-checks after import, not ship defaults.
 
 ## Customize the brand
 
@@ -27,15 +122,7 @@ Edit `data/site.config.ts`.
 | `returnsNote` | Optional line under Add to bag. Leave `""`. The product page hides it until you set one. |
 | `faqs` | `{ question, answer }` list for `/faq`. Leave `[]`. A blank question or answer is not shown. |
 
-Density, chrome, and the color recipe are in `data/recipe.ts`. There is no theme switcher. Change the file and rebuild.
-
-| Field | Values | Ship default |
-| --- | --- | --- |
-| `density` | `comfortable`, `compact` | `comfortable`. Section padding, the gap between product cards, and the type step. Comfortable is the Cool sparse rhythm. |
-| `chrome` | `bare`, `ruled`, `soft-card` | `bare`. Flush product images, no card border or elevation. `ruled` is a hairline border. `soft-card` is a soft shadow on the surface color. |
-| `id` | `default`, `ink`, `sand` | `default`. Cool sparse (`#fafaf8` / `#ffffff` / `#111111`) on `:root` and in `app/recipes/default.css`. |
-
-`ink` (`app/recipes/ink.css`) is dark cinematic. `sand` (`app/recipes/sand.css`) is warmer paper. Neither replaces the ship default. Inter stays the only storefront family. Open Graph colors follow the active id through `lib/theme.ts`. Admin keeps its own tokens on `.admin`.
+Color, density, and chrome are build-time levers in `data/recipe.ts`. Ship default is `default`, `comfortable`, and `bare`. `ink` and `sand` are optional color files. There is no theme switcher. Edit the file and rebuild. Open Graph colors follow the active id. See **Design style** and **Dev file map**.
 
 Changing `data/site.config.ts` leaves the sample catalogue on disk. After the store uses your own products, replace or delete demo files under `public/products/` and refresh `products-template.csv` before you zip or deploy. The checklist is in [PACKAGING.md](PACKAGING.md) under **Scrub before you zip**.
 
