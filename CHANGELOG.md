@@ -15,3 +15,4 @@ First buyer tag for the MVP on main (`bdff806`).
 - Production SEO: metadata and Open Graph, sitemap, robots, product JSON-LD, and canonical URLs from `NEXT_PUBLIC_APP_URL`.
 - Production builds refuse a missing or local-only `NEXT_PUBLIC_APP_URL`. Vercel preview builds can fall back to `https://$VERCEL_URL`.
 - Thin docs: `PLAYBOOK.md` for brand, import, stock, and checkout, including the SEO note. Cold start stays in `README.md`. `DOCUMENTATION-CHECKLIST.md` is the release check for those docs.
+- Admin closed-screen Generate secret: when `ADMIN_SECRET` is missing or still a placeholder, `/admin/login` offers a client-only Generate secret button (`crypto.getRandomValues`, 32 bytes / 44-character base64), copies it to the clipboard with a manual fallback, and shows the steps to put the value in `.env.local` and restart. The server never writes the secret to disk. Fail-closed still blocks admin until a real secret is configured.
