@@ -1,8 +1,13 @@
 @import "tailwindcss";
+@import "./recipes/default.css";
+@import "./recipes/ink.css";
+@import "./recipes/sand.css";
 
 /*
-  Storefront tokens live on :root. Admin tokens live on .admin so a brand
-  restyle of the shop does not repaint the operations UI.
+  Storefront tokens live on :root (Cool sparse, the ship default).
+  `app/recipes/*.css` overrides them from `data-recipe` on `<html>`.
+  Admin tokens live on .admin so a brand restyle of the shop does not
+  repaint the operations UI.
 */
 :root {
   --bg: #fafaf8;
@@ -75,4 +80,141 @@
 body {
   background: var(--bg);
   color: var(--fg);
+}
+
+/*
+  Density and chrome. Comfortable + bare on :root match the Cool sparse
+  rhythm (px-5 / py-8 / gap-8 / text-2xl / flush images, no card elevation).
+  `html[data-density]` and `html[data-chrome]` come from `data/recipe.ts`.
+*/
+:root,
+html[data-density="comfortable"] {
+  --type-step: 0;
+  --section-x: 1.25rem;
+  --section-y: 2rem;
+  --section-y-loose: 4rem;
+  --card-gap: 2rem;
+  --stack-gap: 1.5rem;
+  --thumb-gap: 0.75rem;
+  --header-y: 1rem;
+  --footer-y: 2.5rem;
+  --footer-gap: 1.5rem;
+  --card-title-gap: 0.75rem;
+}
+
+html[data-density="compact"] {
+  --type-step: -1;
+  --section-x: 1rem;
+  --section-y: 1.25rem;
+  --section-y-loose: 2.5rem;
+  --card-gap: 1rem;
+  --stack-gap: 0.75rem;
+  --thumb-gap: 0.5rem;
+  --header-y: 0.625rem;
+  --footer-y: 1.5rem;
+  --footer-gap: 1rem;
+  --card-title-gap: 0.5rem;
+}
+
+:root,
+html[data-chrome="bare"] {
+  --card-radius: 0px;
+  --card-border-width: 0px;
+  --card-border-color: transparent;
+  --card-shadow: none;
+  --card-bg: transparent;
+  --card-inset-x: 0px;
+  --card-inset-y: 0px;
+}
+
+html[data-chrome="ruled"] {
+  --card-radius: 0px;
+  --card-border-width: 1px;
+  --card-border-color: var(--border);
+  --card-shadow: none;
+  --card-bg: transparent;
+  --card-inset-x: 0.75rem;
+  --card-inset-y: 0.875rem;
+}
+
+html[data-chrome="soft-card"] {
+  --card-radius: 1rem;
+  --card-border-width: 0px;
+  --card-border-color: transparent;
+  --card-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 16px 40px rgb(0 0 0 / 0.08);
+  --card-bg: var(--surface);
+  --card-inset-x: 1rem;
+  --card-inset-y: 1rem;
+}
+
+.shop-pad {
+  padding-inline: var(--section-x);
+  padding-block: var(--section-y);
+}
+
+.shop-pad-loose {
+  padding-inline: var(--section-x);
+  padding-block: var(--section-y-loose);
+}
+
+.shop-grid {
+  margin-top: var(--stack-gap);
+  gap: var(--card-gap);
+}
+
+.shop-split {
+  gap: var(--card-gap);
+}
+
+.shop-thumbs {
+  gap: var(--thumb-gap);
+}
+
+.shop-bar {
+  padding-inline: var(--section-x);
+  padding-block: var(--header-y);
+}
+
+.shop-footer {
+  padding-inline: var(--section-x);
+  padding-block: var(--footer-y);
+  gap: var(--footer-gap);
+}
+
+/* Type step 0 is the shipped ramp (text-2xl / text-3xl / text-base). */
+.shop-title {
+  font-size: calc(1.5rem + (var(--type-step) * 0.25rem));
+  line-height: calc(2rem + (var(--type-step) * 0.25rem));
+}
+
+.shop-display {
+  font-size: calc(1.875rem + (var(--type-step) * 0.375rem));
+  line-height: calc(2.25rem + (var(--type-step) * 0.25rem));
+}
+
+.shop-card,
+.shop-frame {
+  border-radius: var(--card-radius);
+  border: var(--card-border-width) solid var(--card-border-color);
+  background-color: var(--card-bg);
+  box-shadow: var(--card-shadow);
+}
+
+html[data-chrome="ruled"] .shop-card,
+html[data-chrome="soft-card"] .shop-card {
+  overflow: hidden;
+}
+
+.shop-card-title {
+  margin-top: var(--card-title-gap);
+  font-size: calc(1rem + (var(--type-step) * 0.125rem));
+  line-height: calc(1.5rem + (var(--type-step) * 0.25rem));
+}
+
+.shop-card-inset {
+  padding-inline: var(--card-inset-x);
+}
+
+.shop-card-action {
+  padding-bottom: var(--card-inset-y);
 }

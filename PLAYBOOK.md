@@ -24,6 +24,16 @@ Edit `data/site.config.ts`.
 | `lowStockDefault` | Low-stock threshold written when a stock row is created. Default `2`. |
 | `checkoutExpiryMinutes` | Stripe Checkout lifetime in minutes. Default `60`. Values are clamped to **31–1440** (Stripe’s window is 30 minutes to 24 hours; the kit sends at least 31 so a delayed request still clears that floor). |
 
+Density, chrome, and the color recipe are in `data/recipe.ts`. There is no theme switcher. Change the file and rebuild.
+
+| Field | Values | Ship default |
+| --- | --- | --- |
+| `density` | `comfortable`, `compact` | `comfortable`. Section padding, the gap between product cards, and the type step. Comfortable is the Cool sparse rhythm. |
+| `chrome` | `bare`, `ruled`, `soft-card` | `bare`. Flush product images, no card border or elevation. `ruled` is a hairline border. `soft-card` is a soft shadow on the surface color. |
+| `id` | `default`, `ink`, `sand` | `default`. Cool sparse (`#fafaf8` / `#ffffff` / `#111111`) on `:root` and in `app/recipes/default.css`. |
+
+`ink` (`app/recipes/ink.css`) is dark cinematic. `sand` (`app/recipes/sand.css`) is warmer paper. Neither replaces the ship default. Inter stays the only storefront family. Open Graph colors follow the active id through `lib/theme.ts`. Admin keeps its own tokens on `.admin`.
+
 Changing `data/site.config.ts` leaves the sample catalogue on disk. After the store uses your own products, replace or delete demo files under `public/products/` and refresh `products-template.csv` before you zip or deploy. The checklist is in [PACKAGING.md](PACKAGING.md) under **Scrub before you zip**.
 
 Brand edits also leave the legal pages and the footer as starter shells. Replace those before go-live. See **Legal pages and footer**.

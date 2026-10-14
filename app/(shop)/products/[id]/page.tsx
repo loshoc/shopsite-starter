@@ -49,13 +49,13 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   return (
     <>
       <JsonLd data={productJsonLd(product, pageUrl, siteConfig.currency, origin)} />
-      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-8 md:grid-cols-2">
+      <div className="shop-pad shop-split mx-auto grid max-w-6xl md:grid-cols-2">
         <div>
-          <ProductMedia name={product.name} images={product.images} className="min-h-80 w-full" />
+          <ProductMedia name={product.name} images={product.images} className="shop-frame min-h-80 w-full" />
           {product.images.length > 1 ? (
-            <div className="mt-3 grid grid-cols-4 gap-3">
+            <div className="shop-thumbs mt-3 grid grid-cols-4">
               {product.images.slice(1).map((src) => (
-                <ProductMedia key={src} name={product.name} images={[src]} className="aspect-square w-full" />
+                <ProductMedia key={src} name={product.name} images={[src]} className="shop-frame aspect-square w-full" />
               ))}
             </div>
           ) : null}
@@ -64,10 +64,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           <Link href="/shop" className="text-sm text-muted hover:text-fg">
             Back to the shop
           </Link>
-          <h1 className="mt-3 text-3xl font-medium tracking-tight">{product.name}</h1>
+          <h1 className="shop-display mt-3 font-medium tracking-tight">{product.name}</h1>
           <ProductDescription html={product.description} className="mt-3 text-base text-muted" />
           {product.details ? <p className="mt-4 text-sm leading-6 text-muted">{product.details}</p> : null}
-          <p className="mt-5 text-2xl font-medium">{formatMoney(product.priceCents)}</p>
+          <p className="shop-title mt-5 font-medium">{formatMoney(product.priceCents)}</p>
           <p className="mt-2 text-sm text-muted">{qtyLabel}</p>
           <div className="mt-6 space-y-4">
             {product.storeVariants.length > 1 ? (

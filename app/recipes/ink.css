@@ -1,0 +1,15 @@
+/* Dark cinematic. Optional recipe, not the ship default. */
+html[data-recipe="ink"] {
+  color-scheme: dark;
+  --bg: #0e0f12;
+  --surface: #17191f;
+  --fg: #f3efe6;
+  --muted: #a8a294;
+  --border: #2e313a;
+  --accent: #f3efe6;
+  --accent-fg: #0e0f12;
+  --highlight: #d7b074;
+  --success: #8eae96;
+  --danger: #e36a5d;
+  --ring: #d7b074;
+}

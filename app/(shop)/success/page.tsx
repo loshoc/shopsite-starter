@@ -21,9 +21,9 @@ export default async function SuccessPage({
   const summary = sessionId ? await readCheckoutSummary(sessionId) : null;
 
   return (
-    <div className="mx-auto max-w-xl px-5 py-16">
+    <div className="shop-pad-loose mx-auto max-w-xl">
       <ClearCart />
-      <h1 className="text-3xl font-medium tracking-tight">Thank you.</h1>
+      <h1 className="shop-display font-medium tracking-tight">Thank you.</h1>
       <p className="mt-3 text-muted">
         Stripe has the payment. This page only shows the email and total, never the card.
       </p>

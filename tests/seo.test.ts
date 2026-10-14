@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
 
+import { recipePalettes, storefrontRecipe } from "../data/recipe.ts";
 import { siteConfig } from "../data/site.config.ts";
 import { theme } from "../lib/theme.ts";
 import { robotsDisallow, siteDescription, sitemapEntries } from "../lib/seo.ts";
@@ -38,22 +39,24 @@ test("sitemap lists public pages and visible products only", () => {
 test("theme hex values mirror the storefront tokens", () => {
   const css = fs.readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
   const root = css.slice(css.indexOf(":root {"), css.indexOf("\n.admin {"));
+  const shipped = recipePalettes.default;
   const tokens: Record<string, string> = {
-    bg: theme.bg,
-    surface: theme.surface,
-    fg: theme.fg,
-    muted: theme.muted,
-    border: theme.border,
-    accent: theme.accent,
-    "accent-fg": theme.accentFg,
-    highlight: theme.highlight,
-    success: theme.success,
-    danger: theme.danger,
-    ring: theme.ring,
+    bg: shipped.bg,
+    surface: shipped.surface,
+    fg: shipped.fg,
+    muted: shipped.muted,
+    border: shipped.border,
+    accent: shipped.accent,
+    "accent-fg": shipped.accentFg,
+    highlight: shipped.highlight,
+    success: shipped.success,
+    danger: shipped.danger,
+    ring: shipped.ring,
   };
   for (const [name, hex] of Object.entries(tokens)) {
     assert.match(root, new RegExp(`--${name}: ${hex};`));
   }
+  assert.deepEqual(theme, recipePalettes[storefrontRecipe.id]);
   for (const legacy of ["paper", "foam", "ink", "sand", "copper", "moss"]) {
     assert.equal(css.includes(`--${legacy}`), false, legacy);
   }

@@ -45,6 +45,7 @@ Brand and catalogue edits do not clear these. The starter text is a shell.
 The install path is identical to the README. [PLAYBOOK.md](PLAYBOOK.md) starts after that.
 
 - [ ] Brand fields in `data/site.config.ts` match the playbook, including checkout expiry clamped to 31–1440 minutes (default 60).
+- [ ] `data/recipe.ts` ships `default`, `comfortable`, and `bare`. `ink` and `sand` are optional color files. There is no theme switcher. Open Graph colors follow the active recipe.
 - [ ] `products-template.csv` imports with `npm run import:products -- products-template.csv`.
 - [ ] After a custom catalogue, [PACKAGING.md](PACKAGING.md) **Scrub before you zip** says to replace or delete demo `public/products/*` and refresh `products-template.csv` before zip or deploy. The unmodified starter still includes those housewares files for cold start.
 - [ ] `--seed-stock` leaves an existing SKU’s quantity alone. `--force` overwrites it.
