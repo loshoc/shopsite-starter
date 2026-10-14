@@ -63,6 +63,19 @@ test("shopify sample uses local images, variants, and an image-only row", () => 
   assert.equal(result.stock.find((row) => row.skuId === "SPOON-CEDAR-01")?.qty, 6);
 });
 
+test("a product with no images still imports", () => {
+  const csv = [
+    "handle,name,description,price,sku,stock,image_1,image_2,option1_name,option1_value,option2_name,option2_value,option3_name,option3_value",
+    "plain-mug,Plain mug,A mug with no photo yet.,12.00,MUG-PLAIN-01,3,,,,,,,",
+  ].join("\n");
+  const result = importProductCsv(csv, { publicDir });
+  assert.deepEqual(result.errors, []);
+  assert.deepEqual(result.warnings, []);
+  assert.equal(result.products.length, 1);
+  assert.deepEqual(result.products[0]?.images, []);
+  assert.equal(result.products[0]?.name, "Plain mug");
+});
+
 test("products template imports the same local catalogue shape", () => {
   const text = fs.readFileSync(path.join(root, "products-template.csv"), "utf8");
   const result = importProductCsv(text, { publicDir });
