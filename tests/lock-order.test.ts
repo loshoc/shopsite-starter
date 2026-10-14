@@ -2,11 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { linesInLockOrder } from "../lib/inventory-policy.ts";
-import { listOrders, listStockRecords, observePaidLockOrder, saveStockRows } from "../lib/db.ts";
+import { listOrders, listStockRecords, observePaidLockOrder } from "../lib/db.ts";
 import { dispatchStripeEvent } from "../lib/stripe-events.ts";
+import { seedFixtureStock } from "./stock-fixtures.ts";
 
-const SKU_A = "SKU-MUG-01";
-const SKU_B = "SKU-TOTE-01";
+const SKU_A = "FIXTURE-LOCK-A";
+const SKU_B = "FIXTURE-LOCK-B";
 
 test("opposite carts lock in skuId order and both paid webhooks finish", async () => {
   const cartAB = [
@@ -30,7 +31,7 @@ test("opposite carts lock in skuId order and both paid webhooks finish", async (
     [SKU_B, SKU_A],
   );
 
-  await saveStockRows([
+  await seedFixtureStock([
     { skuId: SKU_A, qty: 5, incoming: 0, status: "active", lowStockThreshold: 2 },
     { skuId: SKU_B, qty: 7, incoming: 0, status: "active", lowStockThreshold: 2 },
   ]);

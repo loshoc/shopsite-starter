@@ -4,9 +4,10 @@ import test from "node:test";
 import { filterAdminOrders, oversoldBadge, presentAdminOrder } from "../lib/admin-orders.ts";
 import { listOrders, listStockRecords, saveStockRows } from "../lib/db.ts";
 import { dispatchStripeEvent } from "../lib/stripe-events.ts";
-import type { OrderRecord } from "../lib/types.ts";
+import { StockNotSeeded, type OrderRecord } from "../lib/types.ts";
+import { seedFixtureStock } from "./stock-fixtures.ts";
 
-const SKU = "SKU-TOTE-01";
+const SKU = "FIXTURE-OVERSOLD-01";
 
 test("admin oversold badge and filter follow the order flag", () => {
   const rows = [
@@ -27,8 +28,29 @@ test("admin oversold badge and filter follow the order flag", () => {
   assert.equal(oversoldBadge(views[0].oversold), null);
 });
 
+test("fixture stock is independent of the catalogue, and saveStockRows still refuses an unseeded SKU", async () => {
+  const skuId = `FIXTURE-STOCK-${crypto.randomUUID()}`;
+  await seedFixtureStock([
+    { skuId, qty: 4, incoming: 1, status: "active", lowStockThreshold: 2 },
+  ]);
+  const row = (await listStockRecords()).find((item) => item.skuId === skuId);
+  assert.ok(row);
+  assert.equal(row.qty, 4);
+  assert.equal(row.sold, 0);
+  assert.equal(row.incoming, 1);
+
+  const missing = `FIXTURE-UNSEEDED-${crypto.randomUUID()}`;
+  await assert.rejects(
+    () =>
+      saveStockRows([
+        { skuId: missing, qty: 1, incoming: 0, status: "active", lowStockThreshold: 2 },
+      ]),
+    (error: unknown) => error instanceof StockNotSeeded && error.skuId === missing,
+  );
+});
+
 test("two concurrent paid webhooks for the last unit: one oversold, stock stays at 0", async () => {
-  await saveStockRows([
+  await seedFixtureStock([
     { skuId: SKU, qty: 1, incoming: 0, status: "active", lowStockThreshold: 2 },
   ]);
   const before = await stockRow();

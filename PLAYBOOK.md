@@ -51,6 +51,8 @@ npm run import:products -- file.csv --seed-stock --force
 
 Open the shop and admin as `http://localhost:3000` (admin login is `http://localhost:3000/admin/login`). Admin login may reject `127.0.0.1`.
 
+When admin is closed because `ADMIN_SECRET` is missing or still the placeholder, use **Generate secret** on that screen. It makes a client-only random value of at least 32 characters and copies it to the clipboard; paste it into `.env.local` as `ADMIN_SECRET` and restart the app. Fail-closed remains: the server never writes the secret, and admin stays blocked until the env is set and the process restarts.
+
 With Postgres, open **Admin → Stock** and seed the catalogue before you expect items to be orderable. Seed inserts missing SKUs only. A missing stock row is quantity 0.
 
 Sold-out checkout is fail-closed: the API refuses the cart and does not open Stripe. A partial refund does not restock. An **Oversold** badge means refund the order or restock by hand in admin. Details: [INVENTORY.md](INVENTORY.md).
