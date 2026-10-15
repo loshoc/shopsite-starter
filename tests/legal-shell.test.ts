@@ -22,10 +22,14 @@ test("policy pages stay shells with a replace marker", () => {
   }
 });
 
-test("faq, footer, and text page kicker stay marked replace-me", () => {
+test("faq stays marked replace-me; footer and kicker are buyer instructions", () => {
   assert.match(read("app/(shop)/faq/page.tsx"), /TODO: Replace me/);
-  assert.match(read("components/shop/footer.tsx"), /TODO: Replace me/);
-  assert.match(read("components/shop/text-page.tsx"), /TODO: Replace me/);
+  const footer = read("components/shop/footer.tsx");
+  const textPage = read("components/shop/text-page.tsx");
+  assert.equal(footer.includes("TODO: Replace me"), false);
+  assert.match(footer, /Replace this line with your store footer\./);
+  assert.equal(textPage.includes("TODO: Replace me"), false);
+  assert.match(textPage, /Replace this line with your page label\./);
 });
 
 test("release docs force a legal and footer pass before go-live", () => {
@@ -43,4 +47,8 @@ test("release docs force a legal and footer pass before go-live", () => {
   assert.match(packaging, /Policy not set yet/);
   assert.match(packaging, /TODO: Replace me/);
   assert.match(packaging, /before their own go-live/);
+  for (const doc of [checklist, playbook, packaging]) {
+    assert.match(doc, /Replace this line with your store footer/);
+    assert.match(doc, /Replace this line with your page label/);
+  }
 });

@@ -17,7 +17,7 @@ export function Footer() {
         <div>
           <p className="text-sm font-medium">{siteConfig.name}</p>
           <p className="mt-1 max-w-sm text-sm text-muted">
-            TODO: Replace me. This footer line is starter copy.
+            Replace this line with your store footer.
           </p>
         </div>
         <nav className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
