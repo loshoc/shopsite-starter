@@ -49,7 +49,7 @@ stripe listen --forward-to localhost:3000/api/webhooks/stripe
 After the production deployment:
 
 - Home: `https://shop.example.com/`
-- A product page. The demo catalogue includes `https://shop.example.com/products/linen-market-tote`
+- A product page. The demo catalogue includes `https://shop.example.com/products/cedar-spoon`
 - Admin login on that same host: `https://shop.example.com/admin/login` (sign in with the production `ADMIN_SECRET`)
 
 Open the site by the public hostname. Admin login may reject `127.0.0.1`. With Postgres, seed stock in **Admin → Stock** before expecting a product to be orderable.

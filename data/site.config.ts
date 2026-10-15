@@ -1,7 +1,7 @@
 /** Brand and operations. Density, chrome, and color recipe live in `data/recipe.ts`. */
 export const siteConfig = {
   name: "Demo Shop",
-  tagline: "Linen tote, stoneware mug, and wool scarf.",
+  tagline: "Cedar spoon, linen napkin, and stone bowl.",
   description:
     "A demo storefront for the ShopSite starter. Replace the brand and catalogue. Leave the admin UI alone unless you mean to change operations.",
   supportEmail: "support@example.com",
