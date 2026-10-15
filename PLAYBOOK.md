@@ -61,9 +61,11 @@ Acceptance spot-checks after import. They are not ship defaults.
 | Fixture | Look |
 | --- | --- |
 | A premium bag | default · bare · comfortable |
-| B playful bag | soft-card · maybe sand · denser type is fine |
+| B playful bag | sand · soft-card · comfortable |
 | C electronics | compact · ruled · default |
-| D sparse | default · bare · minimal home blocks |
+| D sparse | default · bare · comfortable · 1–2 SKUs |
+
+Multi-option PDP acceptance — re-import products-template.csv and check linen-napkin Color Oat/Sage.
 
 ## Dev file map
 
