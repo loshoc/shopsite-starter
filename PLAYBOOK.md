@@ -189,8 +189,8 @@ Do this before go-live. Editing the brand or the catalogue does not replace thes
 - [ ] Replace `/faq` in `app/(shop)/faq/page.tsx`.
 - [ ] Replace `/privacy` in `app/(shop)/privacy/page.tsx`.
 - [ ] Replace `/terms` in `app/(shop)/terms/page.tsx`.
-- [ ] Replace the kicker in `components/shop/text-page.tsx` (`TODO: Replace me`).
-- [ ] Replace the footer line in `components/shop/footer.tsx` (`TODO: Replace me`).
+- [ ] Replace the kicker in `components/shop/text-page.tsx` (`Replace this line with your page label.`).
+- [ ] Replace the footer line in `components/shop/footer.tsx` (`Replace this line with your store footer.`).
 - [ ] Set `supportEmail` in `data/site.config.ts` to a real inbox. The demo is `support@example.com`.
 
 Privacy, terms, returns, and shipping say `Policy not set yet`. Write your own pages. Do not ship the shell. Do not state shipping or return timing this kit does not enforce.
