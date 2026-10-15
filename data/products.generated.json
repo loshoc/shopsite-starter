@@ -1,58 +1,80 @@
 {
   "products": [
     {
-      "id": "linen-market-tote",
-      "handle": "linen-market-tote",
-      "skuId": "SKU-TOTE-01",
-      "name": "Linen market tote",
-      "description": "Washed oat linen with a flat base and leather-wrapped handles.",
-      "details": "Unlined. Folds flat. Spot clean. Demo SKU for the starter catalogue.",
-      "priceCents": 4800,
-      "stockUnits": 8,
-      "images": [],
-      "variants": [
-        {
-          "skuId": "SKU-TOTE-01",
-          "priceCents": 4800,
-          "stockUnits": 8,
-          "options": []
-        }
+      "id": "cedar-spoon",
+      "handle": "cedar-spoon",
+      "skuId": "SPOON-CEDAR-01",
+      "name": "Cedar tasting spoon",
+      "description": "A short spoon carved from fallen cedar.",
+      "details": "",
+      "priceCents": 1800,
+      "stockUnits": 6,
+      "images": [
+        "/products/cedar-spoon.png"
       ],
-      "featured": true
-    },
-    {
-      "id": "speckled-mug",
-      "handle": "speckled-mug",
-      "skuId": "SKU-MUG-01",
-      "name": "Speckled stoneware mug",
-      "description": "A 10 oz cup with a sand foot and an iron-flecked glaze.",
-      "details": "Dishwasher safe. Speckles are in the glaze. Demo SKU for the starter catalogue.",
-      "priceCents": 3200,
-      "stockUnits": 14,
-      "images": [],
       "variants": [
         {
-          "skuId": "SKU-MUG-01",
-          "priceCents": 3200,
-          "stockUnits": 14,
+          "skuId": "SPOON-CEDAR-01",
+          "priceCents": 1800,
+          "stockUnits": 6,
           "options": []
         }
       ]
     },
     {
-      "id": "wool-camp-scarf",
-      "handle": "wool-camp-scarf",
-      "skuId": "SKU-SCARF-01",
-      "name": "Wool camp scarf",
-      "description": "Undyed merino in a loose rib, long enough to wrap twice.",
-      "details": "Loose rib merino. Dry flat. Demo SKU for the starter catalogue.",
-      "priceCents": 7800,
-      "stockUnits": 4,
-      "images": [],
+      "id": "linen-napkin",
+      "handle": "linen-napkin",
+      "skuId": "NAPKIN-LINEN-OAT",
+      "name": "Linen napkin",
+      "description": "Stonewashed linen napkin.",
+      "details": "",
+      "priceCents": 2200,
+      "stockUnits": 10,
+      "images": [
+        "/products/linen-napkin.png",
+        "/products/linen-napkin-fold.png"
+      ],
       "variants": [
         {
-          "skuId": "SKU-SCARF-01",
-          "priceCents": 7800,
+          "skuId": "NAPKIN-LINEN-OAT",
+          "priceCents": 2200,
+          "stockUnits": 10,
+          "options": [
+            {
+              "name": "Color",
+              "value": "Oat"
+            }
+          ]
+        },
+        {
+          "skuId": "NAPKIN-LINEN-SAGE",
+          "priceCents": 2400,
+          "stockUnits": 8,
+          "options": [
+            {
+              "name": "Color",
+              "value": "Sage"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stone-bowl",
+      "handle": "stone-bowl",
+      "skuId": "BOWL-STONE-01",
+      "name": "Stone fruit bowl",
+      "description": "A low bowl for fruit.",
+      "details": "",
+      "priceCents": 3600,
+      "stockUnits": 4,
+      "images": [
+        "/products/stone-bowl.png"
+      ],
+      "variants": [
+        {
+          "skuId": "BOWL-STONE-01",
+          "priceCents": 3600,
           "stockUnits": 4,
           "options": []
         }

@@ -8,7 +8,7 @@ import { theme } from "../lib/theme.ts";
 import { robotsDisallow, siteDescription, sitemapEntries } from "../lib/seo.ts";
 
 test("default description is Shop {name}. {tagline}.", () => {
-  assert.equal(siteDescription(), `Shop ${siteConfig.name}. Linen tote, stoneware mug, and wool scarf.`);
+  assert.equal(siteDescription(), `Shop ${siteConfig.name}. Cedar spoon, linen napkin, and stone bowl.`);
   assert.equal(siteDescription({ name: "North", tagline: "Quiet goods" }), "Shop North. Quiet goods.");
   assert.equal(siteDescription({ name: "North", tagline: "Quiet goods..." }), "Shop North. Quiet goods.");
 });
