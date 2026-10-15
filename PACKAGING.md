@@ -56,7 +56,8 @@ Run that scrub on a rebranded zip and on the deployed `public/` tree. The playbo
 
 Legal shells stay in the zip. Do not fill them in.
 
-- [ ] `/shipping`, `/returns`, `/faq`, `/privacy`, `/terms`, `components/shop/text-page.tsx`, and `components/shop/footer.tsx` still say `TODO: Replace me`. Policy pages also say `Policy not set yet`. Do not write a privacy, terms, returns, or shipping policy into the zip.
+- [ ] `/shipping`, `/returns`, `/faq`, `/privacy`, and `/terms` still say `TODO: Replace me`. Policy pages also say `Policy not set yet`. Do not write a privacy, terms, returns, or shipping policy into the zip.
+- [ ] `components/shop/footer.tsx` still says `Replace this line with your store footer.` `components/shop/text-page.tsx` still says `Replace this line with your page label.`
 
 Buyers replace those shells and the footer before their own go-live. That pass is PLAYBOOK **Legal pages and footer** and DOCUMENTATION-CHECKLIST **Legal pages and footer**.
 

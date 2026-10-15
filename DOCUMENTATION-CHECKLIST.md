@@ -36,7 +36,7 @@ Brand and catalogue edits do not clear these. The starter text is a shell.
 - [ ] Before go-live, replace `/shipping`, `/returns`, `/faq`, `/privacy`, and `/terms`.
 - [ ] `/shipping`, `/returns`, `/privacy`, and `/terms` no longer say `Policy not set yet` or `TODO: Replace me`.
 - [ ] `/faq` no longer says `TODO: Replace me`.
-- [ ] The kicker in `components/shop/text-page.tsx` and the line in `components/shop/footer.tsx` no longer say `TODO: Replace me`.
+- [ ] The kicker in `components/shop/text-page.tsx` no longer says `Replace this line with your page label.` The line in `components/shop/footer.tsx` no longer says `Replace this line with your store footer.`
 - [ ] `supportEmail` in `data/site.config.ts` is a real inbox, not `support@example.com`.
 - [ ] PLAYBOOK **Legal pages and footer** lists the same files.
 
