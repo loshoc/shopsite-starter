@@ -4,6 +4,8 @@ Next.js storefront, Stripe Checkout, and a separate admin for stock and thin ord
 
 ## Cold start
 
+> Requires Node.js 22.13 or newer (check with `node -v`; `.nvmrc` pins it). Node 20 warns at `npm ci` and fails at `npm test`.
+
 ```bash
 cp .env.example .env.local
 ```
@@ -67,3 +69,7 @@ npm run import:products -- path/to/products_export.csv --seed-stock --force
 - `npm run import:shopify -- <file.csv> [--seed-stock] [--force]`
 
 Buyer walkthrough (brand, import, stock, checkout, SEO): [PLAYBOOK.md](PLAYBOOK.md).
+
+## License
+
+The kit is licensed, not sold, under the ShopSite End-User License Agreement in [docs/legal/EULA-KIT-LICENSE.md](docs/legal/EULA-KIT-LICENSE.md). See [LICENSE](LICENSE).

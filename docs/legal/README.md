@@ -2,7 +2,7 @@
 
 > **Disclaimer:** These are practical templates for informational use only. They are **not** formal legal advice. Have qualified counsel review and adapt them for your jurisdiction, products, and business model before publishing.
 
-This pack helps **ShopSite kit buyers** customize storefront policies for their own stores, and includes a **kit license (EULA)** for the ShopSite starter kit product sold by Kiwi Guo.
+This pack helps **ShopSite kit buyers** customize storefront policies for their own stores, and includes a **kit license (EULA)** for the ShopSite starter kit product sold by the Seller ([SELLER_ENTITY]).
 
 ## What stays empty in the shipped kit
 
@@ -50,7 +50,7 @@ Common tokens across files:
 - `[JURISDICTION]` — governing law / venue (country or state)
 - `[EFFECTIVE_DATE]` — date the policy takes effect
 - `[RETURN_DAYS]` — return window if you offer one
-- `[SELLER_NAME]` / `[SELLER_ENTITY]` — Kiwi Guo / seller entity for kit EULA
+- `[SELLER_NAME]` / `[SELLER_ENTITY]` — the Seller’s legal entity for the kit EULA
 - `[KIT_NAME]` — product name (default: ShopSite)
 - `[LICENSE_SEATS]` — single vs multi-seat (seller decision)
 - `[REFUND_POLICY_URL]` — kit purchase refund policy on the sales site
@@ -60,7 +60,7 @@ Search the pack for `[` to find every customization point.
 ## Related docs for maintainers
 
 - **Tech Writer** should link this pack from `PLAYBOOK` and `PACKAGING` so release and docs checklists point here.
-- Version this legal pack with each kit release (see `SELLER-CHECKLIST.md`).
+- Version this legal pack with each kit release.
 - Do **not** paste filled-in store policies into the empty kit shells; keep the scrubbed placeholders in the product zip.
 
 ## Files in this pack
@@ -72,5 +72,4 @@ Search the pack for `[` to find every customization point.
 | `RETURNS-AND-SHIPPING.md` | Buyer’s store customers (optional short pages) |
 | `EULA-KIT-LICENSE.md` | Kit purchaser ↔ seller |
 | `LICENSE-NOTICE.md` | Optional short notice in buyer repo root |
-| `THIRD-PARTY-AND-COMPLIANCE.md` | Seller + buyers (notes, not a customer contract) |
-| `SELLER-CHECKLIST.md` | Kiwi / release owner before kit zip ships |
+| `THIRD-PARTY-AND-COMPLIANCE.md` | The Seller and buyers (notes, not a customer contract) |
