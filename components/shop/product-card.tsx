@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ProductMedia } from "@/components/shop/product-media";
+import { siteConfig } from "@/data/site.config";
 import type { StoreProduct } from "@/lib/catalogue";
 import { formatMoney } from "@/lib/format";
 import { displayPriceCents, variantHint } from "@/lib/storefront-ui";
@@ -14,7 +15,11 @@ export function ProductCard({ product }: { product: StoreProduct }) {
         <ProductMedia name={product.name} images={product.images} className="aspect-[4/5] w-full" />
         <div className="shop-card-action">
           <h2 className="shop-card-title shop-card-inset font-medium group-hover:underline">{product.name}</h2>
-          <p className="shop-card-inset mt-1 text-sm">{price.from ? `From ${formatMoney(price.cents)}` : formatMoney(price.cents)}</p>
+          <p className="shop-card-inset mt-1 text-sm">
+            {price.from
+              ? `From ${formatMoney(price.cents, siteConfig.currency)}`
+              : formatMoney(price.cents, siteConfig.currency)}
+          </p>
           {hint ? <p className="shop-card-inset mt-1 text-sm text-muted">{hint}</p> : null}
         </div>
       </Link>

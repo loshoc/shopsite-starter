@@ -1,9 +1,9 @@
 import { getProductBySku } from "@/data/products";
 import { productionDatabaseProblem } from "@/lib/database-url";
-import { InventoryUnavailable } from "@/lib/types";
+import { InventoryUnavailable, type ReservationLine } from "@/lib/types";
 import { checkAvailability } from "@/lib/stock";
 import { createCheckoutSession, stripeSecretProblem } from "@/lib/stripe";
-import type { ReservationLine } from "@/lib/types";
+import { LIVE_STRIPE_LOCAL_MESSAGE, liveStripeLocalProblemFromEnv, requestHostValues } from "@/lib/stripe-live";
 
 export const runtime = "nodejs";
 
@@ -15,6 +15,14 @@ export async function POST(request: Request) {
   const lines = await parseLines(request);
   if (!lines) {
     return Response.json({ error: "Cart is empty or invalid." }, { status: 400 });
+  }
+
+  const requestHosts = requestHostValues(request.headers);
+  if (!stripeSecretProblem()) {
+    const liveProblem = liveStripeLocalProblemFromEnv(requestHosts);
+    if (liveProblem) {
+      return Response.json({ error: liveProblem }, { status: 503 });
+    }
   }
 
   try {
@@ -35,9 +43,17 @@ export async function POST(request: Request) {
       return Response.json({ error: "Stripe is not configured." }, { status: 503 });
     }
 
-    const url = await createCheckoutSession(lines);
+    const liveProblem = liveStripeLocalProblemFromEnv(requestHosts);
+    if (liveProblem) {
+      return Response.json({ error: liveProblem }, { status: 503 });
+    }
+
+    const url = await createCheckoutSession(lines, requestHosts);
     return Response.json({ url });
   } catch (error) {
+    if (error instanceof Error && error.message === LIVE_STRIPE_LOCAL_MESSAGE) {
+      return Response.json({ error: LIVE_STRIPE_LOCAL_MESSAGE }, { status: 503 });
+    }
     if (error instanceof InventoryUnavailable) {
       const problem = productionDatabaseProblem();
       return Response.json(

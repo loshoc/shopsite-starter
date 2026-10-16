@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 import { getProductBySku } from "@/data/products";
+import { siteConfig } from "@/data/site.config";
 import { useCart } from "@/components/shop/cart-provider";
 import { formatMoney } from "@/lib/format";
 import { shouldMoveFocusToBag } from "@/lib/storefront-ui";
@@ -135,7 +136,9 @@ export function CartDrawer() {
                 <div key={line.skuId} className="flex items-start justify-between gap-3 border-b border-border pb-4">
                   <div>
                     <p className="font-medium">{line.product?.name ?? line.skuId}</p>
-                    <p className="text-sm text-muted">{line.product ? formatMoney(line.product.priceCents) : "Unavailable"}</p>
+                    <p className="text-sm text-muted">
+                      {line.product ? formatMoney(line.product.priceCents, siteConfig.currency) : "Unavailable"}
+                    </p>
                     <label className="mt-2 flex items-center gap-2 text-xs text-muted">
                       Qty
                       <input
@@ -157,7 +160,7 @@ export function CartDrawer() {
             <div className="border-t border-border px-5 py-4">
               <div className="flex items-center justify-between text-sm">
                 <span>Subtotal</span>
-                <span>{formatMoney(total)}</span>
+                <span>{formatMoney(total, siteConfig.currency)}</span>
               </div>
               <p className="mt-2 text-xs leading-5 text-muted">
                 Coupons and tax are collected by Stripe Checkout. Guest checkout is fine. Stock is checked again before the session is created.

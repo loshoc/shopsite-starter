@@ -2,6 +2,7 @@ import "server-only";
 
 import Stripe from "stripe";
 
+import { siteConfig } from "@/data/site.config";
 import { applyPaidCheckout, applyRefund, markEventProcessed } from "@/lib/db";
 import type { ReservationLine } from "@/lib/types";
 import { webhookSecretProblem } from "@/lib/stripe";
@@ -45,7 +46,7 @@ export async function dispatchStripeEvent(event: Stripe.Event): Promise<void> {
       stripeSessionId: session.id,
       email: session.customer_details?.email ?? session.customer_email ?? null,
       totalCents: session.amount_total ?? 0,
-      currency: session.currency ?? "usd",
+      currency: session.currency ?? siteConfig.currency,
       paymentIntentId: paymentIntentId(session.payment_intent),
       reservation: parseReservation(session.metadata?.stockReservation),
     });

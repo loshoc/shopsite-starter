@@ -8,6 +8,7 @@ import { checkoutExpiresAtFromConfig } from "@/lib/checkout-expiry";
 import { getProductBySku } from "@/data/products";
 import { descriptionText } from "@/lib/description-text";
 import { siteConfig } from "@/data/site.config";
+import { liveStripeLocalProblemFromEnv } from "@/lib/stripe-live";
 import type { ReservationLine } from "@/lib/types";
 
 let stripe: Stripe | null = null;
@@ -52,6 +53,8 @@ export function publishableKeyState(): KeyState {
 export function getStripe(): Stripe {
   const problem = stripeSecretProblem();
   if (problem) throw new Error(problem);
+  const live = liveStripeLocalProblemFromEnv();
+  if (live) throw new Error(live);
   const key = process.env.STRIPE_SECRET_KEY!.trim();
   if (!stripe || stripeKey !== key) {
     stripe = new Stripe(key, {
@@ -78,7 +81,12 @@ export function stripeDashboardUrl(paymentIntentId: string | null, sessionId: st
  * so a fresh test account can still take payment. No extra env var: the
  * Packaging .env.example is the source of truth.
  */
-export async function createCheckoutSession(lines: ReservationLine[]): Promise<string> {
+export async function createCheckoutSession(
+  lines: ReservationLine[],
+  requestHosts?: readonly string[] | null,
+): Promise<string> {
+  const live = liveStripeLocalProblemFromEnv(requestHosts);
+  if (live) throw new Error(live);
   const reservation = JSON.stringify(lines);
   if (reservation.length > 500) {
     throw new Error("Cart is too large to reserve.");
