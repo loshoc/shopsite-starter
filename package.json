@@ -1,6 +1,7 @@
 {
   "name": "shopsite-starter",
   "version": "1.0.0",
+  "license": "SEE LICENSE IN LICENSE",
   "private": true,
   "engines": {
     "node": ">=22.12.0"

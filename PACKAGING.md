@@ -4,7 +4,7 @@ Release checklist for the buyer zip. Cold start stays in [README.md](README.md).
 
 `package.json` `"version"` is `1.0.0`, the same tag as [CHANGELOG.md](CHANGELOG.md).
 
-[LICENSE](LICENSE) is already the MIT license (Copyright 2026 ShopSite contributors). Ship that file with the zip.
+[LICENSE](LICENSE) is a proprietary notice (Copyright (c) 2026 [SELLER_ENTITY]. All rights reserved). The kit is licensed, not sold, under the ShopSite End-User License Agreement in [docs/legal/EULA-KIT-LICENSE.md](docs/legal/EULA-KIT-LICENSE.md). `package.json` `"license"` is `SEE LICENSE IN LICENSE`. Ship `LICENSE` with the zip.
 
 ## Buyer zip
 
@@ -25,7 +25,7 @@ Ship a clean archive of the `1.0.0` tree. Include application source and these r
 - `products-template.csv` (repo root; made-up housewares demo rows — refresh or drop these after a custom catalogue; see **Scrub before you zip**)
 - `DOCUMENTATION-CHECKLIST.md`
 - `INVENTORY.md` (stock and oversold behavior the playbook points at)
-- `docs/legal/` (placeholder policy templates; storefront shells stay empty)
+- `docs/legal/` except `docs/legal/SELLER-CHECKLIST.md` (placeholder policy templates; storefront shells stay empty). That checklist is maintainer-only: keep it in the repo and leave it out of the buyer zip.
 
 `tests/` and `SKILL.md` may stay in the archive. They hold made-up fixtures and editor notes. They are not a substitute for the README or the playbook.
 
@@ -33,6 +33,7 @@ Ship a clean archive of the `1.0.0` tree. Include application source and these r
 
 Leave these out. `.gitignore` already excludes them from git; still check the archive.
 
+- `docs/legal/SELLER-CHECKLIST.md` (Seller release checklist; maintainer-only, not for buyers)
 - `.env`, `.env.local`, and any `.env.*` file except `.env.example`
 - Live or test secrets: Stripe keys, `STRIPE_WEBHOOK_SECRET`, `ADMIN_SECRET`, database passwords
 - Private keys and credential files (`*.pem`, `*.key`, `credentials.json`, service-account JSON)

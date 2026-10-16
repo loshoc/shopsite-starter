@@ -2,10 +2,12 @@
 
 > **Disclaimer:** This is a practical operational checklist for informational use only. It is **not** formal legal advice. Have counsel review Seller-facing terms, privacy, and refund practices for your jurisdiction.
 
-**Owner:** Kiwi Guo / [SELLER_ENTITY]  
+**Owner:** the Seller ([SELLER_ENTITY])  
 **Kit:** [KIT_NAME] (ShopSite)  
 **Release version:** [KIT_VERSION]  
 **Legal pack version:** [LEGAL_PACK_VERSION] (keep in sync with release)
+
+Maintainer-only. Keep this file in the repository and leave it out of the buyer zip (see `PACKAGING.md`).
 
 Use this before cutting a customer-facing zip or marketplace build.
 
@@ -24,9 +26,9 @@ Use this before cutting a customer-facing zip or marketplace build.
 
 - [ ] **Jurisdiction & venue** for kit EULA: `[JURISDICTION]`, `[VENUE]`
 - [ ] **Single vs multi-seat / multi-project** license: `[LICENSE_SEATS]`
-- [ ] **Agency / client-build** rules if selling to freelancers: `[AGENCY_USE_RULES]`
-- [ ] **Updates & support** promises match reality: `[UPDATES_POLICY]`, `[SUPPORT_POLICY]`
-- [ ] Liability caps and warranty language reviewed
+- [ ] **Agency / client-build** — proposed default is in the EULA (one client store per license; do not hand the kit over as a reusable template), pending seller approval
+- [ ] **Updates & support** — proposed defaults are in the EULA (12 months of updates; best-effort email support), pending seller approval
+- [ ] Liability cap reviewed — proposed default is fees paid in the prior 12 months, with no floor, pending seller approval
 
 ## Storefront kit contents (buyer product)
 

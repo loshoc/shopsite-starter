@@ -8,6 +8,7 @@ First buyer release on main (`c517373`).
 - Shop footer and the text-page kicker no longer say `TODO: Replace me`. They tell the buyer which line to replace before go-live (#29). Legal shells, the FAQ row, and empty trust notes stay placeholders.
 - Demo catalogue matches the housewares template: cedar spoon, linen napkin, and stone bowl. The tagline and the deploy smoke URL follow that catalogue (#30).
 - Placeholder policy templates live in `docs/legal/`. Storefront policy shells stay empty (#31).
+- The kit license is proprietary. Root `LICENSE` points at the ShopSite EULA, and `package.json` `"license"` is `SEE LICENSE IN LICENSE`. `docs/legal/SELLER-CHECKLIST.md` stays in the repo and is left out of the buyer zip.
 - Playbook notes that product `hidden` drops the whole product, and that the housewares PNGs are 32×32 swatches to replace (#32). Variants have no `hidden` field. A stock status of `hidden` blocks that SKU and leaves the product listed.
 
 ## 0.2.0

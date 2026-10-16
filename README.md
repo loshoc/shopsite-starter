@@ -69,3 +69,7 @@ npm run import:products -- path/to/products_export.csv --seed-stock --force
 - `npm run import:shopify -- <file.csv> [--seed-stock] [--force]`
 
 Buyer walkthrough (brand, import, stock, checkout, SEO): [PLAYBOOK.md](PLAYBOOK.md).
+
+## License
+
+The kit is licensed, not sold, under the ShopSite End-User License Agreement in [docs/legal/EULA-KIT-LICENSE.md](docs/legal/EULA-KIT-LICENSE.md). See [LICENSE](LICENSE). `docs/legal/SELLER-CHECKLIST.md` is for the Seller. It stays in the repository and is not in the buyer zip.

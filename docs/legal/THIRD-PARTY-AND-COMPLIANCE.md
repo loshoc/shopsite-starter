@@ -1,6 +1,6 @@
 # Third-Party Components and Compliance Notes
 
-> **Disclaimer:** This is a practical template for informational use only. It is **not** formal legal advice. Have qualified counsel and your own compliance review before publishing policies or making market claims. These notes are for **Seller (Kiwi / ShopSite)** and **kit buyers** — they are not a customer-facing contract.
+> **Disclaimer:** This is a practical template for informational use only. It is **not** formal legal advice. Have qualified counsel and your own compliance review before publishing policies or making market claims. These notes are for **the Seller ([SELLER_ENTITY])** and **kit buyers** — they are not a customer-facing contract.
 
 ---
 
@@ -84,5 +84,5 @@ ShopSite is commonly built with components that are **typically MIT-licensed** (
 ## 8. Suggested internal links for maintainers
 
 - Tech Writer: link from `PLAYBOOK` and `PACKAGING` to this pack
-- Release: include `shopsite-legal/` (or `docs/legal/`) in the kit zip / docs artifact
+- Release: include `docs/legal/` in the kit zip, except `SELLER-CHECKLIST.md` (maintainer-only; see `PACKAGING.md`)
 - Sales site: publish Seller EULA + Seller privacy/terms + kit refund policy separately from buyer storefront shells
