@@ -48,7 +48,7 @@ export function ProductPurchase({ name, variants }: { name: string; variants: Pu
 
   return (
     <div className="mt-5">
-      <p className="shop-title font-medium">{formatMoney(selected.priceCents)}</p>
+      <p className="shop-title font-medium">{formatMoney(selected.priceCents, siteConfig.currency)}</p>
       {axes.map((axis) => (
         <fieldset key={axis.name} className="mt-5 min-w-0 border-0 p-0">
           <legend className="text-sm">{axis.name}</legend>
@@ -87,7 +87,7 @@ export function ProductPurchase({ name, variants }: { name: string; variants: Pu
           <div className="min-w-0 flex-1 md:hidden">
             <p className="truncate text-sm">{name}</p>
             <p className="text-sm text-muted">
-              {formatMoney(selected.priceCents)} · {selected.qtyLabel}
+              {formatMoney(selected.priceCents, siteConfig.currency)} · {selected.qtyLabel}
             </p>
           </div>
           <AddToCart

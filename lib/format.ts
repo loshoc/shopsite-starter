@@ -1,4 +1,6 @@
-export function formatMoney(cents: number, currency = "usd"): string {
+import { siteConfig } from "@/data/site.config";
+
+export function formatMoney(cents: number, currency: string = siteConfig.currency): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: currency.toUpperCase(),
