@@ -199,7 +199,7 @@ Do this before go-live. Editing the brand or the catalogue does not replace thes
 
 Privacy, terms, returns, and shipping say `Policy not set yet`. Write your own pages. Do not ship the shell. Do not state shipping or return timing this kit does not enforce.
 
-Placeholder templates for that pass are in [docs/legal/](docs/legal/README.md). Leave the bracket placeholders as written until you set your own values. The kit EULA in that pack has proposed defaults pending seller approval.
+Placeholder templates for that pass are in [docs/legal/](docs/legal/README.md). Leave the bracket placeholders as written until you set your own values.
 
 `shippingNote` and `returnsNote` ship empty. The product page does not show a shipping or returns line until you set one. Do not fill them with timing this kit does not enforce.
 

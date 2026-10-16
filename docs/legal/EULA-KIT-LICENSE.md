@@ -10,8 +10,6 @@
 
 This EULA governs **the starter kit software and materials** as delivered by Seller. It does **not** govern your relationships with *your* store customers. Your storefront needs its own Terms and Privacy (see other templates in this pack).
 
-<!-- Proposed defaults, pending seller approval -->
-
 ---
 
 ## 1. License grant
