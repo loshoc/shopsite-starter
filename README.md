@@ -4,6 +4,8 @@ Next.js storefront, Stripe Checkout, and a separate admin for stock and thin ord
 
 ## Cold start
 
+> Requires Node.js 22.12 or newer (check with `node -v`; `.nvmrc` pins it). Node 20 warns at `npm ci` and fails at `npm test`.
+
 ```bash
 cp .env.example .env.local
 ```

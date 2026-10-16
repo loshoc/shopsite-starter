@@ -21,6 +21,7 @@ Ship a clean archive of the `1.0.0` tree. Include application source and these r
 - `PACKAGING.md`
 - `.env.example`
 - `.gitignore`
+- `.nvmrc`
 - `products-template.csv` (repo root; made-up housewares demo rows — refresh or drop these after a custom catalogue; see **Scrub before you zip**)
 - `DOCUMENTATION-CHECKLIST.md`
 - `INVENTORY.md` (stock and oversold behavior the playbook points at)
