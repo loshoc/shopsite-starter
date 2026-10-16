@@ -2,13 +2,13 @@
 
 Release checklist for the buyer zip. Cold start stays in [README.md](README.md). Brand, import, stock, checkout, and SEO stay in [PLAYBOOK.md](PLAYBOOK.md).
 
-`package.json` `"version"` is `0.1.0`, the same tag as [CHANGELOG.md](CHANGELOG.md). This pass does not bump it.
+`package.json` `"version"` is `1.0.0`, the same tag as [CHANGELOG.md](CHANGELOG.md).
 
 [LICENSE](LICENSE) is already the MIT license (Copyright 2026 ShopSite contributors). Ship that file with the zip.
 
 ## Buyer zip
 
-Ship a clean archive of the `0.1.0` tree. Include application source and these root files:
+Ship a clean archive of the `1.0.0` tree. Include application source and these root files:
 
 - `app/`, `components/`, `data/`, `lib/`, `public/`, `scripts/`, `assets/`
 - `instrumentation.ts`, `proxy.ts`, `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `components.json`
@@ -18,6 +18,7 @@ Ship a clean archive of the `0.1.0` tree. Include application source and these r
 - `DEPLOY-CHECKLIST.md` (Vercel and Stripe steps; the playbook links here)
 - `LICENSE`
 - `CHANGELOG.md`
+- `PACKAGING.md`
 - `.env.example`
 - `.gitignore`
 - `products-template.csv` (repo root; made-up housewares demo rows — refresh or drop these after a custom catalogue; see **Scrub before you zip**)

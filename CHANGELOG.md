@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0
+
+First buyer release on main (`c517373`).
+
+- Lockfile root version matches `package.json`. #28 synced `package-lock.json` `version` and `packages[""].version` to `0.2.0`. This release sets both files to `1.0.0`. No dependency changes.
+- Shop footer and the text-page kicker no longer say `TODO: Replace me`. They tell the buyer which line to replace before go-live (#29). Legal shells, the FAQ row, and empty trust notes stay placeholders.
+- Demo catalogue matches the housewares template: cedar spoon, linen napkin, and stone bowl. The tagline and the deploy smoke URL follow that catalogue (#30).
+- Placeholder policy templates live in `docs/legal/`. Storefront policy shells stay empty (#31).
+- Playbook notes that product `hidden` drops the whole product, and that the housewares PNGs are 32×32 swatches to replace (#32). Variants have no `hidden` field. A stock status of `hidden` blocks that SKU and leaves the product listed.
+
 ## 0.2.0
 
 Cool sparse / Inter storefront redesign on main (`5eae123`).
