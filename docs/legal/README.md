@@ -60,7 +60,7 @@ Search the pack for `[` to find every customization point.
 ## Related docs for maintainers
 
 - **Tech Writer** should link this pack from `PLAYBOOK` and `PACKAGING` so release and docs checklists point here.
-- Version this legal pack with each kit release. The Seller’s release checklist is `SELLER-CHECKLIST.md` in the repository. That file is maintainer-only and is not in the buyer zip.
+- Version this legal pack with each kit release.
 - Do **not** paste filled-in store policies into the empty kit shells; keep the scrubbed placeholders in the product zip.
 
 ## Files in this pack
@@ -73,5 +73,3 @@ Search the pack for `[` to find every customization point.
 | `EULA-KIT-LICENSE.md` | Kit purchaser ↔ seller |
 | `LICENSE-NOTICE.md` | Optional short notice in buyer repo root |
 | `THIRD-PARTY-AND-COMPLIANCE.md` | The Seller and buyers (notes, not a customer contract) |
-
-`SELLER-CHECKLIST.md` is maintainer-only. It stays in the repository for the Seller and is left out of the buyer zip.

@@ -4,7 +4,7 @@ Next.js storefront, Stripe Checkout, and a separate admin for stock and thin ord
 
 ## Cold start
 
-> Requires Node.js 22.12 or newer (check with `node -v`; `.nvmrc` pins it). Node 20 warns at `npm ci` and fails at `npm test`.
+> Requires Node.js 22.13 or newer (check with `node -v`; `.nvmrc` pins it). Node 20 warns at `npm ci` and fails at `npm test`.
 
 ```bash
 cp .env.example .env.local
@@ -72,4 +72,4 @@ Buyer walkthrough (brand, import, stock, checkout, SEO): [PLAYBOOK.md](PLAYBOOK.
 
 ## License
 
-The kit is licensed, not sold, under the ShopSite End-User License Agreement in [docs/legal/EULA-KIT-LICENSE.md](docs/legal/EULA-KIT-LICENSE.md). See [LICENSE](LICENSE). `docs/legal/SELLER-CHECKLIST.md` is for the Seller. It stays in the repository and is not in the buyer zip.
+The kit is licensed, not sold, under the ShopSite End-User License Agreement in [docs/legal/EULA-KIT-LICENSE.md](docs/legal/EULA-KIT-LICENSE.md). See [LICENSE](LICENSE).

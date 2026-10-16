@@ -84,5 +84,5 @@ ShopSite is commonly built with components that are **typically MIT-licensed** (
 ## 8. Suggested internal links for maintainers
 
 - Tech Writer: link from `PLAYBOOK` and `PACKAGING` to this pack
-- Release: include `docs/legal/` in the kit zip, except `SELLER-CHECKLIST.md` (maintainer-only; see `PACKAGING.md`)
+- Release: include `docs/legal/` in the kit zip, except the maintainer-only checklist (see `PACKAGING.md`)
 - Sales site: publish Seller EULA + Seller privacy/terms + kit refund policy separately from buyer storefront shells
