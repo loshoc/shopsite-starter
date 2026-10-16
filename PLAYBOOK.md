@@ -138,6 +138,10 @@ Commands, file detection, image rules, and what gets written are in the README s
 
 That file and `public/products/` ship the housewares sample (`cedar-spoon`, `linen-napkin`, `stone-bowl`, and the PNGs those rows reference: `cedar-spoon.png`, `linen-napkin.png`, `linen-napkin-fold.png`, `stone-bowl.png`). Replace the rows with your catalogue, then replace or delete those demo files under `public/products/` before you zip or deploy. The checklist is in [PACKAGING.md](PACKAGING.md) under **Scrub before you zip**.
 
+Those demo PNGs are 32×32 swatches. Replace them with real product photos before you treat the shop as buyer-ready.
+
+`hidden` is a field on the product. `lib/catalogue.ts` keeps a product on the storefront only when `!product.hidden`. Hiding a product hides every SKU on it. Variants do not have a `hidden` field. Stock quantity and stock status decide whether a SKU is orderable. A stock status of `hidden` blocks that SKU and leaves the product listed.
+
 ```bash
 npm run import:products -- file.csv
 npm run import:products -- file.csv --seed-stock
