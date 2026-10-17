@@ -29,6 +29,18 @@ Use one mode per environment. The publishable key and the secret key are a pair.
 - [ ] The endpoint listens for `checkout.session.completed` and `checkout.session.async_payment_succeeded`. The URL is `https://YOUR_DOMAIN/api/webhooks/stripe`.
 - [ ] Missing or placeholder Stripe keys return `Stripe is not configured.` Checkout does not open.
 
+## PayPal (optional)
+
+Skip this section to stay Stripe-only. Placeholders in `.env.example` hide PayPal Buttons. Stripe Checkout still runs.
+
+- [ ] `PAYPAL_MODE` is `sandbox` on localhost and on any public demo. `live` is only the production store. Live PayPal on a local address is refused.
+- [ ] `NEXT_PUBLIC_PAYPAL_CLIENT_ID` equals `PAYPAL_SANDBOX_CLIENT_ID` or `PAYPAL_LIVE_CLIENT_ID` for that mode. It is the client id for PayPal Buttons, not a secret.
+- [ ] The secret and the webhook id for that mode are server-only. No `NEXT_PUBLIC_` name holds `PAYPAL_SANDBOX_CLIENT_SECRET`, `PAYPAL_LIVE_CLIENT_SECRET`, or a webhook id.
+- [ ] Sandbox and live client ids and secrets are different apps. The server never sends the sandbox client id with the live secret.
+- [ ] The webhook URL is `https://YOUR_DOMAIN/api/webhooks/paypal` for `PAYMENT.CAPTURE.COMPLETED` and `PAYMENT.CAPTURE.REFUNDED`. Stock and the order row change only after that signature verifies. Capturing from the bag does not write stock by itself.
+
+Setup steps: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) **PayPal sandbox and live**.
+
 ## 3. Checkout business name
 
 The name on the Stripe-hosted Checkout page is the Stripe account's **Business name**. `name` in `data/site.config.ts` is the storefront title (header and page titles). The kit leaves `branding_settings.display_name` unset, so Checkout keeps the Dashboard value. Changing the storefront title leaves the Checkout page on the account **Business name**.

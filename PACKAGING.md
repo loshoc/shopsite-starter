@@ -37,7 +37,7 @@ Leave these out. `.gitignore` already excludes them from git; still check the ar
 
 - `docs/legal/SELLER-CHECKLIST.md` (Seller release checklist; maintainer-only, not for buyers)
 - `.env`, `.env.local`, and any `.env.*` file except `.env.example`
-- Live or test secrets: Stripe keys, `STRIPE_WEBHOOK_SECRET`, `ADMIN_SECRET`, database passwords
+- Live or test secrets: Stripe keys, `STRIPE_WEBHOOK_SECRET`, PayPal client secrets, PayPal webhook ids, `ADMIN_SECRET`, database passwords
 - Private keys and credential files (`*.pem`, `*.key`, `credentials.json`, service-account JSON)
 - Personal data: real customer emails, order exports, support inboxes
 - `.vercel/`
@@ -83,6 +83,7 @@ Replace `https://shop.example.com` with the origin for that release. Use placeho
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
+- PayPal, if you enable it: `PAYPAL_MODE`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID`, and the sandbox or live client id, secret, and webhook id. Secrets stay out of `NEXT_PUBLIC_`.
 - `DATABASE_URL`
 - `NEXT_PUBLIC_APP_URL`
 

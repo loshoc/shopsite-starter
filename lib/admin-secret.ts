@@ -28,6 +28,9 @@ const PLACEHOLDER_SNIPPETS = [
   "whsec_your",
   "pk_test_your",
   "pk_live_your",
+  "your_sandbox",
+  "your_live",
+  "your_paypal",
 ];
 
 export function adminSecretProblem(value: string | undefined | null): string | null {

@@ -2,7 +2,7 @@ import { ModeBanner } from "@/components/admin/mode-banner";
 import { OrdersTable } from "@/components/admin/orders-table";
 import { presentAdminOrder, type AdminOrderView } from "@/lib/admin-orders";
 import { listOrders, stockMode } from "@/lib/db";
-import { stripeDashboardUrl } from "@/lib/stripe";
+import { orderDashboardUrl } from "@/lib/order-dashboard";
 import { InventoryUnavailable } from "@/lib/types";
 
 export default async function OrdersPage() {
@@ -15,7 +15,7 @@ export default async function OrdersPage() {
       <div>
         <h1 className="text-xl font-semibold">Orders</h1>
         <p className="text-sm text-muted-foreground">
-          Email, total, status, and a Stripe Dashboard link. No card data.
+          Email, total, status, and a Stripe or PayPal link. No card data.
         </p>
         <p className="text-sm text-muted-foreground">
           Oversold means a paid order asked for more units than were on hand. Resolve it by refunding or restocking.
@@ -33,7 +33,7 @@ async function loadOrders(): Promise<{ mode: "memory" | "postgres" | "unavailabl
     return {
       mode: stockMode(),
       orders: orders.map((order) =>
-        presentAdminOrder(order, stripeDashboardUrl(order.paymentIntentId, order.stripeSessionId)),
+        presentAdminOrder(order, orderDashboardUrl(order.paymentIntentId, order.stripeSessionId)),
       ),
     };
   } catch (error) {

@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { getProductBySku } from "@/data/products";
 import { siteConfig } from "@/data/site.config";
+import { PayPalButtons } from "@/components/shop/paypal-buttons";
 import { useCart } from "@/components/shop/cart-provider";
 import { formatMoney } from "@/lib/format";
 import { shouldMoveFocusToBag } from "@/lib/storefront-ui";
@@ -22,12 +23,35 @@ export function CartDrawer() {
   const { open, setOpen } = cart;
   const panelRef = useRef<HTMLElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const [paypalMessage, setPaypalMessage] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [paypal, setPaypal] = useState<{ clientId: string; currency: string } | null>(null);
 
   function closeBag() {
     setOpen(false);
     moveFocusToBag();
   }
+
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    fetch("/api/paypal/config", { headers: { accept: "application/json" } })
+      .then((response) => response.json())
+      .then((data: { enabled?: boolean; clientId?: string; currency?: string }) => {
+        if (cancelled) return;
+        if (data.enabled && data.clientId && data.currency) {
+          setPaypal({ clientId: data.clientId, currency: data.currency });
+        } else {
+          setPaypal(null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setPaypal(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -163,17 +187,29 @@ export function CartDrawer() {
                 <span>{formatMoney(total, siteConfig.currency)}</span>
               </div>
               <p className="mt-2 text-xs leading-5 text-muted">
-                Coupons and tax are collected by Stripe Checkout. Guest checkout is fine. Stock is checked again before the session is created.
+                {paypal
+                  ? "Stripe Checkout collects coupons and tax. PayPal is a separate button and does not apply those coupons. Stock is checked before either payment starts, and it changes only after a signed webhook."
+                  : "Coupons and tax are collected by Stripe Checkout. Guest checkout is fine. Stock is checked again before the session is created."}
               </p>
               {error ? <p className="mt-3 text-sm text-danger">{error}</p> : null}
+              {paypalMessage ? <p className="mt-3 text-sm text-danger">{paypalMessage}</p> : null}
               <button
                 type="button"
                 disabled={pending || lines.length === 0}
                 onClick={() => void checkout()}
                 className="mt-4 h-11 w-full rounded-full bg-fg text-sm text-surface disabled:opacity-40"
               >
-                {pending ? "Starting checkout…" : "Checkout"}
+                {pending ? "Starting checkout…" : paypal ? "Checkout with Stripe" : "Checkout"}
               </button>
+              {paypal ? (
+                <PayPalButtons
+                  clientId={paypal.clientId}
+                  currency={paypal.currency}
+                  lines={cart.items}
+                  disabled={pending}
+                  onMessage={setPaypalMessage}
+                />
+              ) : null}
             </div>
           </>
         )}
