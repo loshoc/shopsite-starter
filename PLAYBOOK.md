@@ -14,6 +14,11 @@ Work this section before the deeper pages below. Import commands, stock, the mon
 
 ### Intake
 
+**Start / Intake gate**
+
+- No brand + product brief (what you sell, plus brand materials): keep Cool sparse. Skip **AI taste rebrand (optional)**. Do not run taste.
+- Brand + product brief present, and an AI agent is restyling: follow **Design style → AI taste rebrand (optional)**.
+
 Write these down before you edit:
 
 - What you sell.
@@ -42,7 +47,7 @@ There is no theme switcher. Set `storefrontRecipe` in `data/recipe.ts` and rebui
 
 `comfortable` is the Cool sparse rhythm. `compact` tightens it. `bare` is flush images and no card border. `ruled` is a hairline. `soft-card` is a soft shadow on the surface color. The intent table and the anti-AI rules are in **Design style**.
 
-Ship default stays Cool sparse + Inter until you rebrand. If an AI coding agent is applying a full brand look from your brief, follow **Design style → AI taste rebrand (optional)** — that path may change fonts and recipe colors in *your* repo only. It does not change what the zip ships.
+Ship default stays Cool sparse + Inter until you rebrand. If an AI coding agent is applying a full brand look from your brand + product brief, follow **Design style → AI taste rebrand (optional)** — that path may change fonts and recipe colors in *your* repo only. It does not change what the zip ships.
 
 | Preset | When to use | `id` | `density` | `chrome` |
 | --- | --- | --- | --- | --- |
@@ -175,15 +180,23 @@ Set `storefrontRecipe` in `data/recipe.ts` and rebuild. Product, brand, and cont
 
 ### AI taste rebrand (optional)
 
-Use this only when a brand brief exists and a coding agent is restyling the unzipped kit. The zip’s ship default remains Cool sparse + Inter until those file edits land in *this* project.
+Use this only when a brand + product brief exists and a coding agent is restyling the unzipped kit. The zip’s ship default remains Cool sparse + Inter until those file edits land in *this* project. The decision is the **Start / Intake gate** above.
 
-1. Inventory the brief (what you sell, vibe, refs, must-keep colors/fonts, product photos).
+1. Inventory the brand + product brief (what you sell, vibe, refs, must-keep colors/fonts, product photos).
 2. Prefer the redesign skill to keep ShopSite routes and components; optionally run tasteskill `draw.mjs` for a direction sheet when you want a fresh art direction (`ecommerce` / `physical-product`, tone from the brief).
 3. Map the result into files only: `data/site.config.ts`, catalogue + `public/products/`, `data/recipe.ts`, `app/recipes/*`, `app/fonts.ts`, and `lib/theme.ts` for OG colors. Rebuild. There is still no theme switcher.
 4. Keep home as the product grid, PDP sticky buy, bag drawer, and Stripe-hosted checkout. Do not rewrite admin or checkout.
 5. Gate with tasteskill `lint.mjs` + `inspect.mjs` (or equivalent visual QA at ~375 / 768 / 1280). Fix generic AI patterns before you call the rebrand done.
 
 If there is no brief, skip this section and leave Cool sparse.
+
+#### Worked example
+
+Atelier Clay is a sample brand + product brief. It is not the kit. What they sell: a few clay vessels. Brand materials: object photos, the name, and a direction called page-is-the-object — the product photo carries the product page.
+
+The brief is present, so run this section in the buyer repo only. Inventory what they sell and those materials. Map the direction into that repo’s site config, catalogue, recipe, and fonts. Home stays the product grid. Do not rewrite checkout or admin. Install or vendor the taste skills beside the kit. They are not in the zip.
+
+Cool sparse + Inter stays the published ship default. Do not copy this example into the zip, the fixtures, or the ship default.
 
 ### Fixture check
 
