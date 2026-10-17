@@ -73,18 +73,24 @@ test("density and chrome tokens cover both rhythms and all three frames", () => 
   const soft = css.slice(css.indexOf('html[data-chrome="soft-card"]'), css.indexOf(".shop-pad"));
 
   assert.match(comfortable, /--type-step: 0;/);
-  assert.match(comfortable, /--section-x: 1\.25rem;/);
+  assert.match(comfortable, /--section-x: clamp\(1rem, 2\.2vw, 1\.75rem\);/);
   assert.match(comfortable, /--section-y: 2rem;/);
-  assert.match(comfortable, /--section-y-loose: 4rem;/);
+  assert.match(comfortable, /--section-y-loose: clamp\(3\.5rem, 8vw, 6rem\);/);
   assert.match(comfortable, /--card-gap: 2rem;/);
   assert.match(comfortable, /--stack-gap: 1\.5rem;/);
   assert.match(comfortable, /--header-y: 1rem;/);
-  assert.match(comfortable, /--footer-y: 2\.5rem;/);
+  assert.match(comfortable, /--footer-y: clamp\(2\.5rem, 6vw, 4rem\);/);
   assert.match(comfortable, /--card-title-gap: 0\.75rem;/);
+  assert.match(comfortable, /--stack-tight: 0\.35rem;/);
+  assert.match(comfortable, /--control-gap: 0\.5rem;/);
 
   assert.match(compact, /--type-step: -1;/);
+  assert.match(compact, /--section-x: clamp\(0\.875rem, 2vw, 1\.25rem\);/);
   assert.match(compact, /--section-y: 1\.25rem;/);
+  assert.match(compact, /--section-y-loose: clamp\(2rem, 5vw, 3\.5rem\);/);
   assert.match(compact, /--card-gap: 1rem;/);
+  assert.match(compact, /--footer-y: clamp\(1\.5rem, 4vw, 2\.5rem\);/);
+  assert.match(compact, /--stack-tight: 0\.25rem;/);
   assert.equal(compact.includes("--section-y: 2rem;"), false);
 
   assert.match(bare, /--card-border-width: 0px;/);

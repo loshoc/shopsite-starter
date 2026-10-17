@@ -15,7 +15,7 @@ export function ProductMedia({
   if (!src) return <ProductImagePlaceholder className={className} />;
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      <Image src={src} alt={name} fill className="object-cover" sizes="(min-width: 768px) 40vw, 100vw" />
+      <Image src={src} alt={name} fill className="shop-media-img object-cover" sizes="(min-width: 768px) 40vw, 100vw" />
     </div>
   );
 }

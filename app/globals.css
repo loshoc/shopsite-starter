@@ -21,6 +21,14 @@
   --success: #166534;
   --danger: #b42318;
   --ring: #111111;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --t-press: 140ms;
+  --t-hover: 180ms;
+  --t-ui: 240ms;
+  --t-drawer: 320ms;
 }
 
 .admin {
@@ -90,30 +98,34 @@ body {
 :root,
 html[data-density="comfortable"] {
   --type-step: 0;
-  --section-x: 1.25rem;
+  --section-x: clamp(1rem, 2.2vw, 1.75rem);
   --section-y: 2rem;
-  --section-y-loose: 4rem;
+  --section-y-loose: clamp(3.5rem, 8vw, 6rem);
   --card-gap: 2rem;
   --stack-gap: 1.5rem;
   --thumb-gap: 0.75rem;
   --header-y: 1rem;
-  --footer-y: 2.5rem;
+  --footer-y: clamp(2.5rem, 6vw, 4rem);
   --footer-gap: 1.5rem;
   --card-title-gap: 0.75rem;
+  --stack-tight: 0.35rem;
+  --control-gap: 0.5rem;
 }
 
 html[data-density="compact"] {
   --type-step: -1;
-  --section-x: 1rem;
+  --section-x: clamp(0.875rem, 2vw, 1.25rem);
   --section-y: 1.25rem;
-  --section-y-loose: 2.5rem;
+  --section-y-loose: clamp(2rem, 5vw, 3.5rem);
   --card-gap: 1rem;
   --stack-gap: 0.75rem;
   --thumb-gap: 0.5rem;
   --header-y: 0.625rem;
-  --footer-y: 1.5rem;
+  --footer-y: clamp(1.5rem, 4vw, 2.5rem);
   --footer-gap: 1rem;
   --card-title-gap: 0.5rem;
+  --stack-tight: 0.25rem;
+  --control-gap: 0.375rem;
 }
 
 :root,
@@ -185,11 +197,13 @@ html[data-chrome="soft-card"] {
 .shop-title {
   font-size: calc(1.5rem + (var(--type-step) * 0.25rem));
   line-height: calc(2rem + (var(--type-step) * 0.25rem));
+  text-wrap: balance;
 }
 
 .shop-display {
   font-size: calc(1.875rem + (var(--type-step) * 0.375rem));
   line-height: calc(2.25rem + (var(--type-step) * 0.25rem));
+  text-wrap: balance;
 }
 
 .shop-card,
@@ -217,4 +231,235 @@ html[data-chrome="soft-card"] .shop-card {
 
 .shop-card-action {
   padding-bottom: var(--card-inset-y);
+}
+
+.shop-stack-tight > * + * {
+  margin-top: var(--stack-tight);
+}
+
+.shop-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--control-gap);
+}
+
+/* Storefront controls — one ink ring. Admin keeps its own focus styles. */
+.shop-focus,
+a.shop-focus,
+button.shop-focus {
+  outline: none;
+}
+
+.shop-focus:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.shop-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--fg);
+  color: var(--surface);
+  text-decoration: none;
+  transition:
+    transform var(--t-press) var(--ease-out),
+    background-color var(--t-hover) ease;
+}
+
+.shop-btn-primary:disabled {
+  cursor: not-allowed;
+  background: color-mix(in srgb, var(--fg) 20%, transparent);
+  color: var(--surface);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shop-btn-primary:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--fg) 88%, var(--bg));
+  }
+}
+
+.shop-btn-primary:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-btn-primary {
+    transition: background-color var(--t-hover) ease;
+  }
+
+  .shop-btn-primary:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+.shop-link {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 0.07em;
+  transition:
+    text-decoration-color var(--t-hover) ease,
+    color var(--t-hover) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shop-link:hover,
+  .group:hover .shop-link {
+    text-decoration-color: currentColor;
+    color: var(--fg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-link {
+    transition: none;
+  }
+}
+
+.shop-chip {
+  height: 2.25rem;
+  border-radius: 9999px;
+  padding-inline: 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg);
+  transition:
+    background-color var(--t-hover) ease,
+    color var(--t-hover) ease,
+    border-color var(--t-hover) ease;
+}
+
+.shop-chip[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--surface);
+  border-color: var(--fg);
+}
+
+.shop-chip[data-unavailable="true"]:not([aria-pressed="true"]) {
+  color: var(--muted);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shop-chip:hover:not([aria-pressed="true"]) {
+    border-color: var(--fg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-chip {
+    transition: none;
+  }
+}
+
+.shop-bag-control {
+  transition:
+    border-color var(--t-hover) ease,
+    transform var(--t-press) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shop-bag-control:hover {
+    border-color: var(--fg);
+  }
+}
+
+.shop-bag-control:active {
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-bag-control {
+    transition: border-color var(--t-hover) ease;
+  }
+
+  .shop-bag-control:active {
+    transform: none;
+  }
+}
+
+.shop-bag-backdrop {
+  transition: opacity var(--t-drawer) var(--ease-out);
+}
+
+.shop-bag-panel {
+  transform-origin: top right;
+  transition:
+    transform var(--t-drawer) var(--ease-out),
+    opacity var(--t-drawer) var(--ease-out);
+}
+
+.shop-bag-backdrop[data-state="closed"],
+.shop-bag-panel[data-state="closed"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shop-bag-panel[data-state="closed"] {
+  transform: translateX(0.75rem);
+}
+
+.shop-bag-backdrop[data-state="open"],
+.shop-bag-panel[data-state="open"] {
+  opacity: 1;
+}
+
+.shop-bag-panel[data-state="open"] {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-bag-backdrop,
+  .shop-bag-panel {
+    transition: none;
+  }
+
+  .shop-bag-panel[data-state="closed"] {
+    transform: none;
+  }
+}
+
+.shop-media-img {
+  transition: transform calc(var(--t-hover) * 2) var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  @media (prefers-reduced-motion: no-preference) {
+    .group:hover .shop-media-img {
+      transform: scale(1.03);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-media-img {
+    transition: none;
+  }
+}
+
+.shop-disclosure-icon {
+  transition: transform var(--t-ui) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-disclosure-icon {
+    transition: none;
+  }
+}
+
+.shop-qty {
+  transition: border-color var(--t-hover) ease;
+}
+
+.shop-qty:focus-visible {
+  border-color: var(--fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shop-qty {
+    transition: none;
+  }
 }

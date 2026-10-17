@@ -94,6 +94,50 @@ test("cards are flush image, name, and price", () => {
   assert.match(home, /ProductGrid/);
 });
 
+test("detail polish keeps one motion and focus system", () => {
+  const css = read("app/globals.css");
+  const root = css.slice(css.indexOf(":root {"), css.indexOf("\n.admin {"));
+  for (const token of [
+    "--ease-out: cubic-bezier(0.22, 1, 0.36, 1);",
+    "--ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);",
+    "--ease-soft: cubic-bezier(0.33, 1, 0.68, 1);",
+    "--t-press: 140ms;",
+    "--t-hover: 180ms;",
+    "--t-ui: 240ms;",
+    "--t-drawer: 320ms;",
+  ]) {
+    assert.match(root, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+  assert.equal(css.includes("--t-reveal"), false);
+  for (const hook of [
+    ".shop-stack-tight > * + *",
+    ".shop-focus:focus-visible",
+    ".shop-btn-primary:active:not(:disabled)",
+    ".shop-link",
+    ".shop-chip[aria-pressed=\"true\"]",
+    ".shop-bag-panel[data-state=\"closed\"]",
+    ".shop-media-img",
+  ]) {
+    assert.match(css, new RegExp(hook.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(css, /scale\(0\.97\)/);
+  assert.match(css, /scale\(1\.03\)/);
+  const add = read("components/shop/add-to-cart.tsx");
+  const purchase = read("components/shop/product-purchase.tsx");
+  const drawer = read("components/shop/cart-drawer.tsx");
+  const card = read("components/shop/product-card.tsx");
+  assert.match(add, /shop-btn-primary shop-focus/);
+  assert.equal(add.includes("hover:opacity-80"), false);
+  assert.match(purchase, /shop-chip shop-focus/);
+  assert.match(purchase, /data-unavailable/);
+  assert.match(drawer, /data-state=\{phase\}/);
+  assert.match(drawer, /shop-btn-primary shop-focus/);
+  assert.match(card, /shop-stack-tight/);
+  assert.match(card, /shop-link/);
+  assert.equal(css.includes(".admin {\n  --background: #fafafa;"), true);
+});
+
 test("faq is an accordion shell and the placeholder is plain grey", () => {
   const faq = read("app/(shop)/faq/page.tsx");
   assert.match(faq, /TODO: Replace me/);
