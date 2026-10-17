@@ -1,12 +1,16 @@
 # Deploy checklist
 
-Vercel and Stripe steps for a buyer deploy. Tech Writer can fold this into the docs. Cold start stays in [README.md](README.md). After the app runs locally, follow [PLAYBOOK.md](PLAYBOOK.md). Before go-live, confirm the result with [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md).
+Vercel and Stripe steps for a buyer deploy. This file is the detail. The short route is [README.md](README.md) **Start path**: unzip, a **private** GitHub repo, then Vercel **Import Git**. Prefer that over uploading a zip to Vercel.
+
+Local `npm` stays in [README.md](README.md) **Cold start**. Brand and catalogue: [PLAYBOOK.md](PLAYBOOK.md) **Start**. The same Start for an AI edit: [SKILL.md](SKILL.md) **Start**. Before go-live, confirm the result with [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md).
 
 Names below match [.env.example](.env.example). Values are placeholders. Never paste live secrets into the repo, this file, or a public demo.
 
-## 1. Create the Vercel project
+## 1. Import the private Git repo
 
-Create a Vercel project from this repository. Leave the production build until the environment in the next section is saved. Vercel bakes `NEXT_PUBLIC_*` values in at build time.
+Follow [README.md](README.md) **Start path** through the unzip, the private GitHub push, and Vercel **Import Git**. Do not upload the zip to Vercel.
+
+On Vercel, open **Add New… → Project** and **Import** that private GitHub repo. If Vercel asks, connect GitHub and grant access to that repo. Leave the production build until the environment in the next section is saved. Vercel bakes `NEXT_PUBLIC_*` values in at build time.
 
 ## 2. Set environment before the production build
 
@@ -25,6 +29,12 @@ Vercel **Preview** builds may omit `NEXT_PUBLIC_APP_URL`. They fall back to `htt
 
 A shared or public demo stays on Stripe test keys (`pk_test_...`, `sk_test_...`). Live keys stay on the buyer's production project.
 
+### First production build
+
+Save the Production environment, then run the production deployment. `NEXT_PUBLIC_APP_URL` must already be the https origin you will serve.
+
+Set `STRIPE_WEBHOOK_SECRET` before this build when you already have `whsec_...`. When the endpoint does not exist yet, run this build, then finish **Stripe webhook** and redeploy.
+
 ## 3. Stripe webhook
 
 In the Stripe Dashboard (test mode or live mode, matching the keys above), add an endpoint:
@@ -36,7 +46,7 @@ Replace the host with `NEXT_PUBLIC_APP_URL`. Send at least:
 - `checkout.session.completed`
 - `checkout.session.async_payment_succeeded`
 
-Copy that endpoint's signing secret into `STRIPE_WEBHOOK_SECRET`, then run the production build.
+Copy that endpoint's signing secret into `STRIPE_WEBHOOK_SECRET` on the Vercel project, then redeploy so production picks it up. The first production build can already have finished. This secret is server-only.
 
 Local forwarding (printed `whsec_...` goes in `.env.local` only):
 
@@ -59,12 +69,23 @@ Use the Stripe account that owns `STRIPE_SECRET_KEY`. Test keys and live keys on
 
 Run a test Checkout and confirm the page shows this store's **Business name** before you go live.
 
-## 5. Smoke the real domain
+## 5. Custom domain
 
-After the production deployment:
+Attach the domain after the first production deployment.
+
+1. In the Vercel project, open **Settings → Domains** and add the domain.
+2. At the DNS host, add the records Vercel shows for that domain.
+3. `NEXT_PUBLIC_APP_URL` must be `https://` that host, with no trailing slash. If the first build used a different origin, set the variable and run another production build. Vercel bakes `NEXT_PUBLIC_*` at build time.
+4. The Stripe webhook URL is `https://YOUR_DOMAIN/api/webhooks/stripe` on that same origin. If the endpoint was created on a `*.vercel.app` host, add the endpoint for the custom domain and put that endpoint's `whsec_...` in `STRIPE_WEBHOOK_SECRET`.
+
+## 6. Smoke the real domain
+
+After the production deployment, on the custom domain when it is attached:
 
 - Home: `https://shop.example.com/`
 - A product page. The demo catalogue includes `https://shop.example.com/products/cedar-spoon`
 - Admin login on that same host: `https://shop.example.com/admin/login` (sign in with the production `ADMIN_SECRET`)
 
 Open the site by the public hostname. Admin login may reject `127.0.0.1`. With Postgres, seed stock in **Admin → Stock** before expecting a product to be orderable.
+
+Replace `shop.example.com` with `NEXT_PUBLIC_APP_URL`.

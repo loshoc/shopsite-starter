@@ -2,7 +2,7 @@
 
 Buyer pass before go-live. Walk this list on the store you are about to publish. It checks the environment, Stripe key mode, the Checkout business name, currency, sold-out checkout, deploy smoke, and the trust shells.
 
-Cold start stays in [README.md](README.md). Vercel and Stripe setup steps stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). Stock rules stay in [INVENTORY.md](INVENTORY.md). Brand, legal shells, and SEO stay in [PLAYBOOK.md](PLAYBOOK.md).
+Local `npm` stays in [README.md](README.md) **Cold start**. The ship route is [README.md](README.md) **Start path**. Brand and catalogue: [PLAYBOOK.md](PLAYBOOK.md) **Start** (the same pass is in [SKILL.md](SKILL.md) **Start**). Vercel and Stripe setup steps stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). Stock rules stay in [INVENTORY.md](INVENTORY.md).
 
 Names match [.env.example](.env.example). Never paste live secrets into the repo, this file, or a public demo.
 
@@ -66,9 +66,11 @@ Details: [INVENTORY.md](INVENTORY.md).
 
 ## 6. Deploy basics
 
-Setup steps: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). Vercel is the default deploy path.
+The route is [README.md](README.md) **Start path**: a **private** GitHub repo and Vercel **Import Git**. Prefer that over uploading a zip to Vercel. Setup steps stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). This list checks the result.
 
+- [ ] The Vercel project is an **Import Git** of that private repo.
 - [ ] Production environment variables are saved on Vercel before the first production build. Vercel bakes `NEXT_PUBLIC_*` in at build time.
+- [ ] The custom domain is attached. `NEXT_PUBLIC_APP_URL` is that https origin, with no trailing slash.
 - [ ] Home opens on the public hostname: `https://shop.example.com/`.
 - [ ] A product page opens. The demo catalogue includes `https://shop.example.com/products/cedar-spoon`.
 - [ ] Admin login opens on that same host: `https://shop.example.com/admin/login`. Admin login may reject `127.0.0.1`.
