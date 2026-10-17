@@ -128,6 +128,8 @@ Color, density, and chrome are build-time levers in `data/recipe.ts`. Ship defau
 
 Changing `data/site.config.ts` leaves the sample catalogue on disk. After the store uses your own products, replace or delete demo files under `public/products/` and refresh `products-template.csv` before you zip or deploy. The checklist is in [PACKAGING.md](PACKAGING.md) under **Scrub before you zip**.
 
+`npm test` stays green across that rebrand. It checks kit contracts, not the housewares rows, the sample images, the demo name and tagline, or the Cool sparse selection. Maintainers lock those with `npm run test:demo` (`npm run test:design` is the same). `npm run test:all` runs both. The script list is in the README section **Scripts**.
+
 Brand edits also leave the legal pages and the footer as starter shells. Replace those before go-live. See **Legal pages and footer**.
 
 ## Import products

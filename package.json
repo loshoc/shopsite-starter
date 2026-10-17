@@ -12,6 +12,10 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --experimental-strip-types --import ./tests/alias-register.mjs --test tests/*.test.ts",
+    "test:kit": "node --experimental-strip-types --import ./tests/alias-register.mjs --test tests/*.test.ts",
+    "test:demo": "node --experimental-strip-types --import ./tests/alias-register.mjs --test tests/demo/*.test.ts",
+    "test:design": "node --experimental-strip-types --import ./tests/alias-register.mjs --test tests/demo/*.test.ts",
+    "test:all": "node --experimental-strip-types --import ./tests/alias-register.mjs --test tests/*.test.ts tests/demo/*.test.ts",
     "import:products": "node --experimental-strip-types scripts/import-products.ts",
     "import:shopify": "node --experimental-strip-types scripts/import-products.ts"
   },

@@ -65,7 +65,9 @@ npm run import:products -- path/to/products_export.csv --seed-stock --force
 
 - `npm run dev`
 - `npm run build`
-- `npm test`
+- `npm test` — kit-integrity only (checkout gates, admin auth, import pipeline, live-key refuse, currency wiring). Rebranding `products-template.csv`, the sample files under `public/products/`, `data/site.config.ts`, or `data/recipe.ts` does not fail this command.
+- `npm run test:demo` — shipped housewares catalogue and Cool sparse recipe. `npm run test:design` is the same command. For maintainers of the starter, not for a buyer rebrand.
+- `npm run test:all` — kit-integrity and the demo suite.
 - `npm run lint`
 - `npm run import:products -- <file.csv> [--seed-stock] [--force]`
 - `npm run import:shopify -- <file.csv> [--seed-stock] [--force]`

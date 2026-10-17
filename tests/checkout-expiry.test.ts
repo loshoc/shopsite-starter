@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { siteConfig } from "../data/site.config.ts";
 import {
   CHECKOUT_EXPIRY_DEFAULT_MINUTES,
   checkoutExpiresAt,
@@ -12,18 +11,17 @@ import {
 
 const NOW = 1_700_000_000;
 
-test("checkout expiry defaults to 60 minutes", () => {
-  assert.equal(siteConfig.checkoutExpiryMinutes, 60);
+test("checkout expiry code default is 60 minutes", () => {
   assert.equal(CHECKOUT_EXPIRY_DEFAULT_MINUTES, 60);
-  assert.equal(resolveCheckoutExpiryMinutes(siteConfig.checkoutExpiryMinutes), 60);
-  assert.equal(checkoutExpiresAtFromConfig(siteConfig, NOW), NOW + 60 * 60);
+  assert.equal(resolveCheckoutExpiryMinutes(60), 60);
+  assert.equal(checkoutExpiresAtFromConfig({ checkoutExpiryMinutes: 60 }, NOW), NOW + 60 * 60);
 });
 
 test("changing checkoutExpiryMinutes changes expires_at", () => {
   assert.equal(checkoutExpiresAtFromConfig({ checkoutExpiryMinutes: 90 }, NOW), NOW + 90 * 60);
   assert.notEqual(
     checkoutExpiresAtFromConfig({ checkoutExpiryMinutes: 90 }, NOW),
-    checkoutExpiresAtFromConfig(siteConfig, NOW),
+    checkoutExpiresAtFromConfig({ checkoutExpiryMinutes: 60 }, NOW),
   );
 });
 

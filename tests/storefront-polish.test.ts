@@ -1,8 +1,6 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { siteConfig } from "../data/site.config.ts";
 import {
   displayPriceCents,
   findVariant,
@@ -14,10 +12,6 @@ import {
   trustNotes,
   variantHint,
 } from "../lib/storefront-ui.ts";
-
-function read(path: string) {
-  return readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
-}
 
 const napkin = [
   {
@@ -95,9 +89,6 @@ test("trust lines and faqs hide unset copy", () => {
     ]),
     [{ question: "Where", answer: "The shop page." }],
   );
-  assert.equal(siteConfig.shippingNote.trim(), "");
-  assert.equal(siteConfig.returnsNote.trim(), "");
-  assert.deepEqual(publishedFaqs(siteConfig.faqs), []);
 });
 
 test("escape returns focus to the bag control only when focus is elsewhere", () => {
@@ -106,50 +97,3 @@ test("escape returns focus to the bag control only when focus is elsewhere", () 
   assert.equal(shouldMoveFocusToBag("bag-control"), false);
 });
 
-test("product page uses variant buttons, one buy action, and an accordion", () => {
-  const page = read("app/(shop)/products/[id]/page.tsx");
-  const purchase = read("components/shop/product-purchase.tsx");
-  const disclosure = read("components/shop/disclosure.tsx");
-  for (const source of [page, purchase, disclosure]) {
-    assert.equal(source.includes("<select"), false, source.slice(0, 40));
-    assert.equal(source.includes('role="tab'), false);
-  }
-  assert.equal(page.includes("AddToCart"), false);
-  assert.equal((purchase.match(/<AddToCart/g) ?? []).length, 1);
-  assert.match(purchase, /aria-pressed/);
-  assert.match(purchase, /max-md:fixed/);
-  assert.match(page, /DisclosureList/);
-  assert.match(disclosure, /<details/);
-  assert.equal(/free shipping|easy returns|\d+\s*-?\s*days/i.test(purchase), false);
-});
-
-test("cards are flush image, name, and price", () => {
-  const card = read("components/shop/product-card.tsx");
-  assert.equal(card.includes("AddToCart"), false);
-  assert.equal(card.includes("rating"), false);
-  assert.equal(card.includes("Badge"), false);
-  assert.equal(card.includes("border"), false);
-  assert.equal(card.includes("shadow"), false);
-  assert.match(card, /variantHint/);
-  const home = read("app/(shop)/page.tsx");
-  assert.equal(home.includes("tagline"), false);
-  assert.match(home, /ProductGrid/);
-});
-
-test("faq is an accordion shell and the placeholder is plain grey", () => {
-  const faq = read("app/(shop)/faq/page.tsx");
-  assert.match(faq, /TODO: Replace me/);
-  assert.match(faq, /DisclosureList/);
-  assert.equal(/\d+\s*-?\s*days/i.test(faq), false);
-  const placeholder = read("components/shop/product-image-placeholder.tsx");
-  assert.match(placeholder, /Replace me/);
-  assert.match(placeholder, /#e6e6e4/);
-  assert.equal(placeholder.includes("border-dashed"), false);
-  assert.equal(placeholder.includes("ImagePlus"), false);
-  const drawer = read("components/shop/cart-drawer.tsx");
-  const header = read("components/shop/header.tsx");
-  assert.match(drawer, /Escape/);
-  assert.match(drawer, /shouldMoveFocusToBag/);
-  assert.match(drawer, /Start shopping/);
-  assert.match(header, /id="bag-control"/);
-});
