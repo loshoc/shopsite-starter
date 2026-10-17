@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.2
+
+On main after #44 (`3f742b3`).
+
+- Cool sparse detail polish (#42 @ 65bc19c): motion, spacing, focus, button, link, chip, drawer, and image micro-hover. Cool sparse + Inter stays the ship default.
+- Optional AI taste rebrand path in PLAYBOOK and SKILL (#43 @ cccdbed). Cool sparse + Inter stays the ship default; the path runs only in a buyer repo with a brand brief.
+- Start/Intake taste gate (#44 @ 3f742b3): no brand + product brief keeps Cool sparse; a present brief is the only path into the taste rebrand. Atelier Clay is a prose-only worked example.
+- This release bumps package/lockfile to 1.1.2 for the refreshed buyer zip. No dependency changes.
+
 ## 1.1.1
 
 On main after #40 (`a2cbed9`).
