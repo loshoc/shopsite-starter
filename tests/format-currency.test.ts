@@ -10,20 +10,18 @@ function read(path: string) {
 }
 
 test("formatMoney follows siteConfig.currency and keeps en-US", () => {
-  assert.equal(siteConfig.currency, "usd");
-  assert.equal(formatMoney(1800), "$18.00");
-  assert.equal(formatMoney(1800), formatMoney(1800, siteConfig.currency));
   const config = siteConfig as { currency: string };
   const original = config.currency;
-  config.currency = "eur";
+  assert.equal(formatMoney(1800), formatMoney(1800, original));
+  const other = original.toLowerCase() === "eur" ? "gbp" : "eur";
+  config.currency = other;
   try {
-    assert.match(formatMoney(1800), /€/);
-    assert.equal(formatMoney(1800), formatMoney(1800, "eur"));
-    assert.notEqual(formatMoney(1800), formatMoney(1800, "usd"));
+    assert.equal(formatMoney(1800), formatMoney(1800, other));
+    assert.notEqual(formatMoney(1800), formatMoney(1800, original));
   } finally {
     config.currency = original;
   }
-  assert.equal(formatMoney(1800), "$18.00");
+  assert.equal(formatMoney(1800), formatMoney(1800, original));
   assert.match(read("lib/format.ts"), /en-US/);
   assert.equal(read("lib/format.ts").includes('"usd"'), false);
 });

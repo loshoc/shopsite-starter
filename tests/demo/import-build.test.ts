@@ -5,7 +5,7 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 
-const root = path.resolve(import.meta.dirname, "..");
+const root = path.resolve(import.meta.dirname, "../..");
 
 test("importing the template then building succeeds", { timeout: 240_000 }, () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "shopsite-import-"));

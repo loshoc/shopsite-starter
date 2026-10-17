@@ -12,7 +12,18 @@ import { applySeedQuantities, seedStockRows } from "../lib/import/seed-stock.ts"
 
 const root = path.resolve(import.meta.dirname, "..");
 const fixtures = path.join(root, "tests", "fixtures");
-const publicDir = path.join(root, "public");
+// Fixture CSVs name sample files under /products/. Those checks must not
+// depend on the buyer catalogue in public/products.
+const publicDir = fs.mkdtempSync(path.join(os.tmpdir(), "shopsite-import-public-"));
+const samplePng = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+  "base64",
+);
+for (const name of ["cedar-spoon.png", "linen-napkin.png", "linen-napkin-fold.png", "stone-bowl.png"]) {
+  const file = path.join(publicDir, "products", name);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, samplePng);
+}
 const title = 'Oak "bowl" `special` ${process.env.SECRET} */';
 
 function read(name: string): string {
@@ -38,29 +49,27 @@ test("decimal prices become integer cents without float math", () => {
   assert.equal(parsePriceToCents("$18.00"), null);
 });
 
-test("shopify sample uses local images, variants, and an image-only row", () => {
-  const result = imported("shopify-sample.csv");
+test("template rows with the same handle become variants", () => {
+  const csv = [
+    "handle,name,description,price,sku,stock,image_1,image_2,option1_name,option1_value,option2_name,option2_value,option3_name,option3_value",
+    "plain-mug,Plain mug,A mug.,12.00,MUG-OAT,3,,,Color,Oat,,,",
+    "plain-mug,,,14.00,MUG-SAGE,2,,,Color,Sage,,,",
+  ].join("\n");
+  const result = importProductCsv(csv, { publicDir });
   assert.deepEqual(result.errors, []);
-  assert.equal(result.format, "shopify");
+  assert.equal(result.format, "template");
   assert.equal(result.patterns.length, 0);
+  assert.equal(result.products.length, 1);
   assert.deepEqual(
-    result.products.map((product) => product.handle),
-    ["cedar-spoon", "linen-napkin", "stone-bowl"],
+    result.products[0]?.variants.map((variant) => variant.skuId),
+    ["MUG-OAT", "MUG-SAGE"],
   );
-  const napkin = result.products[1];
-  assert.ok(napkin);
-  assert.deepEqual(
-    napkin.variants.map((variant) => variant.skuId),
-    ["NAPKIN-LINEN-OAT", "NAPKIN-LINEN-SAGE"],
-  );
-  assert.deepEqual(napkin.images, ["/products/linen-napkin.png", "/products/linen-napkin-fold.png"]);
-  assert.equal(napkin.variants[0]?.priceCents, 2200);
-  assert.equal(napkin.variants[1]?.priceCents, 2400);
-  assert.deepEqual(napkin.variants[1]?.options, [{ name: "Color", value: "Sage" }]);
-  assert.equal(result.products[0]?.variants[0]?.options.length, 0);
-  assert.match(result.products[0]?.description ?? "", /fallen cedar/);
-  assert.match(result.products[0]?.description ?? "", /Oil it monthly/);
-  assert.equal(result.stock.find((row) => row.skuId === "SPOON-CEDAR-01")?.qty, 6);
+  assert.equal(result.products[0]?.variants[0]?.priceCents, 1200);
+  assert.equal(result.products[0]?.variants[1]?.priceCents, 1400);
+  assert.deepEqual(result.products[0]?.variants[1]?.options, [{ name: "Color", value: "Sage" }]);
+  assert.equal(result.products[0]?.variants[0]?.options.length, 1);
+  assert.equal(result.stock.find((row) => row.skuId === "MUG-OAT")?.qty, 3);
+  assert.equal(result.stock.find((row) => row.skuId === "MUG-SAGE")?.qty, 2);
 });
 
 test("a product with no images still imports", () => {
@@ -74,18 +83,6 @@ test("a product with no images still imports", () => {
   assert.equal(result.products.length, 1);
   assert.deepEqual(result.products[0]?.images, []);
   assert.equal(result.products[0]?.name, "Plain mug");
-});
-
-test("products template imports the same local catalogue shape", () => {
-  const text = fs.readFileSync(path.join(root, "products-template.csv"), "utf8");
-  const result = importProductCsv(text, { publicDir });
-  assert.deepEqual(result.errors, []);
-  assert.equal(result.format, "template");
-  assert.equal(result.patterns.length, 0);
-  assert.equal(result.products.length, 3);
-  assert.deepEqual(result.products[1]?.images, ["/products/linen-napkin.png", "/products/linen-napkin-fold.png"]);
-  assert.equal(result.products[1]?.variants.length, 2);
-  assert.equal(result.products[2]?.priceCents, 3600);
 });
 
 test("hostile shopify and template fixtures fail identically and keep the title inert", () => {

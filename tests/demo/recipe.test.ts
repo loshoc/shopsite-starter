@@ -9,10 +9,10 @@ import {
   storefrontRecipe,
   type RecipeId,
   type RecipeTokens,
-} from "../data/recipe.ts";
-import { theme } from "../lib/theme.ts";
+} from "../../data/recipe.ts";
+import { theme } from "../../lib/theme.ts";
 
-const recipesDir = new URL("../app/recipes/", import.meta.url);
+const recipesDir = new URL("../../app/recipes/", import.meta.url);
 
 function readRecipeCss(id: RecipeId): string {
   return fs.readFileSync(new URL(`${id}.css`, recipesDir), "utf8");
@@ -42,7 +42,7 @@ test("ship default is comfortable, bare, and cool sparse", () => {
 });
 
 test("recipe css files mirror the palette packs", () => {
-  const globals = fs.readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  const globals = fs.readFileSync(new URL("../../app/globals.css", import.meta.url), "utf8");
   for (const id of ["default", "ink", "sand"] as const) {
     assert.match(globals, new RegExp(`@import "./recipes/${id}.css"`));
     assertPalette(readRecipeCss(id), id, recipePalettes[id]);
@@ -59,7 +59,7 @@ test("recipe css files mirror the palette packs", () => {
 });
 
 test("density and chrome tokens cover both rhythms and all three frames", () => {
-  const css = fs.readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  const css = fs.readFileSync(new URL("../../app/globals.css", import.meta.url), "utf8");
   const comfortable = css.slice(
     css.indexOf('html[data-density="comfortable"]'),
     css.indexOf('html[data-density="compact"]'),
@@ -106,10 +106,10 @@ test("density and chrome tokens cover both rhythms and all three frames", () => 
 });
 
 test("html carries the recipe attributes and there is no switcher", () => {
-  const layout = fs.readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
-  const shop = fs.readFileSync(new URL("../components/shop/product-card.tsx", import.meta.url), "utf8");
+  const layout = fs.readFileSync(new URL("../../app/layout.tsx", import.meta.url), "utf8");
+  const shop = fs.readFileSync(new URL("../../components/shop/product-card.tsx", import.meta.url), "utf8");
   assert.match(layout, /recipeDataAttributes\(\)/);
   assert.match(shop, /shop-card/);
   assert.equal(layout.includes("setRecipe"), false);
-  assert.equal(fs.existsSync(new URL("../components/shop/theme-switcher.tsx", import.meta.url)), false);
+  assert.equal(fs.existsSync(new URL("../../components/shop/theme-switcher.tsx", import.meta.url)), false);
 });
