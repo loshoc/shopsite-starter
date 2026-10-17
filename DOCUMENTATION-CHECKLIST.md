@@ -55,3 +55,5 @@ The install path is identical to the README. [PLAYBOOK.md](PLAYBOOK.md) starts a
 - [ ] Sold-out checkout fails closed. A partial refund does not restock. Oversold means refund or restock by hand.
 - [ ] After deploy, `https://YOUR_DOMAIN/sitemap.xml` is the Search Console URL, and `/robots.txt` disallows `/admin`, `/api`, `/success`, and `/cancel`.
 - [ ] Deploy steps for Vercel and Stripe live in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) and PLAYBOOK **Deploy**.
+- [ ] [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) is the buyer pass before go-live: environment, Stripe key mode, Checkout **Business name**, currency, sold-out checkout, deploy smoke, and trust copy. The README and PLAYBOOK **Deploy** link it.
+- [ ] DEPLOY-CHECKLIST **Checkout business name** names **Settings → Business → Business details**, the **Business name** field, and **Public details** **Statement descriptor** / **Shortened descriptor**.

@@ -16,6 +16,7 @@ Ship a clean archive of the `1.0.0` tree. Include application source and these r
 - `README.md`
 - `PLAYBOOK.md`
 - `DEPLOY-CHECKLIST.md` (Vercel and Stripe steps; the playbook links here)
+- `LAUNCH-CHECKLIST.md` (buyer pass before go-live; the README, playbook, and deploy checklist link here)
 - `LICENSE`
 - `CHANGELOG.md`
 - `PACKAGING.md`

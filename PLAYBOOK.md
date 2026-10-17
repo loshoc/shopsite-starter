@@ -1,6 +1,6 @@
 # ShopSite playbook
 
-A short walk after the README cold start. Install, env, and `npm run dev` stay in the README. Use this page for design, brand, catalogue, stock, checkout, and SEO. **Deploy** links to the Vercel and Stripe checklist.
+A short walk after the README cold start. Install, env, and `npm run dev` stay in the README. Use this page for design, brand, catalogue, stock, checkout, and SEO. Before go-live, walk [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md). **Deploy** links to the Vercel and Stripe checklist.
 
 Release checks: [DOCUMENTATION-CHECKLIST.md](DOCUMENTATION-CHECKLIST.md).
 
@@ -170,7 +170,7 @@ Sold-out checkout is fail-closed: the API refuses the cart and does not open Str
 
 1. The buyer adds lines to the cart.
 2. Checkout reads live stock. If a line wants more than is on hand, checkout stops and no Stripe session is created.
-3. Stripe Checkout collects payment.
+3. Stripe Checkout collects payment. The name on that page is the Stripe account's **Business name** (**Settings → Business → Business details**). The card or bank statement uses **Statement descriptor** and **Shortened descriptor** under **Public details**. `name` in `data/site.config.ts` is the storefront title. Steps: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) **Checkout business name**.
 4. The webhook at `/api/webhooks/stripe` checks `STRIPE_WEBHOOK_SECRET` before any write. A bad signature is rejected and stock is untouched.
 5. A verified paid event decrements stock and stores a thin order row (email, total, currency, status, Checkout session id, payment intent id, reserved SKUs, and an oversold flag). Card data is not stored.
 
@@ -207,7 +207,7 @@ Placeholder templates for that pass are in [docs/legal/](docs/legal/README.md). 
 
 ## Deploy
 
-Finish **Legal pages and footer** before the first production deploy. Vercel and Stripe steps are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+Finish **Legal pages and footer** before the first production deploy. Walk [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) (environment, Stripe key mode, Checkout business name, currency, sold-out checkout, deploy smoke, trust copy). Vercel and Stripe steps are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
 Set the production environment before the first production build. Vercel bakes `NEXT_PUBLIC_*` values in at build time.
 

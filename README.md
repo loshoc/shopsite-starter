@@ -37,6 +37,8 @@ With Postgres, open Admin → Stock and seed the catalogue before expecting item
 
 Buyers set real production Stripe keys and `STRIPE_WEBHOOK_SECRET` before going live. Do not commit `.env.local`.
 
+Before go-live, walk [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md): environment, Stripe key mode, Checkout business name, currency, sold-out checkout, and deploy.
+
 ## Inventory
 
 Sold-out checkout is fail-closed. Partial refunds do not restock automatically. See `INVENTORY.md`.
@@ -69,6 +71,8 @@ npm run import:products -- path/to/products_export.csv --seed-stock --force
 - `npm run import:shopify -- <file.csv> [--seed-stock] [--force]`
 
 Buyer walkthrough (brand, import, stock, checkout, SEO): [PLAYBOOK.md](PLAYBOOK.md).
+
+Before go-live: [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md). Vercel and Stripe setup: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
 ## License
 
