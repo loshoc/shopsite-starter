@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0
+
+On main after #37 (`05a4c21`).
+
+- Checkout and the Stripe client refuse `sk_live_` / `pk_live_` when the app URL or the request host is local-only (`localhost`, `127.0.0.1`, `::1`, and the same hosts production already rejects). The bag gets 503: "Stripe live keys cannot be used on a local address. Use test keys for localhost." Test keys still work. `formatMoney`, product prices, and the paid-event fallback follow `siteConfig.currency` (#34).
+- `LAUNCH-CHECKLIST.md` is the buyer pass before go-live (environment, Stripe key mode, currency, sold-out checkout, deploy smoke, and trust shells). README, PLAYBOOK **Deploy**, DEPLOY-CHECKLIST, DOCUMENTATION-CHECKLIST, and the buyer-zip list point at it. Hosted Checkout shows the Stripe account Business name from Settings → Business → Business details. The kit leaves `branding_settings.display_name` and statement descriptors unset, so `data/site.config.ts` `name` stays the storefront title (#35).
+- `npm test` (`npm run test:kit`) runs kit-integrity only. A rebrand of the housewares catalogue, demo site copy, or Cool sparse recipe no longer fails that command. `npm run test:demo` and `npm run test:design` lock the shipped demo. `npm run test:all` runs both (#36).
+- One buyer Start path: unzip, private GitHub, then Vercel Import Git. README **Cold start** stays the local `npm` run. PLAYBOOK **Start** and `SKILL.md` **Start** share the guided pass (intake, materials, recipe presets). `SKILL.md` is required in the buyer zip (#37).
+- Lockfile root version matches `package.json`. This release sets `package-lock.json` `version` and `packages[""].version` to `1.1.0`. No dependency changes.
+
 ## 1.0.0
 
 First buyer release on main (`c517373`).
