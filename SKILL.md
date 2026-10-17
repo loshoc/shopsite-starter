@@ -14,6 +14,11 @@ Follow this before a rebrand. The ship route from the zip to Vercel is [README.m
 
 ### Intake
 
+**Start / Intake gate**
+
+- Empty or missing brand + product brief (what the store sells, plus brand materials): abort taste. Leave Cool sparse. Do not run **AI taste rebrand**.
+- Brand + product brief present: follow **AI taste rebrand**.
+
 Write these down before editing:
 
 - What the store sells.
@@ -75,7 +80,7 @@ Exception: under **AI taste rebrand**, fonts may follow the direction sheet or b
 
 ### AI taste rebrand
 
-When the user provides a brand brief and asks to rebrand the storefront look:
+Run this when the user provides a brand + product brief and asks to rebrand the storefront look. The decision is the **Start / Intake gate** above. A sample brief (Atelier Clay) is prose in [PLAYBOOK.md](PLAYBOOK.md) **Worked example**. Do not copy it into the kit.
 
 Install or vendor `design-taste-frontend` and `redesign-existing-projects` separately. They are not inside the buyer zip.
 
