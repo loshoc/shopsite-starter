@@ -54,6 +54,34 @@ Local forwarding (printed `whsec_...` goes in `.env.local` only):
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ```
 
+## PayPal sandbox and live
+
+PayPal is off until the values below replace the placeholders. Stripe Checkout does not change when they are missing. There is no shared `PAYPAL_CLIENT_SECRET`: sandbox and live are different apps, and the server reads only the trio for `PAYPAL_MODE`.
+
+`NEXT_PUBLIC_PAYPAL_CLIENT_ID` is the only PayPal value the browser may see (PayPal Buttons). `PAYPAL_SANDBOX_CLIENT_SECRET`, `PAYPAL_LIVE_CLIENT_SECRET`, and both webhook ids are server-only. Do not create a `NEXT_PUBLIC_` name for them. Vercel bakes `NEXT_PUBLIC_*` at build time, so change the client id and rebuild when you switch modes.
+
+### Sandbox
+
+1. In the [PayPal Developer Dashboard](https://developer.paypal.com/dashboard/applications/sandbox), open **Apps & Credentials** and stay on **Sandbox**.
+2. Open your app (or create one). Copy the **Client ID** into both `NEXT_PUBLIC_PAYPAL_CLIENT_ID` and `PAYPAL_SANDBOX_CLIENT_ID`. Copy the **Secret** into `PAYPAL_SANDBOX_CLIENT_SECRET`.
+3. Set `PAYPAL_MODE=sandbox`.
+4. Under the app, add a webhook. URL: `https://YOUR_DOMAIN/api/webhooks/paypal`. Events: `PAYMENT.CAPTURE.COMPLETED` and `PAYMENT.CAPTURE.REFUNDED`. Copy the webhook id into `PAYPAL_SANDBOX_WEBHOOK_ID`.
+5. Redeploy so the public client id is baked in. Local `npm run dev` reads `.env.local` on restart.
+6. PayPal cannot deliver webhooks to `localhost`. Use the Dashboard webhook simulator, or a tunnel that forwards to `http://localhost:3000/api/webhooks/paypal`.
+7. In the bag, **Checkout with Stripe** and **Pay with PayPal** both show. Approving PayPal captures the order on the server. Stock moves only when the signed webhook arrives. A buyer landing on `/success` does not write the order.
+
+Live credentials on a local address hide PayPal. The message is `PayPal live credentials cannot be used on a local address. Use sandbox for localhost.`
+
+### Live
+
+1. Switch the Developer Dashboard to **Live** and use the live app. Its client id and secret are not the sandbox pair.
+2. Set `PAYPAL_MODE=live`. Set `NEXT_PUBLIC_PAYPAL_CLIENT_ID` and `PAYPAL_LIVE_CLIENT_ID` to the live client id. Set `PAYPAL_LIVE_CLIENT_SECRET` to the live secret.
+3. Add a live webhook for the same path and the same two events. Put that webhook id in `PAYPAL_LIVE_WEBHOOK_ID`.
+4. Rebuild and redeploy. Leave the sandbox values in place only when they are the sandbox app, not copies of the live secret.
+5. A public demo can stay on sandbox. Live PayPal belongs on the buyer's production project, next to live Stripe keys.
+
+The capture call (`/api/paypal/orders/capture`) talks to PayPal and does not decrement stock. `/api/webhooks/paypal` verifies the signature with PayPal before any order or stock write. A failed verification does not change inventory.
+
 ## 4. Checkout business name
 
 The name on the Stripe-hosted Checkout page is this Stripe account's **Business name**. `name` in `data/site.config.ts` is the storefront title (header and page titles). The kit leaves `branding_settings.display_name` unset, so Checkout keeps the Dashboard value.

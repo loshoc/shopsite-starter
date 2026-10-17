@@ -1,6 +1,6 @@
-import { getProductBySku } from "@/data/products";
+import { parseCartLines } from "@/lib/cart-lines";
 import { productionDatabaseProblem } from "@/lib/database-url";
-import { InventoryUnavailable, type ReservationLine } from "@/lib/types";
+import { InventoryUnavailable } from "@/lib/types";
 import { checkAvailability } from "@/lib/stock";
 import { createCheckoutSession, stripeSecretProblem } from "@/lib/stripe";
 import { LIVE_STRIPE_LOCAL_MESSAGE, liveStripeLocalProblemFromEnv, requestHostValues } from "@/lib/stripe-live";
@@ -12,7 +12,7 @@ export const runtime = "nodejs";
  * requested > liveQty (missing row = 0) returns 409 and stops here.
  */
 export async function POST(request: Request) {
-  const lines = await parseLines(request);
+  const lines = await parseCartLines(request);
   if (!lines) {
     return Response.json({ error: "Cart is empty or invalid." }, { status: 400 });
   }
@@ -66,27 +66,3 @@ export async function POST(request: Request) {
   }
 }
 
-async function parseLines(request: Request): Promise<ReservationLine[] | null> {
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return null;
-  }
-  if (!body || typeof body !== "object") return null;
-  const raw = (body as { lines?: unknown }).lines;
-  if (!Array.isArray(raw) || raw.length === 0 || raw.length > 20) return null;
-  const merged = new Map<string, number>();
-  for (const line of raw) {
-    if (!line || typeof line !== "object") return null;
-    const skuId = (line as { skuId?: unknown }).skuId;
-    const qty = (line as { qty?: unknown }).qty;
-    if (typeof skuId !== "string" || !/^[\w-]{1,64}$/.test(skuId)) return null;
-    if (!getProductBySku(skuId)) return null;
-    if (typeof qty !== "number" || !Number.isInteger(qty) || qty < 1 || qty > 99) return null;
-    const next = (merged.get(skuId) ?? 0) + qty;
-    if (next > 99) return null;
-    merged.set(skuId, next);
-  }
-  return [...merged.entries()].map(([skuId, qty]) => ({ skuId, qty }));
-}

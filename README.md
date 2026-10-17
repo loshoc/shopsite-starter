@@ -64,6 +64,8 @@ Forward webhooks while developing:
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ```
 
+PayPal is optional. Placeholders in `.env.example` keep the bag on Stripe only. To offer PayPal Buttons as well, set `PAYPAL_MODE=sandbox` and the sandbox client id, secret, and webhook id from the PayPal Developer Dashboard. `NEXT_PUBLIC_PAYPAL_CLIENT_ID` must be that same sandbox client id. The secret and webhook id stay server-only. For live, use a different live app, set `PAYPAL_MODE=live`, and point the public client id at the live client id. Stock changes only after the signed webhook at `/api/webhooks/paypal`. Sandbox steps are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+
 With Postgres, open Admin → Stock and seed the catalogue before expecting items to be orderable. A missing stock row is quantity 0. `npm run dev` can use the in-memory fallback, which seeds demo quantities and still blocks checkout at zero. Production does not use that fallback.
 
 Set real production Stripe keys and `STRIPE_WEBHOOK_SECRET` on the deployed project before going live. Do not commit `.env.local`. That setup is **Start path** and [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).

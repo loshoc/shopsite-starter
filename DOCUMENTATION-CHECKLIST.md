@@ -19,6 +19,7 @@ Production needs all of these. Names match `.env.example`.
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Required live publishable key. | Test publishable key. |
 | `STRIPE_SECRET_KEY` | Required live secret key. Server-only. | Test secret key. |
 | `STRIPE_WEBHOOK_SECRET` | Required. From the Dashboard webhook endpoint. | From `stripe listen`, as in the README. |
+| `PAYPAL_MODE`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID`, `PAYPAL_SANDBOX_*` or `PAYPAL_LIVE_*` | Optional. Set only to offer PayPal beside Stripe. Secret and webhook id are server-only. Sandbox and live are different apps. | Optional. Leave the placeholders to hide PayPal. |
 | `DATABASE_URL` | Required real Postgres URL. A missing or placeholder URL refuses boot, admin sessions, and checkout. | Optional. Leave the example placeholder for the in-memory store. |
 | `NEXT_PUBLIC_APP_URL` | Required real https origin, no trailing slash. Set it before the Vercel production build. The build fails if it is missing or a local-only host such as localhost. | `http://localhost:3000`. |
 

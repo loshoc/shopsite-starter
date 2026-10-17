@@ -2,6 +2,7 @@ import { siteConfig } from "@/data/site.config";
 import { appUrl } from "@/lib/app-url";
 import { resolveCheckoutExpiryMinutes } from "@/lib/checkout-expiry";
 import { stockMode } from "@/lib/db";
+import { paypalStatusLabel } from "@/lib/paypal";
 import { publishableKeyState, stripeMode, webhookSecretProblem } from "@/lib/stripe";
 
 export default function SettingsPage() {
@@ -43,6 +44,8 @@ export default function SettingsPage() {
         <p>Publishable key: {publishableKeyState()}</p>
         <p>Webhook secret: {webhookSecretProblem() ? "not configured" : "configured"}</p>
         <p>Webhook URL: {origin}/api/webhooks/stripe</p>
+        <p>PayPal: {paypalStatusLabel()}</p>
+        <p>PayPal webhook URL: {origin}/api/webhooks/paypal</p>
       </section>
       <section className="space-y-2 text-sm text-muted-foreground">
         <p>Coupons and tax are handled by Stripe Checkout, not by an admin discounts screen.</p>

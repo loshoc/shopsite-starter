@@ -2,7 +2,7 @@ import { requireAdminApi } from "@/lib/admin-guard";
 import { presentAdminOrder } from "@/lib/admin-orders";
 import { listOrders } from "@/lib/db";
 import { adminJson } from "@/lib/http";
-import { stripeDashboardUrl } from "@/lib/stripe";
+import { orderDashboardUrl } from "@/lib/order-dashboard";
 import { InventoryUnavailable } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -15,7 +15,7 @@ export async function GET() {
     const orders = await listOrders();
     return adminJson({
       orders: orders.map((order) =>
-        presentAdminOrder(order, stripeDashboardUrl(order.paymentIntentId, order.stripeSessionId)),
+        presentAdminOrder(order, orderDashboardUrl(order.paymentIntentId, order.stripeSessionId)),
       ),
     });
   } catch (error) {

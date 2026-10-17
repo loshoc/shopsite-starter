@@ -81,7 +81,7 @@ From the intake answers, set `name`, `tagline`, `description`, `supportEmail`, a
 | Shop (listing) | `/shop` | The same grid, plus a line that stock is live. |
 | Product | `/products/[id]` | Demo ids: `cedar-spoon`, `linen-napkin`, `stone-bowl`. |
 | Bag | Drawer from the header Bag control | No bag URL. An empty bag is a plain line and **Start shopping**. |
-| Checkout | Stripe-hosted | No checkout page in the kit. Return routes are `/success` and `/cancel`. |
+| Checkout | Stripe-hosted, PayPal Buttons optional | No checkout page in the kit. Return routes are `/success` and `/cancel`. PayPal shows in the bag only when its env is set. |
 | FAQ | `/faq` | `faqs` ships `[]`. The page shows one `TODO: Replace me` row until you add a question and an answer. |
 | Legal shells | `/shipping`, `/returns`, `/privacy`, `/terms` | Copy says `Policy not set yet` and `TODO: Replace me`. |
 | Trust lines | Under Add to bag | `shippingNote` and `returnsNote` ship `""` and stay hidden. |
@@ -113,6 +113,7 @@ Short sequence. The kit leaves `branding_settings`, `statement_descriptor`, and 
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` — `pk_test_...` or `pk_live_...`.
 - `STRIPE_SECRET_KEY` — `sk_test_...` or `sk_live_...`, same mode as the publishable key.
 - `STRIPE_WEBHOOK_SECRET` — `whsec_...`.
+- PayPal, optional. Leave the `.env.example` placeholders to stay Stripe-only. `PAYPAL_MODE` is `sandbox` or `live`. `NEXT_PUBLIC_PAYPAL_CLIENT_ID` is the client id for that mode (the only PayPal value that may be public). `PAYPAL_SANDBOX_CLIENT_SECRET` and `PAYPAL_LIVE_CLIENT_SECRET` are server-only. Webhook ids are server-only too. Do not put a secret in any `NEXT_PUBLIC_` name.
 - `DATABASE_URL` — `postgresql://USER:PASSWORD@HOST:5432/DATABASE` in production. Local `npm run dev` may keep the example placeholder.
 - `NEXT_PUBLIC_APP_URL` — origin, no trailing slash. Local: `http://localhost:3000`. Production: `https://` plus the domain.
 
@@ -289,8 +290,9 @@ Sold-out checkout is fail-closed: the API refuses the cart and does not open Str
 3. Stripe Checkout collects payment. The name on that page is the Stripe account's **Business name** (**Settings → Business → Business details**). The card or bank statement uses **Statement descriptor** and **Shortened descriptor** under **Public details**. `name` in `data/site.config.ts` is the storefront title. Steps: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) **Checkout business name**.
 4. The webhook at `/api/webhooks/stripe` checks `STRIPE_WEBHOOK_SECRET` before any write. A bad signature is rejected and stock is untouched.
 5. A verified paid event decrements stock and stores a thin order row (email, total, currency, status, Checkout session id, payment intent id, reserved SKUs, and an oversold flag). Card data is not stored.
+6. When PayPal is configured, the bag also shows PayPal Buttons. That path checks the same stock, then creates and captures a PayPal order. Stock and the order row change only after `/api/webhooks/paypal` verifies the signature. The return to `/success` does not write stock. Sandbox, then live: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
-Forward webhooks locally with the command in the README cold start.
+Forward Stripe webhooks locally with the command in the README cold start. PayPal cannot call localhost; the Dashboard webhook simulator or a tunnel has to reach `/api/webhooks/paypal`.
 
 ## SEO
 

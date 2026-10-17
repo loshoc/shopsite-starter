@@ -70,6 +70,12 @@ Non-EU stores: replace “legal bases” with your local framing, but still expl
 
 **Customize:** List any other payment or fraud tools: [PAYMENT_AND_FRAUD_VENDORS].
 
+### PayPal (only if the store offers PayPal Buttons)
+
+- PayPal payments are processed by **PayPal**. PayPal’s privacy terms also apply: [https://www.paypal.com/legalhub/privacy-full](https://www.paypal.com/legalhub/privacy-full) (confirm the current URL before publish).
+- The store receives limited PayPal metadata (payer email, capture id, amount) on the signed webhook. It does not receive the buyer’s PayPal password.
+- Delete this subsection if PayPal stays on the placeholders in `.env.example`.
+
 ---
 
 ## 6. Cookies, analytics, and similar technologies *(optional — enable only if used)*

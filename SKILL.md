@@ -81,7 +81,7 @@ From the intake answers, set `name`, `tagline`, `description`, `supportEmail`, a
 | Shop (listing) | `/shop` | The same grid, plus a line that stock is live. |
 | Product | `/products/[id]` | Demo ids: `cedar-spoon`, `linen-napkin`, `stone-bowl`. |
 | Bag | Drawer from the header Bag control | No bag URL. An empty bag is a plain line and **Start shopping**. |
-| Checkout | Stripe-hosted | No checkout page in the kit. Return routes are `/success` and `/cancel`. |
+| Checkout | Stripe-hosted, PayPal Buttons optional | No checkout page in the kit. Return routes are `/success` and `/cancel`. PayPal shows in the bag only when its env is set. |
 | FAQ | `/faq` | `faqs` ships `[]`. The page shows one `TODO: Replace me` row until a question and an answer are set. |
 | Legal shells | `/shipping`, `/returns`, `/privacy`, `/terms` | Copy says `Policy not set yet` and `TODO: Replace me`. |
 | Trust lines | Under Add to bag | `shippingNote` and `returnsNote` ship `""` and stay hidden. |
@@ -113,6 +113,7 @@ Short sequence. The kit leaves `branding_settings`, `statement_descriptor`, and 
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` — `pk_test_...` or `pk_live_...`.
 - `STRIPE_SECRET_KEY` — `sk_test_...` or `sk_live_...`, same mode as the publishable key.
 - `STRIPE_WEBHOOK_SECRET` — `whsec_...`.
+- PayPal, optional. Placeholders hide it. `PAYPAL_MODE` is `sandbox` or `live`. `NEXT_PUBLIC_PAYPAL_CLIENT_ID` matches that mode's client id. Secrets and webhook ids are `PAYPAL_SANDBOX_*` or `PAYPAL_LIVE_*` and are never `NEXT_PUBLIC_`.
 - `DATABASE_URL` — `postgresql://USER:PASSWORD@HOST:5432/DATABASE` in production. Local `npm run dev` may keep the example placeholder.
 - `NEXT_PUBLIC_APP_URL` — origin, no trailing slash. Local: `http://localhost:3000`. Production: `https://` plus the domain.
 
