@@ -1,6 +1,6 @@
 # Deploy checklist
 
-Vercel and Stripe steps for a buyer deploy. Tech Writer can fold this into the docs. Cold start stays in [README.md](README.md). After the app runs locally, follow [PLAYBOOK.md](PLAYBOOK.md).
+Vercel and Stripe steps for a buyer deploy. Tech Writer can fold this into the docs. Cold start stays in [README.md](README.md). After the app runs locally, follow [PLAYBOOK.md](PLAYBOOK.md). Before go-live, confirm the result with [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md).
 
 Names below match [.env.example](.env.example). Values are placeholders. Never paste live secrets into the repo, this file, or a public demo.
 
@@ -44,7 +44,22 @@ Local forwarding (printed `whsec_...` goes in `.env.local` only):
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ```
 
-## 4. Smoke the real domain
+## 4. Checkout business name
+
+The name on the Stripe-hosted Checkout page is this Stripe account's **Business name**. `name` in `data/site.config.ts` is the storefront title (header and page titles). The kit leaves `branding_settings.display_name` unset, so Checkout keeps the Dashboard value.
+
+Use the Stripe account that owns `STRIPE_SECRET_KEY`. Test keys and live keys on that account share its **Business name**. Another Stripe account has its own. If this account was used for a different store, Checkout still shows that account's **Business name** until you change it.
+
+1. Open [Business details](https://dashboard.stripe.com/settings/business-details): **Settings → Business → Business details**.
+2. Set **Business name** to the store name customers should see on Checkout. [Stripe's Checkout appearance docs](https://docs.stripe.com/payments/checkout/customization/appearance) call this field the way to change a Checkout page's name.
+3. Under **Public details**, click **Edit**. Set **Statement descriptor** to a recognizable form of that name. Stripe requires 5–22 Latin characters, at least one letter, and none of `<`, `>`, `\`, `'`, `"`, or `*`. Set **Shortened descriptor** when you want a shorter card-statement prefix (2–10 characters). Click **Save**. The statement descriptor is the text on the customer's card or bank statement. It is a separate field from the Checkout page name. The kit leaves `statement_descriptor` and `statement_descriptor_suffix` unset, so the statement uses these account values. Details: [Statement descriptors](https://docs.stripe.com/get-started/account/statement-descriptors).
+4. Logo, icon, and colors are **Settings → Business → Branding** ([Branding settings](https://dashboard.stripe.com/settings/branding)). The kit does not upload them.
+
+`appInfo.name` on the Stripe client (`shopsite-starter`) identifies the integration to Stripe. Customers do not see it on Checkout.
+
+Run a test Checkout and confirm the page shows this store's **Business name** before you go live.
+
+## 5. Smoke the real domain
 
 After the production deployment:
 
