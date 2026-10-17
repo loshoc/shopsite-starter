@@ -1,6 +1,6 @@
 # Deploy checklist
 
-Vercel and Stripe steps for a buyer deploy. This file is the detail. The short route is [README.md](README.md) **Start path**: unzip, a **private** GitHub repo, then Vercel **Import Git**. Prefer that over uploading a zip to Vercel.
+Vercel, Stripe, and optional PayPal steps for a buyer deploy. This file is the detail. The short route is [README.md](README.md) **Start path**: unzip, a **private** GitHub repo, then Vercel **Import Git**. Prefer that over uploading a zip to Vercel. Stripe Checkout works without PayPal.
 
 Local `npm` stays in [README.md](README.md) **Cold start**. Brand and catalogue: [PLAYBOOK.md](PLAYBOOK.md) **Start**. The same Start for an AI edit: [SKILL.md](SKILL.md) **Start**. Before go-live, confirm the result with [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md).
 
@@ -22,6 +22,14 @@ Set these on the Vercel project for **Production** before the first production b
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Publishable key. `pk_test_...` for a private test deploy or a public demo. `pk_live_...` only on the buyer's own production store. |
 | `STRIPE_SECRET_KEY` | Secret key paired with the publishable key (`sk_test_...` or `sk_live_...`). Server-only. |
 | `STRIPE_WEBHOOK_SECRET` | Signing secret for the webhook endpoint (`whsec_...`). Server-only. Dashboard endpoint in production; `stripe listen` locally. |
+| `PAYPAL_MODE` | Optional. `sandbox` or `live`. Leave the placeholder to hide PayPal. Stripe Checkout works without it. |
+| `NEXT_PUBLIC_PAYPAL_CLIENT_ID` | Optional. Client id for that mode (PayPal Buttons). The only PayPal value that may be public. Stripe Checkout works without it. |
+| `PAYPAL_SANDBOX_CLIENT_ID` | Optional. Sandbox app client id. Must match the public client id when `PAYPAL_MODE=sandbox`. Server-only. Stripe Checkout works without it. |
+| `PAYPAL_SANDBOX_CLIENT_SECRET` | Optional. Sandbox app secret. Server-only. Stripe Checkout works without it. |
+| `PAYPAL_SANDBOX_WEBHOOK_ID` | Optional. Sandbox webhook id for `/api/webhooks/paypal`. Server-only. Stripe Checkout works without it. |
+| `PAYPAL_LIVE_CLIENT_ID` | Optional. Live app client id. Must match the public client id when `PAYPAL_MODE=live`. Server-only. Live is refused on localhost. Stripe Checkout works without it. |
+| `PAYPAL_LIVE_CLIENT_SECRET` | Optional. Live app secret. Server-only. Stripe Checkout works without it. |
+| `PAYPAL_LIVE_WEBHOOK_ID` | Optional. Live webhook id. Server-only. Stripe Checkout works without it. |
 | `DATABASE_URL` | A real Postgres URL in production (`postgresql://USER:PASSWORD@HOST:5432/DATABASE`). A missing URL or the example placeholder refuses boot. |
 | `NEXT_PUBLIC_APP_URL` | Public https origin, no trailing slash: `https://shop.example.com`. The production build fails when this is missing or a local-only host (`localhost`, `127.0.0.1`, and similar). |
 

@@ -2,13 +2,13 @@
 
 Release checklist for the buyer zip. Buyers deploy by unzipping this archive and following [README.md](README.md) **Start path** (private GitHub, then Vercel **Import Git**). They do not upload this zip to Vercel. Local `npm` stays in README **Cold start**. Brand and catalogue stay in [PLAYBOOK.md](PLAYBOOK.md) **Start**. Vercel and Stripe steps stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
-`package.json` `"version"` is `1.1.0`, the same tag as [CHANGELOG.md](CHANGELOG.md).
+`package.json` `"version"` is `1.1.1`, the same tag as [CHANGELOG.md](CHANGELOG.md).
 
 [LICENSE](LICENSE) is a proprietary notice (Copyright (c) 2026 [SELLER_ENTITY]. All rights reserved). The kit is licensed, not sold, under the ShopSite End-User License Agreement in [docs/legal/EULA-KIT-LICENSE.md](docs/legal/EULA-KIT-LICENSE.md). `package.json` `"license"` is `SEE LICENSE IN LICENSE`. Ship `LICENSE` with the zip.
 
 ## Buyer zip
 
-Ship a clean archive of the `1.1.0` tree. Include application source and these root files:
+Ship a clean archive of the `1.1.1` tree. Include application source and these root files:
 
 - `app/`, `components/`, `data/`, `lib/`, `public/`, `scripts/`, `assets/`
 - `instrumentation.ts`, `proxy.ts`, `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `components.json`

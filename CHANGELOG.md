@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1
+
+On main after #40 (`a2cbed9`).
+
+- PayPal Buttons optional beside Stripe Checkout (#40 @ a2cbed9): placeholders hide PayPal; stock only after signed `/api/webhooks/paypal`; sandbox/live mode trios; live refused on localhost. LAUNCH-CHECKLIST go-live prove: sandbox → signed `PAYMENT.CAPTURE.COMPLETED` webhook → stock, not on capture alone.
+- README Start path points at Release buyer zip (#39).
+- This release bumps package/lockfile to 1.1.1 for the refreshed buyer zip. No dependency changes.
+
 ## 1.1.0
 
 On main after #37 (`05a4c21`).
