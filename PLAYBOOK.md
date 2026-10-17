@@ -290,7 +290,7 @@ Sold-out checkout is fail-closed: the API refuses the cart and does not open Str
 3. Stripe Checkout collects payment. The name on that page is the Stripe account's **Business name** (**Settings → Business → Business details**). The card or bank statement uses **Statement descriptor** and **Shortened descriptor** under **Public details**. `name` in `data/site.config.ts` is the storefront title. Steps: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) **Checkout business name**.
 4. The webhook at `/api/webhooks/stripe` checks `STRIPE_WEBHOOK_SECRET` before any write. A bad signature is rejected and stock is untouched.
 5. A verified paid event decrements stock and stores a thin order row (email, total, currency, status, Checkout session id, payment intent id, reserved SKUs, and an oversold flag). Card data is not stored.
-6. When PayPal is configured, the bag also shows PayPal Buttons. That path checks the same stock, then creates and captures a PayPal order. Stock and the order row change only after `/api/webhooks/paypal` verifies the signature. The return to `/success` does not write stock. Sandbox, then live: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+6. When PayPal is configured, the bag also shows PayPal Buttons. That path checks the same stock, then creates and captures a PayPal order. Stock and the order row change only after `/api/webhooks/paypal` verifies the signature. The return to `/success` does not write stock. Sandbox, then live: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). Go-live prove: [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) **PayPal (optional)**.
 
 Forward Stripe webhooks locally with the command in the README cold start. PayPal cannot call localhost; the Dashboard webhook simulator or a tunnel has to reach `/api/webhooks/paypal`.
 

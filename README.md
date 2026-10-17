@@ -4,7 +4,7 @@ Next.js storefront, Stripe Checkout, and a separate admin for stock and thin ord
 
 ## Start path
 
-This is the route from the buyer zip to a live store. Get the buyer zip from [Release v1.1.0](https://github.com/loshoc/shopsite-starter/releases/tag/v1.1.0) (asset `shopsite-starter-1.1.0.zip`). Prefer a **private** GitHub repo and Vercel **Import Git** over uploading a zip to Vercel.
+This is the route from the buyer zip to a live store. Get the buyer zip from [Release v1.1.1](https://github.com/loshoc/shopsite-starter/releases/tag/v1.1.1) (asset `shopsite-starter-1.1.1.zip`). Prefer a **private** GitHub repo and Vercel **Import Git** over uploading a zip to Vercel.
 
 1. Unzip the buyer kit.
 2. Create an empty **private** GitHub repository. Leave it without a README or license file so the first push is this tree. From the unzipped folder, push the tree. When the folder is not already a Git checkout, use the commands below. `.gitignore` already excludes `.env`, `.env.local`, and `node_modules`. Commit `.env.example` only. Do not commit secrets.

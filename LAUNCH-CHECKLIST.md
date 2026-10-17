@@ -38,6 +38,7 @@ Skip this section to stay Stripe-only. Placeholders in `.env.example` hide PayPa
 - [ ] The secret and the webhook id for that mode are server-only. No `NEXT_PUBLIC_` name holds `PAYPAL_SANDBOX_CLIENT_SECRET`, `PAYPAL_LIVE_CLIENT_SECRET`, or a webhook id.
 - [ ] Sandbox and live client ids and secrets are different apps. The server never sends the sandbox client id with the live secret.
 - [ ] The webhook URL is `https://YOUR_DOMAIN/api/webhooks/paypal` for `PAYMENT.CAPTURE.COMPLETED` and `PAYMENT.CAPTURE.REFUNDED`. Stock and the order row change only after that signature verifies. Capturing from the bag does not write stock by itself.
+- [ ] Go-live prove (sandbox): stock moves only after a signed PayPal webhook (`PAYMENT.CAPTURE.COMPLETED`), not on capture alone. Path: sandbox → signed webhook → stock.
 
 Setup steps: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) **PayPal sandbox and live**.
 
