@@ -1,6 +1,6 @@
 # Packaging
 
-Release checklist for the buyer zip. Cold start stays in [README.md](README.md). Brand, import, stock, checkout, and SEO stay in [PLAYBOOK.md](PLAYBOOK.md).
+Release checklist for the buyer zip. Buyers deploy by unzipping this archive and following [README.md](README.md) **Start path** (private GitHub, then Vercel **Import Git**). They do not upload this zip to Vercel. Local `npm` stays in README **Cold start**. Brand and catalogue stay in [PLAYBOOK.md](PLAYBOOK.md) **Start**. Vercel and Stripe steps stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
 `package.json` `"version"` is `1.0.0`, the same tag as [CHANGELOG.md](CHANGELOG.md).
 
@@ -13,9 +13,10 @@ Ship a clean archive of the `1.0.0` tree. Include application source and these r
 - `app/`, `components/`, `data/`, `lib/`, `public/`, `scripts/`, `assets/`
 - `instrumentation.ts`, `proxy.ts`, `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `components.json`
 - `package.json`, `package-lock.json`
-- `README.md`
-- `PLAYBOOK.md`
-- `DEPLOY-CHECKLIST.md` (Vercel and Stripe steps; the playbook links here)
+- `README.md` (**Start path** and **Cold start**)
+- `PLAYBOOK.md` (**Start**, then brand, import, stock, checkout, and SEO)
+- `SKILL.md` (the same **Start**, plus the stop rule for AI edits)
+- `DEPLOY-CHECKLIST.md` (Vercel and Stripe steps; Start path and the playbook link here)
 - `LAUNCH-CHECKLIST.md` (buyer pass before go-live; the README, playbook, and deploy checklist link here)
 - `LICENSE`
 - `CHANGELOG.md`
@@ -28,7 +29,7 @@ Ship a clean archive of the `1.0.0` tree. Include application source and these r
 - `INVENTORY.md` (stock and oversold behavior the playbook points at)
 - `docs/legal/` except `docs/legal/SELLER-CHECKLIST.md` (placeholder policy templates; storefront shells stay empty). That checklist is maintainer-only: keep it in the repo and leave it out of the buyer zip.
 
-`tests/` and `SKILL.md` may stay in the archive. They hold made-up fixtures and editor notes. They are not a substitute for the README or the playbook.
+`tests/` may stay in the archive. It holds made-up fixtures. It is not a substitute for the README, the playbook, or `SKILL.md`.
 
 ## Scrub before you zip
 
@@ -67,6 +68,8 @@ Legal shells stay in the zip. Do not fill them in.
 Buyers replace those shells and the footer before their own go-live. That pass is PLAYBOOK **Legal pages and footer** and DOCUMENTATION-CHECKLIST **Legal pages and footer**. Placeholder templates are in [docs/legal/](docs/legal/README.md). Leave the placeholders as written.
 
 ## Verify the production build
+
+This is a local build check for the archive. Buyer deploy steps stay in README **Start path** and [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
 Set a real public origin before `npm run build`. No trailing slash. The production build fails when `NEXT_PUBLIC_APP_URL` is missing or a local-only host (`localhost`, `127.0.0.1`, and similar). Preview builds on Vercel may omit it and use `https://$VERCEL_URL`.
 

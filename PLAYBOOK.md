@@ -1,14 +1,128 @@
 # ShopSite playbook
 
-A short walk after the README cold start. Install, env, and `npm run dev` stay in the README. Use this page for design, brand, catalogue, stock, checkout, and SEO. Before go-live, walk [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md). **Deploy** links to the Vercel and Stripe checklist.
+Buyer guide for brand, catalogue, stock, checkout, and SEO. The ship route from the zip to a live store is [README.md](README.md) **Start path** (private GitHub, then Vercel **Import Git**). Local `npm` stays in README **Cold start**.
+
+**Start** below is that brand pass. The same pass for an AI edit is [SKILL.md](SKILL.md) **Start**.
+
+Before go-live, walk [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md). **Deploy** points at the Vercel and Stripe checklist.
 
 Release checks: [DOCUMENTATION-CHECKLIST.md](DOCUMENTATION-CHECKLIST.md).
+
+## Start
+
+Work this section before the deeper pages below. Import commands, stock, the money path, SEO, and the legal file list stay in those pages. Deploy clicks stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+
+### Intake
+
+Write these down before you edit:
+
+- What you sell.
+- Market or region.
+- Currency. Set `currency` in `data/site.config.ts` to a lowercase ISO 4217 code. The demo is `usd`.
+- Price range. Prices are per SKU in the CSV. The kit has no range field.
+- Reference sites or brands. Use **Pick elements** below. The app has no picker.
+
+### Materials
+
+Collect these before you treat the shop as ready:
+
+- Logo. The header prints `name` from `data/site.config.ts` as text (`components/shop/header.tsx`). The kit has no logo-image field. A Checkout logo is Stripe Dashboard **Branding**. See [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) **Checkout business name**.
+- Product photos. Demo PNGs under `public/products/` are 32×32 swatches to replace: `cedar-spoon.png`, `linen-napkin.png`, `linen-napkin-fold.png`, `stone-bowl.png`.
+- Product name, SKU, and price for each variant.
+- Support email. Replace `support@example.com` in `data/site.config.ts`.
+- Domain. The https origin the store will serve.
+- Stripe account. The account that will own the keys.
+- Legal pages. `/shipping`, `/returns`, `/privacy`, `/terms`, and `/faq` ship as shells. See **Draft framing and page map**.
+
+### Look presets
+
+Type stays Inter. `app/fonts.ts` sets `--font-body`. Keep that single family.
+
+There is no theme switcher. Set `storefrontRecipe` in `data/recipe.ts` and rebuild. Fields are `id`, `density`, and `chrome`. Palettes for `default`, `ink`, and `sand` already live in that file and in `app/recipes/`. Ship default is Cool sparse: `default`, `comfortable`, `bare`. `default` colors are `#fafaf8` / `#ffffff` / `#111111`.
+
+`comfortable` is the Cool sparse rhythm. `compact` tightens it. `bare` is flush images and no card border. `ruled` is a hairline. `soft-card` is a soft shadow on the surface color. The intent table and the anti-AI rules are in **Design style**.
+
+| Preset | When to use | `id` | `density` | `chrome` |
+| --- | --- | --- | --- | --- |
+| Cool sparse | Quiet goods, fashion, or a sparse catalogue. Ship this unless another row fits. | `default` | `comfortable` | `bare` |
+| Compact ruled | Dense catalogue, many SKUs, electronics. | `default` | `compact` | `ruled` |
+| Warm paper | Paper and rust. | `sand` | `comfortable` | `bare` |
+| Ink night | Night, cinematic, jewelry. | `ink` | `comfortable` | `bare` |
+
+Same file, when the row above is close but the chrome should change:
+
+- Dense catalogue with a flush grid: Compact ruled, with `chrome` set to `bare`.
+- Soft DTC, lifestyle cards, cool colors: Cool sparse, with `chrome` set to `soft-card`.
+- Warm paper with cards: Warm paper, with `chrome` set to `soft-card`.
+- Ink with cards: Ink night, with `chrome` set to `soft-card`.
+
+Use `sand` only when you asked for paper and rust. `ink` is dark cinematic.
+
+#### Pick elements from a reference URL
+
+The app has no picker. From the reference URL, note only the pieces this kit can change:
+
+- Header. Store name and which links show. File: `components/shop/header.tsx`. The name is `siteConfig.name`.
+- Home. This home is the product grid. File: `app/(shop)/page.tsx`. Keep the grid. Skip a manifesto hero.
+- Product card. Image, name, price, and an optional variant hint. The card has no add-to-bag button. File: `components/shop/product-card.tsx`.
+- Product page. Gallery, name, description, variant buttons, one Add to bag, and a mobile buy bar. Files: `app/(shop)/products/[id]/page.tsx`, `components/shop/product-purchase.tsx`.
+- Bag. Empty state and line layout. File: `components/shop/cart-drawer.tsx`.
+- Footer. One store line and the policy links. File: `components/shop/footer.tsx`.
+
+Put those notes into `data/site.config.ts`, the catalogue, and `data/recipe.ts`. Leave the reference site’s fonts and CSS out. Inter stays.
+
+### Draft framing and page map
+
+From the intake answers, set `name`, `tagline`, `description`, `supportEmail`, and `currency` in `data/site.config.ts`. Write factual product names and descriptions. Leave `shippingNote`, `returnsNote`, and `faqs` empty until the policies are real. Empty trust notes stay hidden.
+
+| Page | Route | What ships |
+| --- | --- | --- |
+| Home | `/` | Product grid. The heading is Products. Demo catalogue until you replace it. |
+| Shop (listing) | `/shop` | The same grid, plus a line that stock is live. |
+| Product | `/products/[id]` | Demo ids: `cedar-spoon`, `linen-napkin`, `stone-bowl`. |
+| Bag | Drawer from the header Bag control | No bag URL. An empty bag is a plain line and **Start shopping**. |
+| Checkout | Stripe-hosted | No checkout page in the kit. Return routes are `/success` and `/cancel`. |
+| FAQ | `/faq` | `faqs` ships `[]`. The page shows one `TODO: Replace me` row until you add a question and an answer. |
+| Legal shells | `/shipping`, `/returns`, `/privacy`, `/terms` | Copy says `Policy not set yet` and `TODO: Replace me`. |
+| Trust lines | Under Add to bag | `shippingNote` and `returnsNote` ship `""` and stay hidden. |
+
+Demo brand until you edit it: name `Demo Shop`, the cedar-spoon tagline, `support@example.com`, currency `usd`. Replace the shells before go-live. File list: **Legal pages and footer**.
+
+### Stripe and domain
+
+Short sequence. The kit leaves `branding_settings`, `statement_descriptor`, and `statement_descriptor_suffix` unset. Checkout shows the Stripe account **Business name**. The storefront title is `name` in `data/site.config.ts`.
+
+1. Use the Stripe account that will own `STRIPE_SECRET_KEY`.
+2. Set **Business name**, **Statement descriptor**, and **Shortened descriptor** in the Dashboard. Click path: [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) **Checkout business name** and [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) **Checkout business name**.
+3. Production env, first production build, webhook, then custom domain: [README.md](README.md) **Start path** and [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+4. Confirm before go-live: [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) **Deploy basics**.
+
+### What to prepare
+
+**Images.** PNG, JPEG, or WebP. Put files in `public/products/` and reference them as `/products/your-file.png`, or use an https URL with no query and no hash. Import accepts a file under `public/` or an https URL. It does not check width, height, or file type. Cards use a 4:5 frame. Replace the 32×32 demo swatches.
+
+**CSV.** Edit `products-template.csv` at the repo root. Save as CSV before import. Header row:
+
+`handle,name,description,price,sku,stock,image_1,image_2,option1_name,option1_value,option2_name,option2_value,option3_name,option3_value`
+
+`handle` is lowercase letters, digits, and single hyphens, for example `cedar-spoon`. `price` is major units with at most two decimal places and no currency symbol, for example `18.00`. Import stores integer cents. `stock` is a non-negative integer. Commands: [README.md](README.md) **Import a catalogue**.
+
+**Env.** Names are in `.env.example`. Local file: `.env.local` (gitignored). Production values go on Vercel. See [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) for the table.
+
+- `ADMIN_SECRET` — at least 32 random characters. The example placeholder is rejected.
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` — `pk_test_...` or `pk_live_...`.
+- `STRIPE_SECRET_KEY` — `sk_test_...` or `sk_live_...`, same mode as the publishable key.
+- `STRIPE_WEBHOOK_SECRET` — `whsec_...`.
+- `DATABASE_URL` — `postgresql://USER:PASSWORD@HOST:5432/DATABASE` in production. Local `npm run dev` may keep the example placeholder.
+- `NEXT_PUBLIC_APP_URL` — origin, no trailing slash. Local: `http://localhost:3000`. Production: `https://` plus the domain.
+
+**Currency.** `currency` in `data/site.config.ts` is the lowercase ISO code you charge. The demo is `usd`. Product pages, cards, the bag, and Stripe Checkout read that field. Display formatting stays `en-US`. There is no locale field.
 
 ## Architecture
 
 The storefront is the stylish shop: `app/(shop)` and `components/shop`. Change layout, copy, and the catalogue there.
 
-Admin is a separate shadcn console for stock and thin orders. Leave `app/admin/**` and `components/ui/**` alone unless you mean to change operations. Fuller stop-rules for AI edits are in [SKILL.md](SKILL.md).
+Admin is a separate shadcn console for stock and thin orders. Leave `app/admin/**` and `components/ui/**` alone unless you mean to change operations. The stop rule for AI edits is in [SKILL.md](SKILL.md) **Stop rule**. Guided Start is **Start** above and in that file.
 
 Color, density, and chrome are a rebuild of `data/recipe.ts`. There is no theme switcher. Rules for a rebrand are in **Design style** and **Dev file map**.
 
@@ -24,7 +138,7 @@ Ship default is Cool sparse. Leave it unless the buyer’s brand table below say
 
 ### When to flip levers
 
-Set `storefrontRecipe` in `data/recipe.ts` and rebuild. Product, brand, and content only — do not add a switcher.
+Set `storefrontRecipe` in `data/recipe.ts` and rebuild. Product, brand, and content only — do not add a switcher. Named presets and the fields to set are in **Start**.
 
 | Buyer intent | density | chrome | recipe |
 | --- | --- | --- | --- |
@@ -182,7 +296,7 @@ Forward webhooks locally with the command in the README cold start.
 
 Set `name` and `tagline` in `data/site.config.ts`. Those fields drive titles and descriptions.
 
-`NEXT_PUBLIC_APP_URL` is the public site origin, with no trailing slash. Set it to the real https origin before a Vercel production build. The production build fails when it is missing or a local-only host such as localhost. Vercel preview builds can omit it and use `https://$VERCEL_URL`. Local development: `http://localhost:3000`.
+`NEXT_PUBLIC_APP_URL` is the public site origin, with no trailing slash. Local development: `http://localhost:3000`. Set the production origin before the first production build. Those rules are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
 After deploy, submit `https://YOUR_DOMAIN/sitemap.xml` in Google Search Console. `/robots.txt` already blocks `/admin`, `/api`, `/success`, and `/cancel`.
 
@@ -209,10 +323,8 @@ Placeholder templates for that pass are in [docs/legal/](docs/legal/README.md). 
 
 ## Deploy
 
-Finish **Legal pages and footer** before the first production deploy. Walk [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) (environment, Stripe key mode, Checkout business name, currency, sold-out checkout, deploy smoke, trust copy). Vercel and Stripe steps are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+The ship route is [README.md](README.md) **Start path**. Unzip the kit, push it to a **private** GitHub repo (`.env.example` only, no secrets), then on Vercel use **Import Git**. Prefer that over uploading a zip.
 
-Set the production environment before the first production build. Vercel bakes `NEXT_PUBLIC_*` values in at build time.
+Production env, the first production build, the Stripe webhook, Checkout business name, and the custom domain are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
-`NEXT_PUBLIC_APP_URL` is fail-closed on that build. It must be the real https origin, with no trailing slash. The production build fails when it is missing or a local-only host (`localhost`, `127.0.0.1`, and similar). Preview builds may omit it and use `https://$VERCEL_URL`.
-
-The Stripe webhook URL is `https://YOUR_DOMAIN/api/webhooks/stripe` on that same origin. After deploy, smoke the home page, a product page, and admin login on the real hostname. Admin login may reject `127.0.0.1`.
+Finish **Legal pages and footer** before go-live. Confirm the store with [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md).
