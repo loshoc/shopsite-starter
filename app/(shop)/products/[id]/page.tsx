@@ -62,7 +62,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           ) : null}
         </div>
         <div>
-          <Link href="/shop" className="text-sm text-muted hover:text-fg">
+          <Link href="/shop" className="shop-link shop-focus text-sm text-muted">
             Back to the shop
           </Link>
           <h1 className="shop-display mt-3 font-medium tracking-tight">{product.name}</h1>

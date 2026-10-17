@@ -11,16 +11,16 @@ export function ProductCard({ product }: { product: StoreProduct }) {
   const hint = variantHint(product.variants);
   return (
     <article className="shop-card">
-      <Link href={`/products/${product.id}`} className="group block">
+      <Link href={`/products/${product.id}`} className="group shop-focus block">
         <ProductMedia name={product.name} images={product.images} className="aspect-[4/5] w-full" />
-        <div className="shop-card-action">
-          <h2 className="shop-card-title shop-card-inset font-medium group-hover:underline">{product.name}</h2>
-          <p className="shop-card-inset mt-1 text-sm">
+        <div className="shop-card-action shop-stack-tight">
+          <h2 className="shop-card-title shop-card-inset shop-link font-medium">{product.name}</h2>
+          <p className="shop-card-inset text-sm">
             {price.from
               ? `From ${formatMoney(price.cents, siteConfig.currency)}`
               : formatMoney(price.cents, siteConfig.currency)}
           </p>
-          {hint ? <p className="shop-card-inset mt-1 text-sm text-muted">{hint}</p> : null}
+          {hint ? <p className="shop-card-inset text-sm text-muted">{hint}</p> : null}
         </div>
       </Link>
     </article>

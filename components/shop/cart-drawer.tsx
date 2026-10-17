@@ -12,6 +12,18 @@ import { shouldMoveFocusToBag } from "@/lib/storefront-ui";
 
 const FOCUSABLE = "a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled])";
 
+function prefersReducedMotion() {
+  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function drawerDurationMs() {
+  if (prefersReducedMotion()) return 0;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue("--t-drawer").trim();
+  const value = Number.parseFloat(raw);
+  if (!Number.isFinite(value)) return 320;
+  return raw.endsWith("ms") ? value : value * 1000;
+}
+
 function moveFocusToBag() {
   const bag = document.getElementById("bag-control");
   const activeId = document.activeElement instanceof HTMLElement ? document.activeElement.id : null;
@@ -26,6 +38,22 @@ export function CartDrawer() {
   const [paypalMessage, setPaypalMessage] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [paypal, setPaypal] = useState<{ clientId: string; currency: string } | null>(null);
+  const [present, setPresent] = useState(false);
+  const [phase, setPhase] = useState<"open" | "closed">("closed");
+  const [trackedOpen, setTrackedOpen] = useState(open);
+
+  if (open !== trackedOpen) {
+    setTrackedOpen(open);
+    if (open) {
+      setPresent(true);
+      setPhase(prefersReducedMotion() ? "open" : "closed");
+    } else if (prefersReducedMotion()) {
+      setPhase("closed");
+      setPresent(false);
+    } else {
+      setPhase("closed");
+    }
+  }
 
   function closeBag() {
     setOpen(false);
@@ -54,7 +82,23 @@ export function CartDrawer() {
   }, [open]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!present) return;
+    if (open) {
+      let frame = 0;
+      const first = requestAnimationFrame(() => {
+        frame = requestAnimationFrame(() => setPhase("open"));
+      });
+      return () => {
+        cancelAnimationFrame(first);
+        cancelAnimationFrame(frame);
+      };
+    }
+    const timer = window.setTimeout(() => setPresent(false), drawerDurationMs());
+    return () => window.clearTimeout(timer);
+  }, [open, present]);
+
+  useEffect(() => {
+    if (!open || !present) return;
     const panel = panelRef.current;
     panel?.querySelector<HTMLElement>("[data-bag-close]")?.focus();
     function onKey(event: KeyboardEvent) {
@@ -84,9 +128,9 @@ export function CartDrawer() {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = previousOverflow;
     };
-  }, [open, setOpen]);
+  }, [open, present, setOpen]);
 
-  if (!open) return null;
+  if (!present) return null;
 
   const lines = cart.items.map((item) => {
     const product = getProductBySku(item.skuId);
@@ -118,16 +162,26 @@ export function CartDrawer() {
   }
 
   return (
-    <div className="fixed inset-0 z-40">
-      <button type="button" className="absolute inset-0 bg-fg/30" aria-label="Close bag" tabIndex={-1} onClick={closeBag} />
+    <div className={`fixed inset-0 z-40 ${phase === "closed" ? "pointer-events-none" : ""}`}>
+      <button
+        type="button"
+        data-state={phase}
+        className="shop-bag-backdrop absolute inset-0 bg-fg/30"
+        aria-label="Close bag"
+        tabIndex={-1}
+        onClick={closeBag}
+      />
       <aside
         ref={panelRef}
         id="bag-drawer"
         role="dialog"
-        aria-modal="true"
+        aria-modal={open}
+        aria-hidden={open ? undefined : true}
+        inert={open ? undefined : true}
+        data-state={phase}
         aria-labelledby="bag-title"
         tabIndex={-1}
-        className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-surface shadow-xl outline-none"
+        className="shop-bag-panel absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-surface shadow-xl outline-none"
       >
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <h2 id="bag-title" className="text-xl font-medium">
@@ -136,7 +190,7 @@ export function CartDrawer() {
           <button
             type="button"
             data-bag-close
-            className="text-sm text-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+            className="shop-focus text-sm text-muted"
             onClick={closeBag}
           >
             Close
@@ -147,7 +201,7 @@ export function CartDrawer() {
             <p className="text-sm text-muted">Your bag is empty.</p>
             <Link
               href="/shop"
-              className="mt-4 inline-flex h-11 items-center justify-center rounded-full bg-fg px-4 text-sm text-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+              className="shop-btn-primary shop-focus mt-4 h-11 px-4 text-sm"
               onClick={() => setOpen(false)}
             >
               Start shopping
@@ -166,7 +220,7 @@ export function CartDrawer() {
                     <label className="mt-2 flex items-center gap-2 text-xs text-muted">
                       Qty
                       <input
-                        className="h-8 w-16 border border-border bg-surface px-2"
+                        className="shop-qty shop-focus h-8 w-16 border border-border bg-surface px-2"
                         type="number"
                         min={1}
                         max={99}
@@ -175,7 +229,7 @@ export function CartDrawer() {
                       />
                     </label>
                   </div>
-                  <button type="button" className="text-xs text-muted underline" onClick={() => cart.remove(line.skuId)}>
+                  <button type="button" className="shop-link shop-focus text-xs text-muted" onClick={() => cart.remove(line.skuId)}>
                     Remove
                   </button>
                 </div>
@@ -197,7 +251,7 @@ export function CartDrawer() {
                 type="button"
                 disabled={pending || lines.length === 0}
                 onClick={() => void checkout()}
-                className="mt-4 h-11 w-full rounded-full bg-fg text-sm text-surface disabled:opacity-40"
+                className="shop-btn-primary shop-focus mt-4 h-11 w-full text-sm"
               >
                 {pending ? "Starting checkout…" : paypal ? "Checkout with Stripe" : "Checkout"}
               </button>

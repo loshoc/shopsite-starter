@@ -11,17 +11,17 @@ export function Header() {
   return (
     <header className="border-b border-border/80">
       <div className="shop-bar mx-auto flex max-w-6xl items-center justify-between gap-4">
-        <Link href="/" className="text-sm font-medium">
+        <Link href="/" className="shop-link shop-focus text-sm font-medium">
           {siteConfig.name}
         </Link>
         <nav className="flex items-center gap-5 text-sm">
-          <Link href="/shop" className="hover:underline">
+          <Link href="/shop" className="shop-link shop-focus">
             Shop
           </Link>
-          <Link href="/shipping" className="hidden hover:underline sm:inline">
+          <Link href="/shipping" className="shop-link shop-focus hidden sm:inline">
             Shipping
           </Link>
-          <Link href="/faq" className="hidden hover:underline sm:inline">
+          <Link href="/faq" className="shop-link shop-focus hidden sm:inline">
             FAQ
           </Link>
           <button
@@ -29,7 +29,7 @@ export function Header() {
             type="button"
             aria-expanded={cart.open}
             aria-controls="bag-drawer"
-            className="inline-flex items-center gap-2 rounded-full border border-fg/15 px-3 py-1.5 hover:border-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+            className="shop-bag-control shop-focus inline-flex items-center gap-2 rounded-full border border-fg/15 px-3 py-1.5"
             onClick={() => cart.setOpen(true)}
           >
             <ShoppingBag className="size-4" aria-hidden />

@@ -52,7 +52,7 @@ export function ProductPurchase({ name, variants }: { name: string; variants: Pu
       {axes.map((axis) => (
         <fieldset key={axis.name} className="mt-5 min-w-0 border-0 p-0">
           <legend className="text-sm">{axis.name}</legend>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="shop-chip-row mt-2">
             {axis.values.map((value) => {
               const pressed = selection[axis.name] === value;
               const matched = findVariant(variants, { ...selection, [axis.name]: value });
@@ -62,12 +62,9 @@ export function ProductPurchase({ name, variants }: { name: string; variants: Pu
                   key={value}
                   type="button"
                   aria-pressed={pressed}
+                  data-unavailable={unavailable ? "true" : undefined}
                   onClick={() => choose(axis.name, value)}
-                  className={
-                    pressed
-                      ? "h-9 rounded-full bg-fg px-3 text-sm text-surface"
-                      : `h-9 rounded-full border border-border px-3 text-sm ${unavailable ? "text-muted" : "text-fg"}`
-                  }
+                  className="shop-chip shop-focus"
                 >
                   {value}
                 </button>

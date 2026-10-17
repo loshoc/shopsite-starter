@@ -22,10 +22,7 @@ export function AddToCart({
       type="button"
       disabled={disabled}
       onClick={() => cart.add(skuId, qty)}
-      className={cn(
-        "inline-flex h-10 items-center justify-center rounded-full bg-fg px-4 text-sm text-surface transition hover:opacity-80 disabled:cursor-not-allowed disabled:bg-fg/20",
-        className,
-      )}
+      className={cn("shop-btn-primary shop-focus h-10 px-4 text-sm", className)}
     >
       {disabled ? "Sold out" : label}
     </button>
