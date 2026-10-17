@@ -71,6 +71,23 @@ The app has no picker. From the reference URL, note only the pieces this kit can
 
 Put those notes into `data/site.config.ts`, the catalogue, and `data/recipe.ts`. Leave the reference site’s fonts and CSS out. Inter stays.
 
+Exception: under **AI taste rebrand**, fonts may follow the direction sheet or buyer must-keep type — still via `app/fonts.ts`, never by pasting the reference site’s CSS.
+
+### AI taste rebrand
+
+When the user provides a brand brief and asks to rebrand the storefront look:
+
+Install or vendor `design-taste-frontend` and `redesign-existing-projects` separately. They are not inside the buyer zip.
+
+1. Do not alter the kit’s documented ship default. Cool sparse + Inter remain what an untouched zip shows.
+2. Inventory brief + materials ([PLAYBOOK.md](PLAYBOOK.md) **Start**). Abort taste restyle if the brief is empty — leave Cool sparse.
+3. Prefer `redesign-existing-projects` to keep IA. Optionally run `design-taste-frontend` `scripts/draw.mjs` (`--sector ecommerce` or `physical-product`, `--options 3`, then `--direction <id>`). Use `--keep palette,type` when the brand fixes those.
+4. Map to `data/site.config.ts`, catalogue/`public/products/`, `data/recipe.ts`, `app/recipes/*`, `app/fonts.ts`, `lib/theme.ts`. Rebuild. No theme switcher. No checkout/admin rewrite.
+5. Preserve sticky buy, variant buttons, trust hide-when-empty, bag Esc. Home stays the product grid.
+6. Run `lint.mjs` + `inspect.mjs` (or screenshot QA). Report direction, files touched, and refusals.
+
+Stop rule still applies: leave `app/admin`, `components/ui`, and inventory libraries alone unless the user explicitly asks.
+
 ### Draft framing and page map
 
 From the intake answers, set `name`, `tagline`, `description`, `supportEmail`, and `currency` in `data/site.config.ts`. Write factual product names and descriptions. Leave `shippingNote`, `returnsNote`, and `faqs` empty until the policies are real. Empty trust notes stay hidden.

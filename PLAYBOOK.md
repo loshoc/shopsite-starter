@@ -42,6 +42,8 @@ There is no theme switcher. Set `storefrontRecipe` in `data/recipe.ts` and rebui
 
 `comfortable` is the Cool sparse rhythm. `compact` tightens it. `bare` is flush images and no card border. `ruled` is a hairline. `soft-card` is a soft shadow on the surface color. The intent table and the anti-AI rules are in **Design style**.
 
+Ship default stays Cool sparse + Inter until you rebrand. If an AI coding agent is applying a full brand look from your brief, follow **Design style → AI taste rebrand (optional)** — that path may change fonts and recipe colors in *your* repo only. It does not change what the zip ships.
+
 | Preset | When to use | `id` | `density` | `chrome` |
 | --- | --- | --- | --- | --- |
 | Cool sparse | Quiet goods, fashion, or a sparse catalogue. Ship this unless another row fits. | `default` | `comfortable` | `bare` |
@@ -70,6 +72,8 @@ The app has no picker. From the reference URL, note only the pieces this kit can
 - Footer. One store line and the policy links. File: `components/shop/footer.tsx`.
 
 Put those notes into `data/site.config.ts`, the catalogue, and `data/recipe.ts`. Leave the reference site’s fonts and CSS out. Inter stays.
+
+Exception: under **AI taste rebrand (optional)**, fonts may follow the direction sheet or buyer must-keep type — still via `app/fonts.ts`, never by pasting the reference site’s CSS.
 
 ### Draft framing and page map
 
@@ -169,6 +173,18 @@ Set `storefrontRecipe` in `data/recipe.ts` and rebuild. Product, brand, and cont
 3. `data/recipe.ts` — only if the brand needs a density, chrome, or recipe shift.
 4. Never add a theme switcher UI.
 
+### AI taste rebrand (optional)
+
+Use this only when a brand brief exists and a coding agent is restyling the unzipped kit. The zip’s ship default remains Cool sparse + Inter until those file edits land in *this* project.
+
+1. Inventory the brief (what you sell, vibe, refs, must-keep colors/fonts, product photos).
+2. Prefer the redesign skill to keep ShopSite routes and components; optionally run tasteskill `draw.mjs` for a direction sheet when you want a fresh art direction (`ecommerce` / `physical-product`, tone from the brief).
+3. Map the result into files only: `data/site.config.ts`, catalogue + `public/products/`, `data/recipe.ts`, `app/recipes/*`, `app/fonts.ts`, and `lib/theme.ts` for OG colors. Rebuild. There is still no theme switcher.
+4. Keep home as the product grid, PDP sticky buy, bag drawer, and Stripe-hosted checkout. Do not rewrite admin or checkout.
+5. Gate with tasteskill `lint.mjs` + `inspect.mjs` (or equivalent visual QA at ~375 / 768 / 1280). Fix generic AI patterns before you call the rebrand done.
+
+If there is no brief, skip this section and leave Cool sparse.
+
 ### Fixture check
 
 Acceptance spot-checks after import. They are not ship defaults.
@@ -215,6 +231,7 @@ On a rebrand, leave these alone:
 - `app/admin/**`, `components/ui/**`, Stripe, checkout, the webhook, and the `package.json` version.
 - Do not add a theme switcher UI.
 - Do not change Inter or the Cool sparse defaults unless the buyer’s brand table says so.
+- Do not change the published ship default (Cool sparse + Inter) in docs or fixtures to match one buyer’s taste rebrand. Buyer repos may diverge after **AI taste rebrand (optional)**.
 
 Admin keeps its own tokens on `.admin`. A shop restyle does not repaint the operations UI.
 
