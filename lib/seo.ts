@@ -70,15 +70,16 @@ export type RobotsDocument = {
 
 export function robotsPolicy(sitemap: string, allowAi = allowAiCrawlers()): RobotsDocument {
   const agents = [...aiCrawlerAgents];
+  const blocked = [...robotsDisallow];
   const ai: RobotsRule = allowAi
-    ? { userAgent: agents, allow: "/", disallow: [...robotsDisallow] }
-    : { userAgent: agents, disallow: "/" };
+    ? { userAgent: agents, allow: "/", disallow: blocked }
+    : { userAgent: agents, disallow: ["/", ...blocked] };
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: [...robotsDisallow],
+        disallow: blocked,
       },
       ai,
     ],

@@ -22,8 +22,10 @@ type LlmsProduct = {
 };
 
 /**
- * Public store summary for answer engines. Catalogue and brand copy only.
- * No admin or API routes, no customer or order records, no secrets.
+ * Public store summary for answer engines.
+ * Uses the store name, tagline, description, and visible catalogue rows only.
+ * Hidden products (including unpublished imports) are omitted.
+ * No customer records, support inbox, or environment values.
  */
 export function llmsTxt(input: {
   origin: string;
@@ -47,7 +49,7 @@ export function llmsTxt(input: {
     .join("\n");
   blocks.push(`## Pages\n\n${pages}`);
 
-  const products = input.products.filter((product) => !product.hidden);
+  const products = input.products.filter((product) => product.hidden !== true);
   if (products.length > 0) {
     const lines = products
       .map((product) =>

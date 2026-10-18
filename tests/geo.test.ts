@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { GET } from "../app/llms.txt/route.ts";
+import { GET, llmsBody } from "../app/llms.txt/route.ts";
 import robots from "../app/robots.ts";
 import { products } from "../data/products.ts";
 import { siteConfig } from "../data/site.config.ts";
@@ -252,7 +252,11 @@ test("robots.txt allows AI crawlers by default and blocks them when turned off",
         assert.deepEqual(rule?.disallow, [...robotsDisallow]);
       } else {
         assert.equal(rule?.allow, undefined);
-        assert.deepEqual(rule?.disallow, "/");
+        assert.deepEqual(rule?.disallow, ["/", ...robotsDisallow]);
+      }
+      const blocked = Array.isArray(rule?.disallow) ? rule.disallow : [rule?.disallow];
+      for (const path of ["/admin", "/api", "/success", "/cancel"]) {
+        assert.equal(blocked.includes(path) || blocked.includes("/"), true, `${bot} ${path}`);
       }
     }
   }
@@ -269,9 +273,17 @@ test("robots.txt allows AI crawlers by default and blocks them when turned off",
     process.env.GEO_ALLOW_AI_CRAWLERS = "0";
     const closed = rulesByAgent(robots().rules);
     assert.equal(closed.get("*")?.allow, "/");
-    assert.deepEqual(closed.get("PerplexityBot")?.disallow, "/");
-    assert.deepEqual(closed.get("Bingbot")?.disallow, "/");
+    assert.deepEqual(closed.get("*")?.disallow, [...robotsDisallow]);
+    assert.deepEqual(closed.get("PerplexityBot")?.disallow, ["/", ...robotsDisallow]);
+    assert.deepEqual(closed.get("Bingbot")?.disallow, ["/", ...robotsDisallow]);
     assert.equal(closed.get("Google-Extended")?.allow, undefined);
+    for (const agent of ["*", ...aiCrawlerAgents]) {
+      const blocked = closed.get(agent)?.disallow;
+      const list = Array.isArray(blocked) ? blocked : [blocked];
+      for (const path of ["/admin", "/api", "/success", "/cancel"]) {
+        assert.equal(list.includes(path), true, `${agent} ${path}`);
+      }
+    }
   } finally {
     if (previous === undefined) delete process.env.GEO_ALLOW_AI_CRAWLERS;
     else process.env.GEO_ALLOW_AI_CRAWLERS = previous;
@@ -323,6 +335,25 @@ test("llms.txt lists the brand and catalogue and skips private paths and contact
   assert.equal(source.includes("orders"), false);
 });
 
+test("JSON-LD stringifies and escapes < so product copy cannot close the script", () => {
+  const hostile = "Cedar <spoon> </script><script>alert(1)</script>";
+  const data = productJsonLd(
+    product({ name: hostile, description: `Washed ${hostile} linen.` }),
+    `${origin}/products/linen-market-tote`,
+    "usd",
+    origin,
+  );
+  const raw = serializeJsonLd(data);
+  assert.equal(raw, JSON.stringify(data).replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026"));
+  assert.match(raw, /\\u003c/);
+  assert.equal(raw.includes("<"), false);
+  assert.equal(raw.includes("</script>"), false);
+  assert.equal(JSON.parse(raw).name, hostile);
+  const component = read("components/shop/json-ld.tsx");
+  assert.match(component, /serializeJsonLd/);
+  assert.equal(component.includes("JSON.stringify"), false);
+});
+
 test("llms.txt route serves the public catalogue as text", async () => {
   const response = await GET();
   assert.equal(response.headers.get("content-type"), "text/plain; charset=utf-8");
@@ -334,6 +365,37 @@ test("llms.txt route serves the public catalogue as text", async () => {
   const paths = pathsIn(text);
   assert.equal(paths.some((path) => path === "/admin" || path.startsWith("/admin/")), false);
   assert.equal(paths.some((path) => path === "/api" || path.startsWith("/api/")), false);
+
+  const sentinel = "sk_test_geo_secret_should_not_leak";
+  const previousSecret = process.env.ADMIN_SECRET;
+  const previousStripe = process.env.STRIPE_SECRET_KEY;
+  const previousDatabase = process.env.DATABASE_URL;
+  try {
+    process.env.ADMIN_SECRET = sentinel;
+    process.env.STRIPE_SECRET_KEY = sentinel;
+    process.env.DATABASE_URL = "postgresql://user:password@db.internal:5432/orders";
+    const again = llmsBody();
+    assert.equal(again, text);
+    assert.equal(again.includes(sentinel), false);
+    assert.equal(again.includes("db.internal"), false);
+    assert.equal(again.includes("support@example.com"), false);
+  } finally {
+    if (previousSecret === undefined) delete process.env.ADMIN_SECRET;
+    else process.env.ADMIN_SECRET = previousSecret;
+    if (previousStripe === undefined) delete process.env.STRIPE_SECRET_KEY;
+    else process.env.STRIPE_SECRET_KEY = previousStripe;
+    if (previousDatabase === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = previousDatabase;
+  }
+
+  const route = read("app/llms.txt/route.ts");
+  assert.match(route, /export const dynamic = "force-static"/);
+  assert.match(route, /export function GET\(\): Response/);
+  assert.equal(route.includes("searchParams"), false);
+  assert.equal(route.includes("request"), false);
+  assert.equal(route.includes("nextUrl"), false);
+  assert.equal(route.includes("supportEmail"), false);
+  assert.equal(route.includes("ADMIN_SECRET"), false);
 });
 
 test("FAQ accordion questions match the schema input, and the crawler switch is documented", () => {
@@ -346,8 +408,17 @@ test("FAQ accordion questions match the schema input, and the crawler switch is 
   assert.match(faq, /faqPageJsonLd\(faqs/);
   assert.match(disclosure, /<details/);
   assert.match(disclosure, /<summary/);
-  assert.match(read(".env.example"), /GEO_ALLOW_AI_CRAWLERS=1/);
-  assert.match(read(".env.example"), /Set to 0/);
+  const example = read(".env.example");
+  assert.match(example, /GEO_ALLOW_AI_CRAWLERS=1/);
+  assert.match(example, /Server-only crawler switch/);
+  assert.match(example, /Not a secret/);
+  assert.match(example, /Set to 0/);
+  assert.equal(example.includes("NEXT_PUBLIC_GEO_ALLOW_AI_CRAWLERS"), false);
+  const deploy = read("DEPLOY-CHECKLIST.md");
+  assert.match(deploy, /\| `GEO_ALLOW_AI_CRAWLERS` \|/);
+  assert.match(deploy, /Not a secret and not `NEXT_PUBLIC_`/);
   assert.match(read("PLAYBOOK.md"), /GEO_ALLOW_AI_CRAWLERS/);
-  assert.match(read("DEPLOY-CHECKLIST.md"), /GEO_ALLOW_AI_CRAWLERS/);
+  const policy = read("lib/seo.ts");
+  assert.match(policy, /process\.env\.GEO_ALLOW_AI_CRAWLERS/);
+  assert.equal(policy.includes("NEXT_PUBLIC_GEO_ALLOW_AI_CRAWLERS"), false);
 });
