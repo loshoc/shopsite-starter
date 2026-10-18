@@ -34,6 +34,59 @@ export const publicPaths = [
 /** Checkout receipts and operations. Not linked from the public sitemap. */
 export const robotsDisallow = ["/admin", "/api", "/success", "/cancel"] as const;
 
+/**
+ * Crawlers named in `/robots.txt` so a buyer can allow or block them as a group.
+ * `GEO_ALLOW_AI_CRAWLERS=1` (the default when unset) allows them on public pages.
+ * `0` disallows them. Private paths stay disallowed either way.
+ */
+export const aiCrawlerAgents = [
+  "GPTBot",
+  "Google-Extended",
+  "PerplexityBot",
+  "ClaudeBot",
+  "Bingbot",
+] as const;
+
+const aiCrawlerOff = new Set(["0", "false", "no", "off"]);
+
+export function allowAiCrawlers(
+  value: string | null | undefined = process.env.GEO_ALLOW_AI_CRAWLERS,
+): boolean {
+  const raw = (value ?? "").trim().toLowerCase();
+  if (!raw) return true;
+  return !aiCrawlerOff.has(raw);
+}
+
+export type RobotsRule = {
+  userAgent: string | string[];
+  allow?: string;
+  disallow: string | string[];
+};
+
+export type RobotsDocument = {
+  rules: RobotsRule[];
+  sitemap: string;
+};
+
+export function robotsPolicy(sitemap: string, allowAi = allowAiCrawlers()): RobotsDocument {
+  const agents = [...aiCrawlerAgents];
+  const blocked = [...robotsDisallow];
+  const ai: RobotsRule = allowAi
+    ? { userAgent: agents, allow: "/", disallow: blocked }
+    : { userAgent: agents, disallow: ["/", ...blocked] };
+  return {
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: blocked,
+      },
+      ai,
+    ],
+    sitemap,
+  };
+}
+
 export function productPath(id: string): string {
   return `/products/${id}`;
 }

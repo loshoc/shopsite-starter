@@ -1,4 +1,5 @@
 import { descriptionText } from "@/lib/description-text";
+import { absoluteUrl, siteDescription } from "@/lib/seo";
 
 /**
  * JSON-LD for a `<script>` tag. `<` is escaped so a catalog string cannot
@@ -38,7 +39,11 @@ export type JsonLdProduct = {
   storeVariants?: JsonLdVariant[];
 };
 
-/** Hidden products are omitted. Out-of-stock offers stay OutOfStock. */
+/**
+ * Hidden products are omitted. Out-of-stock offers stay OutOfStock.
+ * `orderable` is live stock, not the catalogue seed. There is no review
+ * source, so this object never includes Review or AggregateRating.
+ */
 export function productJsonLd(
   product: JsonLdProduct,
   pageUrl: string,
@@ -84,6 +89,135 @@ export function productJsonLd(
   if (description) data.description = description;
   if (images.length > 0) data.image = images;
   return data;
+}
+
+const placeholderFaq = /todo:\s*replace me/i;
+
+export function faqPageJsonLd(
+  faqs: readonly { question: string; answer: string }[],
+  pageUrl?: string,
+): Record<string, unknown> | null {
+  const mainEntity = publishedFaqPairs(faqs).map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer,
+    },
+  }));
+  if (mainEntity.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    ...(pageUrl ? { url: pageUrl } : {}),
+    mainEntity,
+  };
+}
+
+/**
+ * A disclosure is a FAQ only when it is a real question and answer.
+ * A section label such as "Details" is not. Question-and-answer blocks
+ * inside that body are, when each question is its own line ending in "?".
+ */
+export function disclosureFaqs(
+  items: readonly { title: string; body: string }[],
+): { question: string; answer: string }[] {
+  const faqs: { question: string; answer: string }[] = [];
+  for (const item of items) {
+    const title = item.title.trim();
+    const body = item.body.trim();
+    if (!title || !body || placeholderFaq.test(title) || placeholderFaq.test(body)) continue;
+    if (title.endsWith("?")) {
+      faqs.push({ question: title, answer: body });
+      continue;
+    }
+    faqs.push(...faqsFromProse(body));
+  }
+  return publishedFaqPairs(faqs);
+}
+
+function faqsFromProse(body: string): { question: string; answer: string }[] {
+  const faqs: { question: string; answer: string }[] = [];
+  for (const block of body.split(/\n\s*\n/)) {
+    const lines = block
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+    if (lines.length < 2) continue;
+    const question = lines[0] ?? "";
+    if (!question.endsWith("?") || placeholderFaq.test(question)) continue;
+    const answer = lines.slice(1).join("\n").trim();
+    if (!answer || placeholderFaq.test(answer)) continue;
+    faqs.push({ question, answer });
+  }
+  return faqs;
+}
+
+function publishedFaqPairs(
+  faqs: readonly { question: string; answer: string }[],
+): { question: string; answer: string }[] {
+  const seen = new Set<string>();
+  const cleaned: { question: string; answer: string }[] = [];
+  for (const item of faqs) {
+    const question = item.question.trim();
+    const answer = item.answer.trim();
+    if (!question || !answer) continue;
+    if (placeholderFaq.test(question) || placeholderFaq.test(answer)) continue;
+    if (seen.has(question)) continue;
+    seen.add(question);
+    cleaned.push({ question, answer });
+  }
+  return cleaned;
+}
+
+export function organizationWebSiteJsonLd(
+  config: { name: string; tagline: string; description: string },
+  origin: string,
+): Record<string, unknown> {
+  const name = config.name.trim() || "Store";
+  const summary = siteDescription({ name: config.name, tagline: config.tagline });
+  const about = config.description.trim() || summary;
+  const organizationId = `${origin}/#organization`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": organizationId,
+        name,
+        url: origin,
+        ...(about ? { description: about } : {}),
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${origin}/#website`,
+        name,
+        url: origin,
+        ...(summary ? { description: summary } : {}),
+        publisher: { "@id": organizationId },
+      },
+    ],
+  };
+}
+
+export function breadcrumbJsonLd(
+  items: readonly { name: string; path: string }[],
+  origin: string,
+): Record<string, unknown> | null {
+  const crumbs = items
+    .map((item) => ({ name: item.name.trim(), path: item.path }))
+    .filter((item) => item.name.length > 0);
+  if (crumbs.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path, origin),
+    })),
+  };
 }
 
 function absoluteImage(origin: string, src: string): string | null {
