@@ -246,11 +246,13 @@ html[data-chrome="soft-card"] .shop-card {
 /* Storefront controls — one ink ring. Admin keeps its own focus styles. */
 .shop-focus,
 a.shop-focus,
-button.shop-focus {
+button.shop-focus,
+.shop-copy a {
   outline: none;
 }
 
-.shop-focus:focus-visible {
+.shop-focus:focus-visible,
+.shop-copy a:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 3px;
 }
@@ -295,7 +297,8 @@ button.shop-focus {
   }
 }
 
-.shop-link {
+.shop-link,
+.shop-copy a {
   text-decoration: underline;
   text-decoration-color: transparent;
   text-underline-offset: 0.2em;
@@ -305,8 +308,31 @@ button.shop-focus {
     color var(--t-hover) ease;
 }
 
+.shop-copy a {
+  color: inherit;
+}
+
+/* Exit links and catalogue anchors stay identifiable without a hover. */
+.shop-link-rest,
+.shop-copy a {
+  text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
+}
+
+.shop-link:focus-visible,
+.shop-copy a:focus-visible,
+.group:focus-visible .shop-link {
+  text-decoration-color: currentColor;
+  color: var(--fg);
+}
+
+.shop-follow {
+  display: inline-block;
+  margin-top: var(--stack-gap);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .shop-link:hover,
+  .shop-copy a:hover,
   .group:hover .shop-link {
     text-decoration-color: currentColor;
     color: var(--fg);
@@ -314,7 +340,8 @@ button.shop-focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shop-link {
+  .shop-link,
+  .shop-copy a {
     transition: none;
   }
 }
@@ -330,7 +357,8 @@ button.shop-focus {
   transition:
     background-color var(--t-hover) ease,
     color var(--t-hover) ease,
-    border-color var(--t-hover) ease;
+    border-color var(--t-hover) ease,
+    transform var(--t-press) var(--ease-out);
 }
 
 .shop-chip[aria-pressed="true"] {
@@ -343,6 +371,10 @@ button.shop-focus {
   color: var(--muted);
 }
 
+.shop-chip:active {
+  transform: scale(0.98);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .shop-chip:hover:not([aria-pressed="true"]) {
     border-color: var(--fg);
@@ -352,6 +384,10 @@ button.shop-focus {
 @media (prefers-reduced-motion: reduce) {
   .shop-chip {
     transition: none;
+  }
+
+  .shop-chip:active {
+    transform: none;
   }
 }
 
@@ -411,6 +447,14 @@ button.shop-focus {
   transform: none;
 }
 
+.shop-bag-line {
+  border-bottom: 1px solid var(--border);
+}
+
+.shop-bag-line:last-child {
+  border-bottom-width: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .shop-bag-backdrop,
   .shop-bag-panel {
@@ -441,12 +485,26 @@ button.shop-focus {
 }
 
 .shop-disclosure-icon {
-  transition: transform var(--t-ui) var(--ease-out);
+  transition:
+    transform var(--t-ui) var(--ease-out),
+    color var(--t-hover) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shop-disclosure:hover .shop-disclosure-icon {
+    color: var(--fg);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .shop-disclosure-icon {
     transition: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .shop-buy-pad {
+    padding-inline: var(--section-x);
   }
 }
 
