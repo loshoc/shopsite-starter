@@ -52,7 +52,7 @@ export default async function SuccessPage({
             : "If Stripe redirected you here, the receipt is in your inbox when email is collected at Checkout."}
         </p>
       )}
-      <Link href="/shop" className="mt-6 inline-block text-sm underline">
+      <Link href="/shop" className="shop-link shop-link-rest shop-focus shop-follow text-sm">
         Continue browsing
       </Link>
     </div>

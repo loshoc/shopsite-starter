@@ -190,7 +190,7 @@ export function CartDrawer() {
           <button
             type="button"
             data-bag-close
-            className="shop-focus text-sm text-muted"
+            className="shop-link shop-focus text-sm text-muted"
             onClick={closeBag}
           >
             Close
@@ -211,7 +211,7 @@ export function CartDrawer() {
           <>
             <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
               {lines.map((line) => (
-                <div key={line.skuId} className="flex items-start justify-between gap-3 border-b border-border pb-4">
+                <div key={line.skuId} className="shop-bag-line flex items-start justify-between gap-3 border-b border-border pb-4">
                   <div>
                     <p className="font-medium">{line.product?.name ?? line.skuId}</p>
                     <p className="text-sm text-muted">

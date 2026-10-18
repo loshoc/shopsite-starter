@@ -136,6 +136,20 @@ test("detail polish keeps one motion and focus system", () => {
   assert.match(card, /shop-stack-tight/);
   assert.match(card, /shop-link/);
   assert.equal(css.includes(".admin {\n  --background: #fafafa;"), true);
+  assert.match(css, /\.shop-link:focus-visible/);
+  assert.match(css, /\.shop-link-rest/);
+  assert.match(css, /\.shop-chip:active/);
+  assert.match(css, /\.shop-disclosure:hover \.shop-disclosure-icon/);
+  assert.match(css, /\.shop-buy-pad/);
+  assert.match(css, /\.shop-bag-line:last-child/);
+  assert.match(read("components/shop/disclosure.tsx"), /shop-disclosure/);
+  assert.match(read("components/shop/product-purchase.tsx"), /shop-buy-pad/);
+  assert.match(read("components/shop/product-description.tsx"), /shop-copy/);
+  for (const path of ["app/(shop)/success/page.tsx", "app/(shop)/cancel/page.tsx", "app/not-found.tsx"]) {
+    const source = read(path);
+    assert.match(source, /shop-link shop-link-rest shop-focus shop-follow/);
+    assert.equal(source.includes("underline"), false, path);
+  }
 });
 
 test("faq is an accordion shell and the placeholder is plain grey", () => {

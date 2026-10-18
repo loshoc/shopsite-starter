@@ -4,5 +4,5 @@ import { sanitizeDescription } from "@/lib/sanitize-description";
 export function ProductDescription({ html, className = "" }: { html: string; className?: string }) {
   const safe = sanitizeDescription(html);
   if (!safe) return null;
-  return <div className={className} dangerouslySetInnerHTML={{ __html: safe }} />;
+  return <div className={`shop-copy ${className}`} dangerouslySetInnerHTML={{ __html: safe }} />;
 }

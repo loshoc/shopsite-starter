@@ -78,7 +78,7 @@ export function ProductPurchase({ name, variants }: { name: string; variants: Pu
       </p>
       <div
         ref={barRef}
-        className="mt-4 max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:z-30 max-md:mt-0 max-md:border-t max-md:border-border max-md:bg-surface max-md:px-5 max-md:pt-3 max-md:pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+        className="shop-buy-pad mt-4 max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:z-30 max-md:mt-0 max-md:border-t max-md:border-border max-md:bg-surface max-md:pt-3 max-md:pb-[max(0.75rem,env(safe-area-inset-bottom))]"
       >
         <div className="flex items-center gap-3 md:block">
           <div className="min-w-0 flex-1 md:hidden">
