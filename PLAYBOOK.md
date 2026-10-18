@@ -1,6 +1,6 @@
 # ShopSite playbook
 
-Buyer guide for brand, catalogue, stock, checkout, and SEO. The ship route from the zip to a live store is [README.md](README.md) **Start path** (private GitHub, then Vercel **Import Git**). Local `npm` stays in README **Cold start**.
+Buyer guide for brand, catalogue, stock, checkout, SEO, and search visibility. The ship route from the zip to a live store is [README.md](README.md) **Start path** (private GitHub, then Vercel **Import Git**). Local `npm` stays in README **Cold start**.
 
 **Start** below is that brand pass. The same pass for an AI edit is [SKILL.md](SKILL.md) **Start**.
 
@@ -10,7 +10,7 @@ Release checks: [DOCUMENTATION-CHECKLIST.md](DOCUMENTATION-CHECKLIST.md).
 
 ## Start
 
-Work this section before the deeper pages below. Import commands, stock, the money path, SEO, and the legal file list stay in those pages. Deploy clicks stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+Work this section before the deeper pages below. Import commands, stock, the money path, SEO, search visibility, and the legal file list stay in those pages. Deploy clicks stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
 ### Intake
 
@@ -322,6 +322,20 @@ Sold-out checkout is fail-closed: the API refuses the cart and does not open Str
 5. A verified paid event decrements stock and stores a thin order row (email, total, currency, status, Checkout session id, payment intent id, reserved SKUs, and an oversold flag). Card data is not stored.
 6. When PayPal is configured, the bag also shows PayPal Buttons. That path checks the same stock, then creates and captures a PayPal order. Stock and the order row change only after `/api/webhooks/paypal` verifies the signature. The return to `/success` does not write stock. Sandbox, then live: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). Go-live prove: [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) **PayPal (optional)**.
 
+### Sandbox PayPal refund and restock
+
+Refund the payment in the PayPal sandbox account that received it. Refund the full capture. Admin has no refund button.
+
+Stock and the order change only after `/api/webhooks/paypal` accepts a signed `PAYMENT.CAPTURE.REFUNDED` event for that full refund. On localhost, PayPal has to reach that path through the Dashboard webhook simulator or a tunnel. Setup: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) **PayPal sandbox and live**.
+
+Then check the admin:
+
+- **Admin → Orders**, column **Status**: **Refunded**.
+- **Admin → Orders**, column **Stock**: **Restocked**.
+- **Admin → Stock**, column **Qty**: each reserved SKU is higher by the units that order held.
+
+A partial refund leaves **Qty** unchanged. **Status** shows **Partial refund**. **Stock** shows **Restock inventory** when you want those units returned by hand. The rule is also in [INVENTORY.md](INVENTORY.md) and [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) **PayPal (optional)**.
+
 Forward Stripe webhooks locally with the command in the README cold start. PayPal cannot call localhost; the Dashboard webhook simulator or a tunnel has to reach `/api/webhooks/paypal`.
 
 ## SEO
@@ -330,9 +344,61 @@ Set `name` and `tagline` in `data/site.config.ts`. Those fields drive titles and
 
 `NEXT_PUBLIC_APP_URL` is the public site origin, with no trailing slash. Local development: `http://localhost:3000`. Set the production origin before the first production build. Those rules are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
-After deploy, submit `https://YOUR_DOMAIN/sitemap.xml` in Google Search Console. `/robots.txt` already blocks `/admin`, `/api`, `/success`, and `/cancel`.
+Submitting the site, the crawler switch, `/llms.txt`, and FAQ markup are in **Search visibility**.
 
-AI crawlers are allowed on public pages by default: GPTBot, Google-Extended, PerplexityBot, ClaudeBot, and Bingbot. They still follow those blocks. `GEO_ALLOW_AI_CRAWLERS` defaults to `1` in `.env.example`. Set it to `0` and rebuild to disallow those crawlers. `/llms.txt` lists the store name, description, public pages, and products.
+## Search visibility
+
+Use this after **SEO**. It covers what the shop already publishes for search and answer engines, and the two webmaster accounts you submit by hand.
+
+### What the pages already include
+
+The HTML includes structured data (`application/ld+json`).
+
+- Home (`/`) includes `Organization` and `WebSite`, from `name`, `tagline`, and `description` in `data/site.config.ts`.
+- A product page includes `Product` and `Offer`: name, price, `currency`, and live availability. An orderable SKU uses `https://schema.org/InStock`. A sold-out SKU uses `https://schema.org/OutOfStock`. More than one variant wraps those offers in `AggregateOffer`. A hidden product is omitted.
+- A product page, `/shop`, and `/faq` include `BreadcrumbList`.
+- `/faq` includes `FAQPage` from `faqs` in `data/site.config.ts`. The question and answer strings match the accordion. The shell row `TODO: Replace me` is omitted.
+- A product page includes `FAQPage` only when that product's `details` text is a real question and answer. The accordion title **Details** is a label. A question is its own line ending in `?`, with the answer underneath. Text that says `TODO: Replace me` is skipped.
+
+A product has no review field. The markup includes neither `Review` nor `AggregateRating`.
+
+### Submit your site
+
+After deploy:
+
+1. In [Google Search Console](https://search.google.com/search-console), add a property for the public origin (`NEXT_PUBLIC_APP_URL`), verify that you own it, and submit `https://YOUR_DOMAIN/sitemap.xml`.
+2. In [Bing Webmaster Tools](https://www.bing.com/webmasters), import that property from Google Search Console, or add the site and verify it there. Submit the same sitemap.
+
+`/robots.txt` disallows `/admin`, `/api`, `/success`, and `/cancel` for every crawler.
+
+### AI crawlers
+
+`GEO_ALLOW_AI_CRAWLERS` is server-only. Leave it without a `NEXT_PUBLIC_` prefix. The name and the default already sit in [.env.example](.env.example) and in the env table in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+
+Unset, or `1`, allows GPTBot, Google-Extended, PerplexityBot, ClaudeBot, and Bingbot on public pages. Those crawlers still skip `/admin`, `/api`, `/success`, and `/cancel`.
+
+Set it to `0` and rebuild to disallow that group. Setting it to `0` also blocks Bingbot, so the store drops out of normal Bing search too. Other crawlers still use the public-page rules.
+
+### `/llms.txt`
+
+Open `/llms.txt` on the site (`http://localhost:3000/llms.txt` locally). It lists the public brand and catalogue only: `name` from `data/site.config.ts`, a one-line summary built from `name` and `tagline`, and `description` when that text is different. Then the public pages (home, shop, shipping, returns, FAQ, privacy, terms). Then each visible product with its link, description, and price in `currency` (a low–high range when variant prices differ). Hidden products are omitted. Orders, customers, and `supportEmail` are omitted.
+
+`/llms.txt` is generated when the site is built. A change to the catalogue, or to `hidden`, shows up there only after a rebuild and redeploy.
+
+### Write the FAQ
+
+Write short questions a buyer would actually ask. Answer each one directly, in the same words the page shows.
+
+Store FAQ: add pairs to `faqs` in `data/site.config.ts`. Each pair has a `question` and an `answer`. `/faq` shows those pairs. With an empty list, the page shows `TODO: Replace me`, and that shell stays out of the FAQ markup. The go-live check for the page copy is **Legal pages and footer**.
+
+Product FAQ markup is taken from the product `details` field. The product page shows that field in the **Details** accordion. Separate each pair with a blank line. The first line is the question and ends in `?`. The lines under it are the answer. A product import writes `details` as an empty string.
+
+### Check
+
+- View the page source and find `application/ld+json`.
+- Check a product URL in [Google's Rich Results Test](https://search.google.com/test/rich-results) or the [Schema.org validator](https://validator.schema.org/).
+- On a sold-out SKU, the offer availability is `https://schema.org/OutOfStock`.
+- Open `/robots.txt` and `/llms.txt` on the deployed origin.
 
 ## Legal pages and footer
 
