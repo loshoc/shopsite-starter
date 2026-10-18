@@ -447,6 +447,10 @@ button.shop-focus,
   transform: none;
 }
 
+.shop-bag-line {
+  border-bottom: 1px solid var(--border);
+}
+
 .shop-bag-line:last-child {
   border-bottom-width: 0;
 }
