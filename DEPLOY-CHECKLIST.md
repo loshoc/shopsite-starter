@@ -32,6 +32,7 @@ Set these on the Vercel project for **Production** before the first production b
 | `PAYPAL_LIVE_WEBHOOK_ID` | Optional. Live webhook id. Server-only. Stripe Checkout works without it. |
 | `DATABASE_URL` | A real Postgres URL in production (`postgresql://USER:PASSWORD@HOST:5432/DATABASE`). A missing URL or the example placeholder refuses boot. |
 | `NEXT_PUBLIC_APP_URL` | Public https origin, no trailing slash: `https://shop.example.com`. The production build fails when this is missing or a local-only host (`localhost`, `127.0.0.1`, and similar). |
+| `GEO_ALLOW_AI_CRAWLERS` | Optional. `1` (default) allows GPTBot, Google-Extended, PerplexityBot, ClaudeBot, and Bingbot on public pages. `0` disallows those crawlers. `/admin`, `/api`, `/success`, and `/cancel` stay disallowed either way. Rebuild after a change. |
 
 Vercel **Preview** builds may omit `NEXT_PUBLIC_APP_URL`. They fall back to `https://$VERCEL_URL`. Production does not.
 

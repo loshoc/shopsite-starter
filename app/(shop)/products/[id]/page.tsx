@@ -12,7 +12,7 @@ import { getProduct } from "@/data/products";
 import { appUrl } from "@/lib/app-url";
 import { getStoreProduct, type StoreVariant } from "@/lib/catalogue";
 import { descriptionText } from "@/lib/description-text";
-import { productJsonLd } from "@/lib/json-ld";
+import { breadcrumbJsonLd, disclosureFaqs, faqPageJsonLd, productJsonLd } from "@/lib/json-ld";
 import { metaDescription, pageMetadata, productPath } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -46,10 +46,22 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   const origin = appUrl();
   const pageUrl = `${origin}${productPath(product.id)}`;
   const details = product.details?.trim() ?? "";
+  const disclosures = details ? [{ title: "Details", body: details }] : [];
 
   return (
     <>
       <JsonLd data={productJsonLd(product, pageUrl, siteConfig.currency, origin)} />
+      <JsonLd
+        data={breadcrumbJsonLd(
+          [
+            { name: "Home", path: "/" },
+            { name: "Shop", path: "/shop" },
+            { name: product.name, path: productPath(product.id) },
+          ],
+          origin,
+        )}
+      />
+      <JsonLd data={faqPageJsonLd(disclosureFaqs(disclosures), pageUrl)} />
       <div className="shop-pad shop-split mx-auto grid max-w-6xl md:grid-cols-2">
         <div>
           <ProductMedia name={product.name} images={product.images} className="shop-frame min-h-80 w-full" />

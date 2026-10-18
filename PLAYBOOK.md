@@ -332,6 +332,8 @@ Set `name` and `tagline` in `data/site.config.ts`. Those fields drive titles and
 
 After deploy, submit `https://YOUR_DOMAIN/sitemap.xml` in Google Search Console. `/robots.txt` already blocks `/admin`, `/api`, `/success`, and `/cancel`.
 
+AI crawlers are allowed on public pages by default: GPTBot, Google-Extended, PerplexityBot, ClaudeBot, and Bingbot. They still follow those blocks. `GEO_ALLOW_AI_CRAWLERS` defaults to `1` in `.env.example`. Set it to `0` and rebuild to disallow those crawlers. `/llms.txt` lists the store name, description, public pages, and products.
+
 ## Legal pages and footer
 
 Do this before go-live. Editing the brand or the catalogue does not replace these files. The starter copy is a shell, not a policy.
