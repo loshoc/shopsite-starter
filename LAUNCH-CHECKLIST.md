@@ -39,6 +39,7 @@ Skip this section to stay Stripe-only. Placeholders in `.env.example` hide PayPa
 - [ ] Sandbox and live client ids and secrets are different apps. The server never sends the sandbox client id with the live secret.
 - [ ] The webhook URL is `https://YOUR_DOMAIN/api/webhooks/paypal` for `PAYMENT.CAPTURE.COMPLETED` and `PAYMENT.CAPTURE.REFUNDED`. Stock and the order row change only after that signature verifies. Capturing from the bag does not write stock by itself.
 - [ ] Go-live prove (sandbox): stock moves only after a signed PayPal webhook (`PAYMENT.CAPTURE.COMPLETED`), not on capture alone. Path: sandbox → signed webhook → stock.
+- [ ] Go-live prove (sandbox): a full refund restocks only after a signed PayPal webhook (`PAYMENT.CAPTURE.REFUNDED`). Path: full refund → signed webhook → stock up. A partial refund does not restock. See **5. Inventory and sold-out**.
 
 Setup steps: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) **PayPal sandbox and live**.
 

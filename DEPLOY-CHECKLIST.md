@@ -90,6 +90,8 @@ Live credentials on a local address hide PayPal. The message is `PayPal live cre
 
 The capture call (`/api/paypal/orders/capture`) talks to PayPal and does not decrement stock. `/api/webhooks/paypal` verifies the signature with PayPal before any order or stock write. A failed verification does not change inventory.
 
+A verified `PAYMENT.CAPTURE.REFUNDED` for a full refund restocks. A partial refund does not restock. Sandbox go-live prove: [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) **PayPal (optional)**.
+
 ## 4. Checkout business name
 
 The name on the Stripe-hosted Checkout page is this Stripe account's **Business name**. `name` in `data/site.config.ts` is the storefront title (header and page titles). The kit leaves `branding_settings.display_name` unset, so Checkout keeps the Dashboard value.
