@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { GET, llmsBody } from "../app/llms.txt/route.ts";
+import { GET } from "../app/llms.txt/route.ts";
+import { llmsBody } from "../lib/llms.ts";
 import robots from "../app/robots.ts";
 import { products } from "../data/products.ts";
 import { siteConfig } from "../data/site.config.ts";

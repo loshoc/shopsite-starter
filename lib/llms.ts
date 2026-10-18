@@ -1,3 +1,6 @@
+import { products } from "@/data/products";
+import { siteConfig } from "@/data/site.config";
+import { appUrl } from "@/lib/app-url";
 import { descriptionText } from "@/lib/description-text";
 import { centsToPrice } from "@/lib/json-ld";
 import { absoluteUrl, productPath, publicPaths, siteDescription } from "@/lib/seo";
@@ -64,6 +67,19 @@ export function llmsTxt(input: {
   }
 
   return `${blocks.join("\n\n")}\n`;
+}
+
+export function llmsBody(): string {
+  return llmsTxt({
+    origin: appUrl(),
+    brand: {
+      name: siteConfig.name,
+      tagline: siteConfig.tagline,
+      description: siteConfig.description,
+    },
+    products: products.filter((product) => product.hidden !== true),
+    currency: siteConfig.currency,
+  });
 }
 
 function productDetail(product: LlmsProduct, currency: string): string {
