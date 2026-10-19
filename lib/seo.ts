@@ -38,6 +38,8 @@ export const robotsDisallow = ["/admin", "/api", "/success", "/cancel"] as const
  * Crawlers named in `/robots.txt` so a buyer can allow or block them as a group.
  * `GEO_ALLOW_AI_CRAWLERS=1` (the default when unset) allows them on public pages.
  * `0` disallows them. Private paths stay disallowed either way.
+ * `GEO_KEEP_BINGBOT=1` keeps Bingbot on public pages when that group is off.
+ * Unset, or any value other than `1`, leaves Bingbot in the group.
  */
 export const aiCrawlerAgents = [
   "GPTBot",
@@ -57,6 +59,13 @@ export function allowAiCrawlers(
   return !aiCrawlerOff.has(raw);
 }
 
+/** True only for `GEO_KEEP_BINGBOT=1`. Unset and every other value stay off. */
+export function keepBingbot(
+  value: string | null | undefined = process.env.GEO_KEEP_BINGBOT,
+): boolean {
+  return (value ?? "").trim() === "1";
+}
+
 export type RobotsRule = {
   userAgent: string | string[];
   allow?: string;
@@ -68,23 +77,34 @@ export type RobotsDocument = {
   sitemap: string;
 };
 
-export function robotsPolicy(sitemap: string, allowAi = allowAiCrawlers()): RobotsDocument {
+export function robotsPolicy(
+  sitemap: string,
+  allowAi = allowAiCrawlers(),
+  keepBing = keepBingbot(),
+): RobotsDocument {
   const agents = [...aiCrawlerAgents];
   const blocked = [...robotsDisallow];
+  const separateBingbot = keepBing && !allowAi;
+  const group = separateBingbot ? agents.filter((agent) => agent !== "Bingbot") : agents;
   const ai: RobotsRule = allowAi
-    ? { userAgent: agents, allow: "/", disallow: blocked }
-    : { userAgent: agents, disallow: ["/", ...blocked] };
-  return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow: blocked,
-      },
-      ai,
-    ],
-    sitemap,
-  };
+    ? { userAgent: group, allow: "/", disallow: blocked }
+    : { userAgent: group, disallow: ["/", ...blocked] };
+  const rules: RobotsRule[] = [
+    {
+      userAgent: "*",
+      allow: "/",
+      disallow: blocked,
+    },
+    ai,
+  ];
+  if (separateBingbot) {
+    rules.push({
+      userAgent: "Bingbot",
+      allow: "/",
+      disallow: blocked,
+    });
+  }
+  return { rules, sitemap };
 }
 
 export function productPath(id: string): string {

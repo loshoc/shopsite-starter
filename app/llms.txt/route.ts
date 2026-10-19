@@ -7,6 +7,7 @@ export function GET(): Response {
   return new Response(llmsBody(), {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }

@@ -336,7 +336,7 @@ Then check the admin:
 
 A partial refund leaves **Qty** unchanged. **Status** shows **Partial refund**. **Stock** shows **Restock inventory** when you want those units returned by hand. The rule is also in [INVENTORY.md](INVENTORY.md) and [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) **PayPal (optional)**.
 
-Forward Stripe webhooks locally with the command in the README cold start. PayPal cannot call localhost; the Dashboard webhook simulator or a tunnel has to reach `/api/webhooks/paypal`.
+Forward Stripe webhooks locally with the command in the README cold start.
 
 ## SEO
 
@@ -373,11 +373,11 @@ After deploy:
 
 ### AI crawlers
 
-`GEO_ALLOW_AI_CRAWLERS` is server-only. Leave it without a `NEXT_PUBLIC_` prefix. The name and the default already sit in [.env.example](.env.example) and in the env table in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+`GEO_ALLOW_AI_CRAWLERS` and `GEO_KEEP_BINGBOT` are server-only. Leave them without a `NEXT_PUBLIC_` prefix. Neither is a secret. The names and the defaults already sit in [.env.example](.env.example) and in the env table in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
 Unset, or `1`, allows GPTBot, Google-Extended, PerplexityBot, ClaudeBot, and Bingbot on public pages. Those crawlers still skip `/admin`, `/api`, `/success`, and `/cancel`.
 
-Set it to `0` and rebuild to disallow that group. Setting it to `0` also blocks Bingbot, so the store drops out of normal Bing search too. Other crawlers still use the public-page rules.
+Set `GEO_ALLOW_AI_CRAWLERS` to `0` and rebuild to disallow that group. By default, `0` still blocks Bingbot, so the store drops out of normal Bing search too. `GEO_KEEP_BINGBOT=1` keeps Bingbot (normal Bing search) on public pages while the other AI crawlers stay disallowed. Leave `GEO_KEEP_BINGBOT` unset unless you want that. Other crawlers still use the public-page rules.
 
 ### `/llms.txt`
 
