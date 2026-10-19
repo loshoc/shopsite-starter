@@ -18,7 +18,7 @@ import {
   type JsonLdProduct,
 } from "../lib/json-ld.ts";
 import { llmsTxt } from "../lib/llms.ts";
-import { aiCrawlerAgents, allowAiCrawlers, robotsDisallow, robotsPolicy, type RobotsRule } from "../lib/seo.ts";
+import { aiCrawlerAgents, allowAiCrawlers, keepBingbot, robotsDisallow, robotsPolicy, type RobotsRule } from "../lib/seo.ts";
 
 const origin = "https://shop.example.com";
 
@@ -237,10 +237,27 @@ test("robots.txt allows AI crawlers by default and blocks them when turned off",
   assert.equal(allowAiCrawlers("false"), false);
   assert.equal(allowAiCrawlers("OFF"), false);
 
+  assert.equal(keepBingbot(undefined), false);
+  assert.equal(keepBingbot(""), false);
+  assert.equal(keepBingbot("0"), false);
+  assert.equal(keepBingbot("true"), false);
+  assert.equal(keepBingbot("1"), true);
+  assert.equal(keepBingbot(" 1 "), true);
+
   const sitemap = `${origin}/sitemap.xml`;
+  const privatePaths = ["/admin", "/api", "/success", "/cancel"] as const;
+  const openRules: RobotsRule[] = [
+    { userAgent: "*", allow: "/", disallow: [...privatePaths] },
+    { userAgent: [...aiCrawlerAgents], allow: "/", disallow: [...privatePaths] },
+  ];
+  const closedRules: RobotsRule[] = [
+    { userAgent: "*", allow: "/", disallow: [...privatePaths] },
+    { userAgent: [...aiCrawlerAgents], disallow: ["/", ...privatePaths] },
+  ];
   for (const allowed of [true, false]) {
-    const doc = robotsPolicy(sitemap, allowed);
+    const doc = robotsPolicy(sitemap, allowed, false);
     assert.equal(doc.sitemap, sitemap);
+    assert.deepEqual(doc.rules, allowed ? openRules : closedRules);
     const rules = rulesByAgent(doc.rules);
     const star = rules.get("*");
     assert.equal(star?.allow, "/");
@@ -256,20 +273,35 @@ test("robots.txt allows AI crawlers by default and blocks them when turned off",
         assert.deepEqual(rule?.disallow, ["/", ...robotsDisallow]);
       }
       const blocked = Array.isArray(rule?.disallow) ? rule.disallow : [rule?.disallow];
-      for (const path of ["/admin", "/api", "/success", "/cancel"]) {
+      for (const path of privatePaths) {
         assert.equal(blocked.includes(path) || blocked.includes("/"), true, `${bot} ${path}`);
       }
     }
   }
 
+  const kept = robotsPolicy(sitemap, false, true);
+  assert.deepEqual(kept.rules, [
+    { userAgent: "*", allow: "/", disallow: [...privatePaths] },
+    {
+      userAgent: aiCrawlerAgents.filter((agent) => agent !== "Bingbot"),
+      disallow: ["/", ...privatePaths],
+    },
+    { userAgent: "Bingbot", allow: "/", disallow: [...privatePaths] },
+  ]);
+  assert.deepEqual(robotsPolicy(sitemap, true, true).rules, openRules);
+
   const previous = process.env.GEO_ALLOW_AI_CRAWLERS;
+  const previousKeep = process.env.GEO_KEEP_BINGBOT;
   try {
     delete process.env.GEO_ALLOW_AI_CRAWLERS;
+    delete process.env.GEO_KEEP_BINGBOT;
     assert.equal(allowAiCrawlers(), true);
+    assert.equal(keepBingbot(), false);
     const open = rulesByAgent(robots().rules);
     assert.equal(open.get("GPTBot")?.allow, "/");
     assert.deepEqual(open.get("ClaudeBot")?.disallow, [...robotsDisallow]);
     assert.match(robots().sitemap ?? "", /\/sitemap\.xml$/);
+    const openSitemap = robots().sitemap;
 
     process.env.GEO_ALLOW_AI_CRAWLERS = "0";
     const closed = rulesByAgent(robots().rules);
@@ -281,13 +313,50 @@ test("robots.txt allows AI crawlers by default and blocks them when turned off",
     for (const agent of ["*", ...aiCrawlerAgents]) {
       const blocked = closed.get(agent)?.disallow;
       const list = Array.isArray(blocked) ? blocked : [blocked];
-      for (const path of ["/admin", "/api", "/success", "/cancel"]) {
+      for (const path of privatePaths) {
         assert.equal(list.includes(path), true, `${agent} ${path}`);
+      }
+    }
+
+    const matrix: { ai: string | undefined; keep: string | undefined; rules: RobotsRule[] }[] = [
+      { ai: undefined, keep: undefined, rules: openRules },
+      { ai: "1", keep: undefined, rules: openRules },
+      { ai: "0", keep: undefined, rules: closedRules },
+      { ai: "0", keep: "0", rules: closedRules },
+      { ai: "1", keep: "0", rules: openRules },
+      { ai: undefined, keep: "1", rules: openRules },
+      { ai: "1", keep: "1", rules: openRules },
+      { ai: "0", keep: "true", rules: closedRules },
+      { ai: "0", keep: "1", rules: kept.rules },
+    ];
+    for (const row of matrix) {
+      if (row.ai === undefined) delete process.env.GEO_ALLOW_AI_CRAWLERS;
+      else process.env.GEO_ALLOW_AI_CRAWLERS = row.ai;
+      if (row.keep === undefined) delete process.env.GEO_KEEP_BINGBOT;
+      else process.env.GEO_KEEP_BINGBOT = row.keep;
+      const doc = robots();
+      assert.equal(doc.sitemap, openSitemap, `sitemap ai=${row.ai} keep=${row.keep}`);
+      assert.deepEqual(doc.rules, row.rules, `rules ai=${String(row.ai)} keep=${String(row.keep)}`);
+      const byAgent = rulesByAgent(doc.rules);
+      for (const agent of ["*", ...aiCrawlerAgents]) {
+        const blocked = byAgent.get(agent)?.disallow;
+        const list = Array.isArray(blocked) ? blocked : [blocked];
+        for (const path of privatePaths) {
+          assert.equal(list.includes(path), true, `${agent} ${path} ai=${row.ai} keep=${row.keep}`);
+        }
+      }
+      if (row.keep === "1" && row.ai === "0") {
+        assert.equal(byAgent.get("Bingbot")?.allow, "/");
+        assert.deepEqual(byAgent.get("Bingbot")?.disallow, [...privatePaths]);
+        assert.equal(byAgent.get("GPTBot")?.allow, undefined);
+        assert.deepEqual(byAgent.get("ClaudeBot")?.disallow, ["/", ...privatePaths]);
       }
     }
   } finally {
     if (previous === undefined) delete process.env.GEO_ALLOW_AI_CRAWLERS;
     else process.env.GEO_ALLOW_AI_CRAWLERS = previous;
+    if (previousKeep === undefined) delete process.env.GEO_KEEP_BINGBOT;
+    else process.env.GEO_KEEP_BINGBOT = previousKeep;
   }
 });
 
@@ -358,6 +427,7 @@ test("JSON-LD stringifies and escapes < so product copy cannot close the script"
 test("llms.txt route serves the public catalogue as text", async () => {
   const response = await GET();
   assert.equal(response.headers.get("content-type"), "text/plain; charset=utf-8");
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
   const text = await response.text();
   assert.match(text, /# Demo Shop/);
   assert.match(text, /Cedar tasting spoon/);
@@ -392,6 +462,8 @@ test("llms.txt route serves the public catalogue as text", async () => {
   const route = read("app/llms.txt/route.ts");
   assert.match(route, /export const dynamic = "force-static"/);
   assert.match(route, /export function GET\(\): Response/);
+  assert.match(route, /"Content-Type": "text\/plain; charset=utf-8"/);
+  assert.match(route, /"X-Content-Type-Options": "nosniff"/);
   assert.equal(route.includes("searchParams"), false);
   assert.equal(route.includes("request"), false);
   assert.equal(route.includes("nextUrl"), false);
@@ -414,12 +486,23 @@ test("FAQ accordion questions match the schema input, and the crawler switch is 
   assert.match(example, /Server-only crawler switch/);
   assert.match(example, /Not a secret/);
   assert.match(example, /Set to 0/);
+  assert.match(example, /^# GEO_KEEP_BINGBOT=1$/m);
+  assert.equal(/^\s*GEO_KEEP_BINGBOT\s*=/m.test(example), false);
   assert.equal(example.includes("NEXT_PUBLIC_GEO_ALLOW_AI_CRAWLERS"), false);
+  assert.equal(example.includes("NEXT_PUBLIC_GEO_KEEP_BINGBOT"), false);
   const deploy = read("DEPLOY-CHECKLIST.md");
   assert.match(deploy, /\| `GEO_ALLOW_AI_CRAWLERS` \|/);
+  assert.match(deploy, /\| `GEO_KEEP_BINGBOT` \|/);
   assert.match(deploy, /Not a secret and not `NEXT_PUBLIC_`/);
-  assert.match(read("PLAYBOOK.md"), /GEO_ALLOW_AI_CRAWLERS/);
+  assert.match(deploy, /Unset by default/);
+  const playbook = read("PLAYBOOK.md");
+  assert.match(playbook, /GEO_ALLOW_AI_CRAWLERS/);
+  assert.match(playbook, /By default, `0` still blocks Bingbot/);
+  assert.match(playbook, /`GEO_KEEP_BINGBOT=1` keeps Bingbot \(normal Bing search\)/);
+  assert.equal(playbook.includes("PayPal cannot call localhost"), false);
   const policy = read("lib/seo.ts");
   assert.match(policy, /process\.env\.GEO_ALLOW_AI_CRAWLERS/);
+  assert.match(policy, /process\.env\.GEO_KEEP_BINGBOT/);
   assert.equal(policy.includes("NEXT_PUBLIC_GEO_ALLOW_AI_CRAWLERS"), false);
+  assert.equal(policy.includes("NEXT_PUBLIC_GEO_KEEP_BINGBOT"), false);
 });
