@@ -1,6 +1,6 @@
 # ShopSite playbook
 
-Buyer guide for brand, catalogue, stock, checkout, SEO, and search visibility. The ship route from a clone to a live store is [README.md](README.md) **Start path** (your GitHub repo, then Vercel **Import Git**). Local `npm` stays in README **Cold start**. Changes to this repository: [CONTRIBUTING.md](CONTRIBUTING.md). License: [LICENSE](LICENSE). Vulnerability reports: [SECURITY.md](SECURITY.md).
+Buyer guide for brand, catalogue, stock, checkout, SEO, search visibility, and abuse hardening. The ship route from a clone to a live store is [README.md](README.md) **Start path** (your GitHub repo, then Vercel **Import Git**). Local `npm` stays in README **Cold start**. Changes to this repository: [CONTRIBUTING.md](CONTRIBUTING.md). License: [LICENSE](LICENSE). Vulnerability reports: [SECURITY.md](SECURITY.md).
 
 **Start** below is that brand pass. The same pass for an AI edit is [SKILL.md](SKILL.md) **Start**.
 
@@ -10,7 +10,7 @@ Release checks: [DOCUMENTATION-CHECKLIST.md](DOCUMENTATION-CHECKLIST.md).
 
 ## Start
 
-Work this section before the deeper pages below. Import commands, stock, the money path, SEO, search visibility, and the legal file list stay in those pages. Deploy clicks stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+Work this section before the deeper pages below. Import commands, stock, the money path, SEO, search visibility, anti-scrape, and the legal file list stay in those pages. Deploy clicks stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
 ### Intake
 
@@ -399,6 +399,52 @@ Product FAQ markup is taken from the product `details` field. The product page s
 - Check a product URL in [Google's Rich Results Test](https://search.google.com/test/rich-results) or the [Schema.org validator](https://validator.schema.org/).
 - On a sold-out SKU, the offer availability is `https://schema.org/OutOfStock`.
 - Open `/robots.txt` and `/llms.txt` on the deployed origin.
+
+## Anti-scrape and abuse hardening
+
+Use this after deploy. The threat model and merchant-side notes live in [SECURITY.md](SECURITY.md). This section is the buyer how-to. The kit is **AS IS** — it is not a WAF and does not claim to stop scraping or fraud by itself.
+
+Crawler allow/deny for public pages is already in **Search visibility** (`GEO_ALLOW_AI_CRAWLERS`, `GEO_KEEP_BINGBOT`, `/robots.txt`). That path is about search and answer engines. The steps below are about product-image theft, checkout abuse, and edge rate limits on your host.
+
+### Product images
+
+Before you publish real photos:
+
+1. Strip GPS and other EXIF metadata from every file under `public/products/` (and from any https originals you host elsewhere). Phone cameras often embed location. Export a clean JPEG/WebP, or use an image tool that removes EXIF, then replace the demo swatches.
+2. Prefer a unique crop or light watermark when scrape or 挂码 risk is high for your catalogue. Do not ship camera originals that still carry location tags.
+3. Keep card frames at 4:5 as in **Start → What to prepare**. Smaller unique exports beat uploading the full-resolution original to a public CDN path.
+
+The import path accepts a file under `public/` or an https URL. It does not strip metadata for you.
+
+### Fraud review
+
+Watch for sudden traffic spikes plus identical cart patterns (same SKUs, same quantities, many sessions). Treat those as scrape or abuse signals, not only as “good sales.”
+
+Payment risk tools are merchant-side:
+
+- Stripe Radar (and Dashboard dispute/fraud settings) on the Stripe account that owns your keys.
+- PayPal fraud filters on the PayPal account that owns the Buttons credentials.
+
+This kit does not embed those products. Do not paste live keys, webhook secrets, or customer data into Issues or pull requests. Report kit vulnerabilities through [SECURITY.md](SECURITY.md).
+
+### Edge rate limits
+
+Put Cloudflare (or your host’s WAF) in front of the production origin. The kit has no built-in WAF.
+
+Suggested starting rules (tune to your traffic):
+
+- Rate-limit `/api/*`, `/admin`, and the checkout session create path.
+- Challenge or block abusive ASNs and obvious bot bursts on those routes.
+- Keep public catalogue pages usable for real buyers; tighten the money and admin paths first.
+
+Confirm the custom domain and `NEXT_PUBLIC_APP_URL` in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) before you rely on edge rules.
+
+### Check
+
+- A sample product photo from `public/products/` has no GPS/EXIF location when inspected.
+- Stripe/PayPal fraud settings are reviewed on the merchant accounts you use in production.
+- Edge rate limits cover `/api/*`, admin, and checkout session create.
+- `/robots.txt` and GEO toggles still match **Search visibility** after any host change.
 
 ## Legal pages and footer
 
