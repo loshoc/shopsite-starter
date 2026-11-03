@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/admin-guard";
 import { ModeBanner } from "@/components/admin/mode-banner";
 import { OrdersTable } from "@/components/admin/orders-table";
 import { presentAdminOrder, type AdminOrderView } from "@/lib/admin-orders";
@@ -6,6 +7,7 @@ import { orderDashboardUrl } from "@/lib/order-dashboard";
 import { InventoryUnavailable } from "@/lib/types";
 
 export default async function OrdersPage() {
+  await requireAdminPage();
   const loaded = await loadOrders();
   if (!loaded) {
     return <p className="text-sm">Orders are unavailable because the inventory store is down.</p>;

@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/admin-guard";
 import { siteConfig } from "@/data/site.config";
 import { appUrl } from "@/lib/app-url";
 import { resolveCheckoutExpiryMinutes } from "@/lib/checkout-expiry";
@@ -5,7 +6,8 @@ import { stockMode } from "@/lib/db";
 import { paypalStatusLabel } from "@/lib/paypal";
 import { publishableKeyState, stripeMode, webhookSecretProblem } from "@/lib/stripe";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  await requireAdminPage();
   let origin = "Set NEXT_PUBLIC_APP_URL";
   try {
     origin = appUrl();
