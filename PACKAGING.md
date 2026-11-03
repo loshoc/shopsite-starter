@@ -1,6 +1,6 @@
 # Packaging
 
-Release checklist for the buyer zip. Buyers deploy by unzipping this archive and following [README.md](README.md) **Start path** (private GitHub, then Vercel **Import Git**). They do not upload this zip to Vercel. Local `npm` stays in README **Cold start**. Brand and catalogue stay in [PLAYBOOK.md](PLAYBOOK.md) **Start**. Vercel and Stripe steps stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
+Archive checklist for a clean copy of this tree. The public install path is [README.md](README.md) **Start path**: clone or fork, then a GitHub repo you control and Vercel **Import Git**. Do not upload a zip to Vercel. Local `npm` stays in README **Cold start**. Brand and catalogue stay in [PLAYBOOK.md](PLAYBOOK.md) **Start**. Vercel and Stripe steps stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). Contributor setup is [CONTRIBUTING.md](CONTRIBUTING.md).
 
 `package.json` `"version"` is `1.1.2`, the same tag as [CHANGELOG.md](CHANGELOG.md).
 
@@ -14,6 +14,7 @@ Ship a clean archive of the `1.1.2` tree. Include application source and these r
 - `instrumentation.ts`, `proxy.ts`, `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `components.json`
 - `package.json`, `package-lock.json`
 - `README.md` (**Start path** and **Cold start**)
+- `CONTRIBUTING.md`
 - `PLAYBOOK.md` (**Start**, then brand, import, stock, checkout, and SEO)
 - `SKILL.md` (the same **Start**, plus the stop rule for AI edits)
 - `DEPLOY-CHECKLIST.md` (Vercel and Stripe steps; Start path and the playbook link here)

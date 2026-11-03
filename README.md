@@ -2,30 +2,26 @@
 
 Next.js storefront, Stripe Checkout, and a separate admin for stock and thin orders.
 
+The core is MIT open source. See [LICENSE](LICENSE). Contributor setup is [CONTRIBUTING.md](CONTRIBUTING.md). Vulnerability reports: [SECURITY.md](SECURITY.md).
+
 ## Start path
 
-This is the route from the buyer zip to a live store. Get the buyer zip from [Release v1.1.2](https://github.com/loshoc/shopsite-starter/releases/tag/v1.1.2) (asset `shopsite-starter-1.1.2.zip`). Prefer a **private** GitHub repo and Vercel **Import Git** over uploading a zip to Vercel.
+This is the route from a clone of this repository to a live store. Clone the public repo, or clone your fork. Deploy from a GitHub repository you control with Vercel **Import Git**. Do not upload a zip to Vercel. A private repository is fine if you want one.
 
-1. Unzip the buyer kit.
-2. Create an empty **private** GitHub repository. Leave it without a README or license file so the first push is this tree. From the unzipped folder, push the tree. When the folder is not already a Git checkout, use the commands below. `.gitignore` already excludes `.env`, `.env.local`, and `node_modules`. Commit `.env.example` only. Do not commit secrets.
+1. Clone.
 
 ```bash
-git init
-git add .
-git status
-git commit -m "Import ShopSite kit"
-git branch -M main
-git remote add origin https://github.com/OWNER/REPO.git
-git push -u origin main
+git clone https://github.com/loshoc/shopsite-starter.git
+cd shopsite-starter
 ```
 
-Replace `OWNER/REPO`. `git status` should include `.env.example` and should omit `.env.local`.
+For your own store or a pull request, fork the repository on GitHub and clone that fork. The URL is the same shape with your user in place of `loshoc`. `.gitignore` already excludes `.env`, `.env.local`, and `node_modules`. Commit `.env.example` only. Do not commit secrets. `git status` should include `.env.example` and should omit `.env.local`.
 
-3. On Vercel, open **Add New… → Project** and **Import** that private repo. If Vercel asks, connect GitHub and grant access to that repo. Do not drag the zip onto Vercel. Continue to environment variables before the first deploy.
-4. Set **Production** environment variables from the names in `.env.example`. Set `NEXT_PUBLIC_APP_URL` to the https origin you will serve, with no trailing slash, before the first build.
-5. Run the first production build.
-6. Add the Stripe webhook.
-7. Attach the custom domain.
+2. On Vercel, open **Add New… → Project** and **Import** that GitHub repo. If Vercel asks, connect GitHub and grant access to that repo. Do not drag a zip onto Vercel. Continue to environment variables before the first deploy.
+3. Set **Production** environment variables from the names in `.env.example`. Set `NEXT_PUBLIC_APP_URL` to the https origin you will serve, with no trailing slash, before the first build.
+4. Run the first production build.
+5. Add the Stripe webhook.
+6. Attach the custom domain.
 
 Values, the build, the webhook, Checkout **Business name**, the domain, and smoke checks: [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 
@@ -111,4 +107,4 @@ Before go-live: [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md). Vercel and Stripe de
 
 ShopSite is MIT-licensed. Copyright (c) 2026 Kiwi Guo. See [LICENSE](LICENSE).
 
-Storefront Terms, Privacy, and Returns templates in [docs/legal/](docs/legal/README.md) are not part of that grant. Replace the empty policy shells before go-live. Vulnerability reports: [SECURITY.md](SECURITY.md).
+Storefront Terms, Privacy, and Returns templates in [docs/legal/](docs/legal/README.md) are not part of that grant. Replace the empty policy shells before go-live. Vulnerability reports: [SECURITY.md](SECURITY.md). Contributor setup: [CONTRIBUTING.md](CONTRIBUTING.md).

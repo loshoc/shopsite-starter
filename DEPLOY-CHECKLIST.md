@@ -1,16 +1,16 @@
 # Deploy checklist
 
-Vercel, Stripe, and optional PayPal steps for a buyer deploy. This file is the detail. The short route is [README.md](README.md) **Start path**: unzip, a **private** GitHub repo, then Vercel **Import Git**. Prefer that over uploading a zip to Vercel. Stripe Checkout works without PayPal.
+Vercel, Stripe, and optional PayPal steps for a deploy. This file is the detail. The short route is [README.md](README.md) **Start path**: clone or fork, a GitHub repo you control, then Vercel **Import Git**. Do not upload a zip to Vercel. A private repository is fine if you want one. Stripe Checkout works without PayPal.
 
 Local `npm` stays in [README.md](README.md) **Cold start**. Brand and catalogue: [PLAYBOOK.md](PLAYBOOK.md) **Start**. The same Start for an AI edit: [SKILL.md](SKILL.md) **Start**. Before go-live, confirm the result with [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md).
 
 Names below match [.env.example](.env.example). Values are placeholders. Never paste live secrets into the repo, this file, or a public demo.
 
-## 1. Import the private Git repo
+## 1. Import the Git repo
 
-Follow [README.md](README.md) **Start path** through the unzip, the private GitHub push, and Vercel **Import Git**. Do not upload the zip to Vercel.
+Follow [README.md](README.md) **Start path**: clone or fork, then Vercel **Import Git**. Do not upload a zip to Vercel.
 
-On Vercel, open **Add New… → Project** and **Import** that private GitHub repo. If Vercel asks, connect GitHub and grant access to that repo. Leave the production build until the environment in the next section is saved. Vercel bakes `NEXT_PUBLIC_*` values in at build time.
+On Vercel, open **Add New… → Project** and **Import** that GitHub repo. If Vercel asks, connect GitHub and grant access to that repo. Leave the production build until the environment in the next section is saved. Vercel bakes `NEXT_PUBLIC_*` values in at build time.
 
 ## 2. Set environment before the production build
 

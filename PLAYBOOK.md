@@ -1,6 +1,6 @@
 # ShopSite playbook
 
-Buyer guide for brand, catalogue, stock, checkout, SEO, and search visibility. The ship route from the zip to a live store is [README.md](README.md) **Start path** (private GitHub, then Vercel **Import Git**). Local `npm` stays in README **Cold start**.
+Buyer guide for brand, catalogue, stock, checkout, SEO, and search visibility. The ship route from a clone to a live store is [README.md](README.md) **Start path** (your GitHub repo, then Vercel **Import Git**). Local `npm` stays in README **Cold start**. Changes to this repository: [CONTRIBUTING.md](CONTRIBUTING.md). License: [LICENSE](LICENSE). Vulnerability reports: [SECURITY.md](SECURITY.md).
 
 **Start** below is that brand pass. The same pass for an AI edit is [SKILL.md](SKILL.md) **Start**.
 
@@ -47,7 +47,7 @@ There is no theme switcher. Set `storefrontRecipe` in `data/recipe.ts` and rebui
 
 `comfortable` is the Cool sparse rhythm. `compact` tightens it. `bare` is flush images and no card border. `ruled` is a hairline. `soft-card` is a soft shadow on the surface color. The intent table and the anti-AI rules are in **Design style**.
 
-Ship default stays Cool sparse + Inter until you rebrand. If an AI coding agent is applying a full brand look from your brand + product brief, follow **Design style → AI taste rebrand (optional)** — that path may change fonts and recipe colors in *your* repo only. It does not change what the zip ships.
+Ship default stays Cool sparse + Inter until you rebrand. If an AI coding agent is applying a full brand look from your brand + product brief, follow **Design style → AI taste rebrand (optional)** — that path may change fonts and recipe colors in *your* repo only. It does not change what this repository ships.
 
 | Preset | When to use | `id` | `density` | `chrome` |
 | --- | --- | --- | --- | --- |
@@ -180,7 +180,7 @@ Set `storefrontRecipe` in `data/recipe.ts` and rebuild. Product, brand, and cont
 
 ### AI taste rebrand (optional)
 
-Use this only when a brand + product brief exists and a coding agent is restyling the unzipped kit. The zip’s ship default remains Cool sparse + Inter until those file edits land in *this* project. The decision is the **Start / Intake gate** above.
+Use this only when a brand + product brief exists and a coding agent is restyling a copy of this repository. The published ship default remains Cool sparse + Inter until those file edits land in *this* project. The decision is the **Start / Intake gate** above.
 
 1. Inventory the brand + product brief (what you sell, vibe, refs, must-keep colors/fonts, product photos).
 2. Prefer the redesign skill to keep ShopSite routes and components; optionally run tasteskill `draw.mjs` for a direction sheet when you want a fresh art direction (`ecommerce` / `physical-product`, tone from the brief).
@@ -194,9 +194,9 @@ If there is no brief, skip this section and leave Cool sparse.
 
 Atelier Clay is a sample brand + product brief. It is not the kit. What they sell: a few clay vessels. Brand materials: object photos, the name, and a direction called page-is-the-object — the product photo carries the product page.
 
-The brief is present, so run this section in the buyer repo only. Inventory what they sell and those materials. Map the direction into that repo’s site config, catalogue, recipe, and fonts. Home stays the product grid. Do not rewrite checkout or admin. Install or vendor the taste skills beside the kit. They are not in the zip.
+The brief is present, so run this section in your copy only. Inventory what they sell and those materials. Map the direction into that copy’s site config, catalogue, recipe, and fonts. Home stays the product grid. Do not rewrite checkout or admin. Install or vendor the taste skills next to your copy. They are not in this repository.
 
-Cool sparse + Inter stays the published ship default. Do not copy this example into the zip, the fixtures, or the ship default.
+Cool sparse + Inter stays the published ship default. Do not copy this example into the fixtures or the ship default.
 
 ### Fixture check
 
@@ -423,7 +423,7 @@ Placeholder templates for that pass are in [docs/legal/](docs/legal/README.md). 
 
 ## Deploy
 
-The ship route is [README.md](README.md) **Start path**. Unzip the kit, push it to a **private** GitHub repo (`.env.example` only, no secrets), then on Vercel use **Import Git**. Prefer that over uploading a zip.
+The ship route is [README.md](README.md) **Start path**. Clone or fork the repository, push your store to a GitHub repo you control (`.env.example` only, no secrets), then on Vercel use **Import Git**. Do not upload a zip to Vercel. A private repository is fine if you want one.
 
 Production env, the first production build, the Stripe webhook, Checkout business name, and the custom domain are in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md).
 

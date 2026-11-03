@@ -10,7 +10,7 @@ Do not add Resend, newsletters, audiences, or campaign email to the core kit. Do
 
 ## Start
 
-Follow this before a rebrand. The ship route from the zip to Vercel is [README.md](README.md) **Start path**. The same Start for a person is [PLAYBOOK.md](PLAYBOOK.md) **Start**. Deploy detail is [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). The pre-go-live pass is [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md).
+Follow this before a rebrand. The ship route from a clone to Vercel is [README.md](README.md) **Start path**. The same Start for a person is [PLAYBOOK.md](PLAYBOOK.md) **Start**. Deploy detail is [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). The pre-go-live pass is [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md). Contributor setup is [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Intake
 
@@ -82,9 +82,9 @@ Exception: under **AI taste rebrand**, fonts may follow the direction sheet or b
 
 Run this when the user provides a brand + product brief and asks to rebrand the storefront look. The decision is the **Start / Intake gate** above. A sample brief (Atelier Clay) is prose in [PLAYBOOK.md](PLAYBOOK.md) **Worked example**. Do not copy it into the kit.
 
-Install or vendor `design-taste-frontend` and `redesign-existing-projects` separately. They are not inside the buyer zip.
+Install or vendor `design-taste-frontend` and `redesign-existing-projects` separately. They are not in this repository.
 
-1. Do not alter the kit’s documented ship default. Cool sparse + Inter remain what an untouched zip shows.
+1. Do not alter the kit’s documented ship default. Cool sparse + Inter remain what an untouched copy of this repository shows.
 2. Inventory brief + materials ([PLAYBOOK.md](PLAYBOOK.md) **Start**). Abort taste restyle if the brief is empty — leave Cool sparse.
 3. Prefer `redesign-existing-projects` to keep IA. Optionally run `design-taste-frontend` `scripts/draw.mjs` (`--sector ecommerce` or `physical-product`, `--options 3`, then `--direction <id>`). Use `--keep palette,type` when the brand fixes those.
 4. Map to `data/site.config.ts`, catalogue/`public/products/`, `data/recipe.ts`, `app/recipes/*`, `app/fonts.ts`, `lib/theme.ts`. Rebuild. No theme switcher. No checkout/admin rewrite.

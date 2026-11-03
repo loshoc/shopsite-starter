@@ -80,9 +80,9 @@ Details: [INVENTORY.md](INVENTORY.md).
 
 ## 6. Deploy basics
 
-The route is [README.md](README.md) **Start path**: a **private** GitHub repo and Vercel **Import Git**. Prefer that over uploading a zip to Vercel. Setup steps stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). This list checks the result.
+The route is [README.md](README.md) **Start path**: your GitHub repo and Vercel **Import Git**. Do not upload a zip to Vercel. A private repository is fine if you want one. Setup steps stay in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). This list checks the result.
 
-- [ ] The Vercel project is an **Import Git** of that private repo.
+- [ ] The Vercel project is an **Import Git** of that GitHub repo.
 - [ ] Production environment variables are saved on Vercel before the first production build. Vercel bakes `NEXT_PUBLIC_*` in at build time.
 - [ ] The custom domain is attached. `NEXT_PUBLIC_APP_URL` is that https origin, with no trailing slash.
 - [ ] Home opens on the public hostname: `https://shop.example.com/`.
