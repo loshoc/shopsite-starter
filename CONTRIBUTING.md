@@ -77,4 +77,4 @@ Keep Issues and pull requests constructive.
 
 Report a vulnerability through [SECURITY.md](SECURITY.md). Prefer a [GitHub Security Advisory](https://github.com/loshoc/shopsite-starter/security/advisories/new). Do not open a public issue for a vulnerability.
 
-Feature requests and ordinary bugs are GitHub Issues. `SECURITY.md` keeps the `[SECURITY_CONTACT_EMAIL]` placeholder. This guide does not add an address.
+Feature requests and ordinary bugs are GitHub Issues. Vulnerabilities go only through a private GitHub Security Advisory, as `SECURITY.md` says. There is no security email.
