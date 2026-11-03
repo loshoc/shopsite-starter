@@ -6,9 +6,7 @@ This repository is not a hosted store. The maintainer is not the merchant of rec
 
 ## Reporting a vulnerability
 
-Prefer a [GitHub Security Advisory](https://github.com/loshoc/shopsite-starter/security/advisories/new) for this repository.
-
-If you cannot use GitHub advisories, write to [SECURITY_CONTACT_EMAIL].
+Report privately through a [GitHub Security Advisory](https://github.com/loshoc/shopsite-starter/security/advisories/new) for this repository. Do not open a public issue for a vulnerability.
 
 ## Abuse
 
