@@ -89,6 +89,25 @@ function asReservation(value: unknown): ReservationLine[] {
 }
 
 /**
+ * Per-SKU units actually removed from on-hand. Unlike asReservation this keeps
+ * qty 0 (an oversold line removed nothing). Returns undefined for a legacy row
+ * with no stored value, so restock falls back to the reservation quantity.
+ */
+function asTaken(value: unknown): ReservationLine[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const lines: ReservationLine[] = [];
+  for (const item of value) {
+    if (!item || typeof item !== "object") continue;
+    const skuId = (item as { skuId?: unknown }).skuId;
+    const qty = (item as { qty?: unknown }).qty;
+    if (typeof skuId === "string" && typeof qty === "number" && Number.isInteger(qty) && qty >= 0) {
+      lines.push({ skuId, qty });
+    }
+  }
+  return lines;
+}
+
+/**
  * Local development only. No DATABASE_URL (or the example placeholder) seeds
  * a process-local catalogue so a first run can demo checkout. That seed is
  * not a sold-out bypass: after startup, a missing SKU is qty 0, and
@@ -133,13 +152,19 @@ function rememberEvent(mem: Memory, eventType: string) {
   mem.lastEvent = { eventType, processedAt: new Date().toISOString() };
 }
 
-function restockMemory(mem: Memory, lines: ReservationLine[], now: string) {
+/**
+ * Reverse a paid order's lines. `sold` drops by the requested qty (reversing
+ * the paid increment), but on-hand rises only by `taken` — the units actually
+ * removed — so refunding an oversold line never credits phantom stock.
+ */
+function restockMemory(mem: Memory, lines: ReservationLine[], taken: TakenLookup, now: string) {
   for (const line of lines) {
+    const addBack = taken(line.skuId, line.qty);
     const row = mem.stock.get(line.skuId);
     if (!row) {
       mem.stock.set(line.skuId, {
         skuId: line.skuId,
-        qty: line.qty,
+        qty: addBack,
         sold: 0,
         incoming: 0,
         status: "active",
@@ -148,10 +173,19 @@ function restockMemory(mem: Memory, lines: ReservationLine[], now: string) {
       });
       continue;
     }
-    row.qty += line.qty;
+    row.qty += addBack;
     row.sold = Math.max(0, row.sold - line.qty);
     row.updatedAt = now;
   }
+}
+
+/** Units to add back for a SKU: stored `taken`, or the requested qty for legacy orders. */
+type TakenLookup = (skuId: string, requested: number) => number;
+
+function takenLookup(order: OrderRecord): TakenLookup {
+  if (!order.stockTaken) return (_skuId, requested) => requested;
+  const map = new Map(order.stockTaken.map((line) => [line.skuId, line.qty]));
+  return (skuId, requested) => map.get(skuId) ?? requested;
 }
 
 async function ensureSchema(sql: Sql) {
@@ -192,6 +226,10 @@ async function ensureSchema(sql: Sql) {
   // Existing databases created before `oversold` keep their rows. Add the column in place.
   await sql`
     alter table orders add column if not exists oversold boolean not null default false
+  `;
+  // Rows written before stock_taken keep a null; restock falls back to reservation.
+  await sql`
+    alter table orders add column if not exists stock_taken jsonb
   `;
   await sql`
     create index if not exists orders_payment_intent_idx on orders (payment_intent_id)
@@ -276,6 +314,7 @@ type OrderRow = {
   status: string;
   payment_intent_id: string | null;
   reservation: unknown;
+  stock_taken: unknown;
   amount_refunded_cents: number;
   restocked: boolean;
   oversold: boolean;
@@ -292,6 +331,7 @@ function mapOrder(row: OrderRow): OrderRecord {
     status: asOrderStatus(row.status),
     paymentIntentId: row.payment_intent_id,
     reservation: asReservation(row.reservation),
+    stockTaken: asTaken(row.stock_taken),
     amountRefundedCents: row.amount_refunded_cents,
     restocked: row.restocked,
     oversold: row.oversold === true,
@@ -432,7 +472,7 @@ export async function receiveIncoming(skuId: string): Promise<boolean> {
  * Locks the stock row so a concurrent webhook sees the updated quantity.
  * Returns whether this line asked for more than was on hand.
  */
-async function decrementSql(tx: postgres.TransactionSql, line: ReservationLine): Promise<boolean> {
+async function decrementSql(tx: postgres.TransactionSql, line: ReservationLine): Promise<{ oversold: boolean; taken: number }> {
   let row = (
     await tx<{ qty: number; status: string }[]>`
       select qty, status from product_stock where sku_id = ${line.skuId} for update
@@ -466,15 +506,15 @@ async function decrementSql(tx: postgres.TransactionSql, line: ReservationLine):
         updated_at = now()
     where sku_id = ${line.skuId}
   `;
-  return lineIsOversold(status, available, line.qty);
+  return { oversold: lineIsOversold(status, available, line.qty), taken: available - applied.qty };
 }
 
-async function restockSql(tx: postgres.TransactionSql, line: ReservationLine) {
+async function restockSql(tx: postgres.TransactionSql, line: ReservationLine, addBack: number) {
   await tx`
     insert into product_stock (sku_id, qty, sold, incoming, status, low_stock_threshold)
-    values (${line.skuId}, ${line.qty}, 0, 0, 'active', ${siteConfig.lowStockDefault})
+    values (${line.skuId}, ${addBack}, 0, 0, 'active', ${siteConfig.lowStockDefault})
     on conflict (sku_id) do update
-    set qty = product_stock.qty + ${line.qty},
+    set qty = product_stock.qty + ${addBack},
         sold = greatest(product_stock.sold - ${line.qty}, 0),
         updated_at = now()
   `;
@@ -496,7 +536,7 @@ export async function markEventProcessed(eventId: string, eventType: string): Pr
   });
 }
 
-function applyLineMemory(mem: Memory, line: ReservationLine, now: string): boolean {
+function applyLineMemory(mem: Memory, line: ReservationLine, now: string): { oversold: boolean; taken: number } {
   const row = mem.stock.get(line.skuId);
   const available = row?.qty ?? 0;
   const status = row?.status ?? "active";
@@ -516,7 +556,7 @@ function applyLineMemory(mem: Memory, line: ReservationLine, now: string): boole
     row.sold += line.qty;
     row.updatedAt = now;
   }
-  return lineIsOversold(status, available, line.qty);
+  return { oversold: lineIsOversold(status, available, line.qty), taken: available - applied.qty };
 }
 
 function applyPaidCheckoutMemory(input: PaidCheckout): "duplicate" | "applied" {
@@ -528,8 +568,11 @@ function applyPaidCheckoutMemory(input: PaidCheckout): "duplicate" | "applied" {
   }
   const now = new Date().toISOString();
   let oversold = false;
+  const stockTaken: ReservationLine[] = [];
   for (const line of linesToLock(input.reservation)) {
-    if (applyLineMemory(mem, line, now)) oversold = true;
+    const result = applyLineMemory(mem, line, now);
+    if (result.oversold) oversold = true;
+    stockTaken.push({ skuId: line.skuId, qty: result.taken });
   }
   const order: OrderRecord = {
     stripeSessionId: input.stripeSessionId,
@@ -539,6 +582,7 @@ function applyPaidCheckoutMemory(input: PaidCheckout): "duplicate" | "applied" {
     status: "paid",
     paymentIntentId: input.paymentIntentId,
     reservation: input.reservation,
+    stockTaken,
     amountRefundedCents: 0,
     restocked: false,
     oversold,
@@ -578,13 +622,16 @@ export async function applyPaidCheckout(input: PaidCheckout): Promise<"duplicate
         return;
       }
       let oversold = false;
+      const stockTaken: ReservationLine[] = [];
       for (const line of linesToLock(input.reservation)) {
-        if (await decrementSql(tx, line)) oversold = true;
+        const result = await decrementSql(tx, line);
+        if (result.oversold) oversold = true;
+        stockTaken.push({ skuId: line.skuId, qty: result.taken });
       }
       await tx`
         insert into orders (
           stripe_session_id, email, total_cents, currency, status,
-          payment_intent_id, reservation, amount_refunded_cents, restocked, oversold
+          payment_intent_id, reservation, stock_taken, amount_refunded_cents, restocked, oversold
         ) values (
           ${input.stripeSessionId},
           ${input.email},
@@ -593,6 +640,7 @@ export async function applyPaidCheckout(input: PaidCheckout): Promise<"duplicate
           'paid',
           ${input.paymentIntentId},
           ${tx.json(input.reservation)},
+          ${tx.json(stockTaken)},
           0,
           false,
           ${oversold}
@@ -632,7 +680,7 @@ export async function applyRefund(input: RefundInput): Promise<void> {
     } else {
       order.status = "refunded";
       if (!order.restocked) {
-        restockMemory(mem, order.reservation, now);
+        restockMemory(mem, order.reservation, takenLookup(order), now);
         order.restocked = true;
       }
     }
@@ -653,7 +701,7 @@ export async function applyRefund(input: RefundInput): Promise<void> {
       if (kind === "none" || !input.paymentIntentId) return;
       const rows = await tx<OrderRow[]>`
         select stripe_session_id, email, total_cents, currency, status, payment_intent_id,
-               reservation, amount_refunded_cents, restocked, oversold, created_at, updated_at
+               reservation, stock_taken, amount_refunded_cents, restocked, oversold, created_at, updated_at
         from orders
         where payment_intent_id = ${input.paymentIntentId}
         for update
@@ -671,8 +719,9 @@ export async function applyRefund(input: RefundInput): Promise<void> {
         return;
       }
       if (!order.restocked) {
+        const takeback = takenLookup(order);
         for (const line of order.reservation) {
-          await restockSql(tx, line);
+          await restockSql(tx, line, takeback(line.skuId, line.qty));
         }
       }
       await tx`
@@ -695,7 +744,7 @@ export async function explicitRestock(stripeSessionId: string): Promise<{ ok: tr
     if (order.restocked) return { ok: false, error: "This order was already restocked." };
     if (order.reservation.length === 0) return { ok: false, error: "No reserved units on this order." };
     const now = new Date().toISOString();
-    restockMemory(memory(), order.reservation, now);
+    restockMemory(memory(), order.reservation, takenLookup(order), now);
     order.restocked = true;
     order.updatedAt = now;
     return { ok: true };
@@ -706,7 +755,7 @@ export async function explicitRestock(stripeSessionId: string): Promise<{ ok: tr
     await sql.begin(async (tx) => {
       const rows = await tx<OrderRow[]>`
         select stripe_session_id, email, total_cents, currency, status, payment_intent_id,
-               reservation, amount_refunded_cents, restocked, oversold, created_at, updated_at
+               reservation, stock_taken, amount_refunded_cents, restocked, oversold, created_at, updated_at
         from orders
         where stripe_session_id = ${stripeSessionId}
         for update
@@ -725,8 +774,9 @@ export async function explicitRestock(stripeSessionId: string): Promise<{ ok: tr
         result = { ok: false, error: "No reserved units on this order." };
         return;
       }
+      const takeback = takenLookup(order);
       for (const line of order.reservation) {
-        await restockSql(tx, line);
+        await restockSql(tx, line, takeback(line.skuId, line.qty));
       }
       await tx`
         update orders
@@ -746,7 +796,7 @@ export async function listOrders(): Promise<OrderRecord[]> {
   return withDatabase(async (sql) => {
     const rows = await sql<OrderRow[]>`
       select stripe_session_id, email, total_cents, currency, status, payment_intent_id,
-             reservation, amount_refunded_cents, restocked, oversold, created_at, updated_at
+             reservation, stock_taken, amount_refunded_cents, restocked, oversold, created_at, updated_at
       from orders
       order by created_at desc
       limit 100

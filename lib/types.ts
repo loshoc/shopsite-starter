@@ -29,6 +29,12 @@ export type OrderRecord = {
   restocked: boolean;
   /** True when a paid line asked for more units than were on hand. */
   oversold: boolean;
+  /**
+   * Units actually removed from on-hand per SKU (min(requested, available)).
+   * Differs from `reservation` qty only for oversold lines. Absent on rows
+   * written before this field existed; restock then falls back to reservation.
+   */
+  stockTaken?: ReservationLine[];
   createdAt: string;
   updatedAt: string;
 };
