@@ -41,8 +41,9 @@ Sudden traffic, many identical carts, or checkout sessions that never pay can be
 
 Put rate limits and bot challenges at your edge (for example Cloudflare in front of Vercel, or your host’s WAF). Suggested starting points — tune to your traffic:
 
-- Rate-limit `/api/*`, especially checkout session create and webhooks’ public URLs if abused for noise (webhooks must still accept signed provider traffic).
-- Protect `/admin` and `/admin/login` with stricter limits and, where possible, IP allowlists or an extra access rule.
+- Rate-limit the checkout create routes (`/api/checkout`, `/api/paypal/orders`, `/api/paypal/orders/capture`).
+- Do not put browser challenges or bot modes on `/api/webhooks/stripe` or `/api/webhooks/paypal`. Providers cannot solve them, and paid orders stop recording. Signature checks already reject forged calls.
+- Protect `/admin`, `/admin/login`, and `/api/admin/login` with stricter limits and, where possible, IP allowlists or an extra access rule. Behind a proxy such as Cloudflare, the in-process login limiter sees the proxy's forwarded IP, so keep the edge limit as the main guard.
 - Challenge or throttle abusive ASNs and known scraper bands when your edge product supports it.
 
 Crawler policy for search and AI bots is already documented in [PLAYBOOK.md](PLAYBOOK.md) **Search visibility** (`GEO_ALLOW_AI_CRAWLERS`, `GEO_KEEP_BINGBOT`, `/robots.txt`). That is indexing control, not a substitute for edge rate limits against hostile scrapers.
