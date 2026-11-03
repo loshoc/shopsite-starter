@@ -176,3 +176,58 @@ function sample(stripeSessionId: string, oversold: boolean): OrderRecord {
     updatedAt: "2026-01-01T00:00:00.000Z",
   };
 }
+
+test("full refund of an oversold order does not restock phantom units", async () => {
+  const SKU2 = "FIXTURE-PHANTOM-01";
+  await seedFixtureStock([{ skuId: SKU2, qty: 1, incoming: 0, status: "active", lowStockThreshold: 2 }]);
+  const resv = JSON.stringify([{ skuId: SKU2, qty: 1 }]);
+  const paidFor = (eventId: string, sessionId: string) =>
+    ({
+      id: eventId,
+      type: "checkout.session.completed",
+      data: {
+        object: {
+          id: sessionId,
+          payment_status: "paid",
+          customer_details: { email: "buyer@example.com" },
+          amount_total: 4800,
+          currency: "usd",
+          payment_intent: `pi_${sessionId}`,
+          metadata: { stockReservation: resv },
+        },
+      },
+    }) as never;
+
+  // Two buyers both pay for the single unit: one order is flagged oversold.
+  await dispatchStripeEvent(paidFor("evt_ph_a", "cs_ph_a"));
+  await dispatchStripeEvent(paidFor("evt_ph_b", "cs_ph_b"));
+  const afterPaid = (await listStockRecords()).find((r) => r.skuId === SKU2);
+  assert.ok(afterPaid);
+  assert.equal(afterPaid.qty, 0);
+  assert.equal(afterPaid.sold, 2);
+
+  const oversoldOrder = (await listOrders()).find(
+    (o) => (o.stripeSessionId === "cs_ph_a" || o.stripeSessionId === "cs_ph_b") && o.oversold,
+  );
+  assert.ok(oversoldOrder, "one order should be oversold");
+
+  // Fully refund the oversold order. It removed 0 physical units, so on-hand
+  // must stay 0; only sold reverses by its reserved qty.
+  await dispatchStripeEvent({
+    id: "evt_ph_refund",
+    type: "charge.refunded",
+    data: {
+      object: {
+        payment_intent: oversoldOrder.paymentIntentId,
+        amount: 4800,
+        amount_refunded: 4800,
+        refunded: true,
+      },
+    },
+  } as never);
+
+  const afterRefund = (await listStockRecords()).find((r) => r.skuId === SKU2);
+  assert.ok(afterRefund);
+  assert.equal(afterRefund.qty, 0, "no phantom unit restocked");
+  assert.equal(afterRefund.sold, 1, "sold reversed by the refunded order's qty");
+});

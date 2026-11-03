@@ -12,18 +12,19 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   const denied = await requireAdminApi();
   if (denied) return denied;
-  let stripeSessionId = "";
+  let orderId = "";
   try {
     const body = (await request.json()) as { stripeSessionId?: unknown };
-    if (typeof body.stripeSessionId === "string") stripeSessionId = body.stripeSessionId;
+    if (typeof body.stripeSessionId === "string") orderId = body.stripeSessionId;
   } catch {
-    stripeSessionId = "";
+    orderId = "";
   }
-  if (!/^cs_[A-Za-z0-9_]+$/.test(stripeSessionId)) {
+  // Stripe orders are cs_…; PayPal orders are paypal:<ORDERID>. Both can be restocked.
+  if (!/^cs_[A-Za-z0-9_]+$/.test(orderId) && !/^paypal:[A-Za-z0-9_-]+$/.test(orderId)) {
     return adminJson({ error: "Unknown order." }, 400);
   }
   try {
-    const result = await explicitRestock(stripeSessionId);
+    const result = await explicitRestock(orderId);
     if (!result.ok) return adminJson({ error: result.error }, 409);
     return adminJson({ ok: true });
   } catch (error) {
