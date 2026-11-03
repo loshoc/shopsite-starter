@@ -1,7 +1,7 @@
 {
   "name": "shopsite-starter",
   "version": "1.1.2",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "private": true,
   "engines": {
     "node": ">=22.13.0"

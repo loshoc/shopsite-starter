@@ -109,4 +109,6 @@ Before go-live: [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md). Vercel and Stripe de
 
 ## License
 
-The kit is licensed, not sold, under the ShopSite End-User License Agreement in [docs/legal/EULA-KIT-LICENSE.md](docs/legal/EULA-KIT-LICENSE.md). See [LICENSE](LICENSE).
+ShopSite is MIT-licensed. Copyright (c) 2026 Kiwi Guo. See [LICENSE](LICENSE).
+
+Storefront Terms, Privacy, and Returns templates in [docs/legal/](docs/legal/README.md) are not part of that grant. Replace the empty policy shells before go-live. Vulnerability reports: [SECURITY.md](SECURITY.md).

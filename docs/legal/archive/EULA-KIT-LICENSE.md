@@ -1,3 +1,5 @@
+> **Archived 2026-11-03.** The public ShopSite core is MIT-licensed (see the repository root `LICENSE`). This EULA applied to the former paid kit and is not the current license.
+
 # End-User License Agreement (EULA) — ShopSite Starter Kit
 
 > **Disclaimer:** This is a practical template for informational use only. It is **not** formal legal advice. Have qualified counsel review it for the seller’s and purchaser’s jurisdictions before using it in a sales flow or attaching it to a purchase.

@@ -6,7 +6,7 @@
 
 ## 1. Open-source and UI stack (typical)
 
-ShopSite is commonly built with components that are **typically MIT-licensed** (confirm in your lockfile / `LICENSE` files each release):
+The ShopSite starter itself is MIT-licensed. See the repository root `LICENSE` (Copyright (c) 2026 Kiwi Guo). It is commonly built with components that are **typically MIT-licensed** (confirm in your lockfile / `LICENSE` files each release):
 
 | Component | Typical license | Action |
 |-----------|-----------------|--------|
@@ -85,4 +85,5 @@ ShopSite is commonly built with components that are **typically MIT-licensed** (
 
 - Tech Writer: link from `PLAYBOOK` and `PACKAGING` to this pack
 - Release: include `docs/legal/` in the kit zip, except the maintainer-only checklist (see `PACKAGING.md`)
-- Sales site: publish Seller EULA + Seller privacy/terms + kit refund policy separately from buyer storefront shells
+- The public ShopSite core is MIT. See the repository root `LICENSE`. The former paid-kit EULA in `docs/legal/archive/EULA-KIT-LICENSE.md` is not the current license.
+- Sales site: buyer storefront shells stay separate from this repository’s MIT grant. Optional paid offerings, if sold, use terms published on the sales site (`COMMERCIAL-ADD-ONS.md`), plus the seller’s own privacy, terms, and refund policy. This file does not supply those terms.
