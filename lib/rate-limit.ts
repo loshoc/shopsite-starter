@@ -5,6 +5,8 @@
  * x-real-ip. That trust is fine on Vercel, which overwrites the header.
  * Self-hosting needs a trusted proxy that strips client-supplied forwarded
  * headers; otherwise a caller can rotate the header and skip this limit.
+ * Behind Cloudflare (or another proxy) in front of Vercel, the first hop is
+ * the proxy, so set TRUSTED_CLIENT_IP_HEADER (see clientIp).
  *
  * Counts are per instance (this process only). A multi-instance deploy
  * should move the same allow/deny shape to Redis or Upstash.
