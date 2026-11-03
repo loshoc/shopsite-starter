@@ -7,7 +7,8 @@ Use this before a release. Local install is README **Cold start**. The ship rout
 - [ ] Local install matches README **Cold start**: `cp .env.example .env.local`, edit `.env.local`, `npm install`, `npm run dev`.
 - [ ] Shop: `http://localhost:3000`. Admin: `http://localhost:3000/admin/login`.
 - [ ] Open localhost by that name. Admin login may reject `127.0.0.1`.
-- [ ] Buyers who deploy follow README **Start path**: unzip, private GitHub, Vercel **Import Git**, then [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). The docs do not send that buyer to a Vercel zip upload.
+- [ ] People who deploy follow README **Start path**: clone or fork, a GitHub repo you control, Vercel **Import Git**, then [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). The docs do not send that person to a Vercel zip upload.
+- [ ] README links [CONTRIBUTING.md](CONTRIBUTING.md), [LICENSE](LICENSE), and [SECURITY.md](SECURITY.md).
 
 ## Env: required vs optional
 
@@ -56,7 +57,7 @@ The install path is identical to the README. [PLAYBOOK.md](PLAYBOOK.md) starts a
 - [ ] With Postgres, **Admin → Stock** seed runs before a product is orderable.
 - [ ] Sold-out checkout fails closed. A partial refund does not restock. Oversold means refund or restock by hand.
 - [ ] After deploy, `https://YOUR_DOMAIN/sitemap.xml` is the Search Console URL, and `/robots.txt` disallows `/admin`, `/api`, `/success`, and `/cancel`. AI crawlers stay allowed unless `GEO_ALLOW_AI_CRAWLERS=0`. Buyer steps: PLAYBOOK **Search visibility**.
-- [ ] Deploy steps for Vercel and Stripe live in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). README **Start path** is the short route (private GitHub, Vercel **Import Git**). PLAYBOOK **Deploy** points there.
+- [ ] Deploy steps for Vercel and Stripe live in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md). README **Start path** is the short route (clone or fork, your GitHub repo, Vercel **Import Git**). PLAYBOOK **Deploy** points there.
 - [ ] [SKILL.md](SKILL.md) **Start** and PLAYBOOK **Start** match: intake, materials, look presets (`data/recipe.ts` `id` / `density` / `chrome`), the page map, Stripe and domain pointers, and file formats. The SKILL stop rule still leaves admin and ops alone and does not add Resend or Clerk.
 - [ ] [LAUNCH-CHECKLIST.md](LAUNCH-CHECKLIST.md) is the buyer pass before go-live: environment, Stripe key mode, Checkout **Business name**, currency, sold-out checkout, deploy smoke, and trust copy. The README, PLAYBOOK **Start**, and PLAYBOOK **Deploy** link it.
 - [ ] DEPLOY-CHECKLIST **Checkout business name** names **Settings → Business → Business details**, the **Business name** field, and **Public details** **Statement descriptor** / **Shortened descriptor**.

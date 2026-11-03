@@ -3,6 +3,7 @@
 ## Unreleased
 
 - The public ShopSite core is MIT (Copyright (c) 2026 Kiwi Guo). Root `LICENSE` is the standard MIT text, and `package.json` `"license"` is `MIT`. The former paid-kit EULA is archived at `docs/legal/archive/EULA-KIT-LICENSE.md`.
+- `CONTRIBUTING.md` is the contributor guide (fork or clone, local run, secrets, tests, and vulnerability reports via `SECURITY.md`). README **Start path** is clone or fork, then your GitHub repo and Vercel **Import Git**. The public install path is no longer the buyer zip.
 
 ## 1.1.2
 
