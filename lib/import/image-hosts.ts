@@ -2,16 +2,19 @@ import { BlockList, isIP } from "node:net";
 
 /**
  * Hosts that must not become images.remotePatterns. Next would fetch these
- * from the server at build or request time (loopback, RFC1918, link-local,
- * cloud metadata). DNS is not resolved; only the URL hostname is inspected.
+ * from the server at build or request time (loopback, RFC1918, CGNAT,
+ * link-local, benchmarking, multicast/reserved, cloud metadata). DNS is not resolved; only the URL hostname is inspected.
  */
 const blockedAddresses = new BlockList();
 blockedAddresses.addSubnet("0.0.0.0", 8, "ipv4");
 blockedAddresses.addSubnet("10.0.0.0", 8, "ipv4");
+blockedAddresses.addSubnet("100.64.0.0", 10, "ipv4");
 blockedAddresses.addSubnet("127.0.0.0", 8, "ipv4");
 blockedAddresses.addSubnet("169.254.0.0", 16, "ipv4");
 blockedAddresses.addSubnet("172.16.0.0", 12, "ipv4");
 blockedAddresses.addSubnet("192.168.0.0", 16, "ipv4");
+blockedAddresses.addSubnet("198.18.0.0", 15, "ipv4");
+blockedAddresses.addSubnet("224.0.0.0", 3, "ipv4");
 blockedAddresses.addAddress("::", "ipv6");
 blockedAddresses.addAddress("::1", "ipv6");
 blockedAddresses.addSubnet("fc00::", 7, "ipv6");

@@ -43,3 +43,11 @@ test("PDP, bag, cards, and Stripe follow siteConfig.currency", () => {
   assert.match(read("lib/stripe.ts"), /currency: siteConfig\.currency/);
   assert.match(read("lib/stripe-events.ts"), /session\.currency \?\? siteConfig\.currency/);
 });
+
+test("maskEmail keeps the first letter and the domain only", async () => {
+  const { maskEmail } = await import("../lib/format.ts");
+  assert.equal(maskEmail("jane.doe@example.com"), "j•••@example.com");
+  assert.equal(maskEmail("a@b.co"), "a•••@b.co");
+  assert.equal(maskEmail("not-an-email"), "•••");
+  assert.equal(maskEmail("@example.com"), "•••");
+});

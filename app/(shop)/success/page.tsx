@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ClearCart } from "@/components/shop/clear-cart";
-import { formatMoney } from "@/lib/format";
+import { formatMoney, maskEmail } from "@/lib/format";
 import { readPayPalCheckoutSummary } from "@/lib/paypal";
 import { pageMetadata } from "@/lib/seo";
 import { readCheckoutSummary } from "@/lib/stripe";
@@ -32,13 +32,13 @@ export default async function SuccessPage({
       <p className="mt-3 text-muted">
         {paypalOrderId
           ? "PayPal accepted the payment. Stock and the order row update only after the signed PayPal webhook. This page does not mark the order paid."
-          : "Stripe has the payment. This page only shows the email and total, never the card."}
+          : "Stripe has the payment. This page only shows a masked email and the total, never the card."}
       </p>
       {summary ? (
         <dl className="mt-6 space-y-2 text-sm">
           <div className="flex justify-between gap-4">
             <dt className="text-muted">Email</dt>
-            <dd>{summary.email ?? "Guest"}</dd>
+            <dd>{summary.email ? maskEmail(summary.email) : "Guest"}</dd>
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-muted">Total</dt>

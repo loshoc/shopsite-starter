@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/lib/admin-guard";
 import Link from "next/link";
 
 import { ModeBanner } from "@/components/admin/mode-banner";
@@ -9,6 +10,7 @@ import { publishableKeyState, stripeMode, webhookSecretProblem } from "@/lib/str
 import { InventoryUnavailable } from "@/lib/types";
 
 export default async function DashboardPage() {
+  await requireAdminPage();
   const data = await loadDashboard();
   if (!data) {
     return (

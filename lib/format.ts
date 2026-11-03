@@ -15,3 +15,14 @@ export function formatWhen(iso: string): string {
     timeStyle: "short",
   }).format(date);
 }
+
+/**
+ * Shows enough of an email for the buyer to recognise it. The success page
+ * is reachable by anyone holding the order id from a URL, so never the full
+ * address there.
+ */
+export function maskEmail(email: string): string {
+  const at = email.lastIndexOf("@");
+  if (at < 1) return "•••";
+  return `${email[0]}•••${email.slice(at)}`;
+}

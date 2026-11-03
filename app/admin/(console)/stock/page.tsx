@@ -1,8 +1,10 @@
+import { requireAdminPage } from "@/lib/admin-guard";
 import { StockTable } from "@/components/admin/stock-table";
 import { listAdminStock } from "@/lib/stock";
 import { InventoryUnavailable } from "@/lib/types";
 
 export default async function StockPage() {
+  await requireAdminPage();
   const data = await loadStock();
   if (!data) {
     return <p className="text-sm">Inventory store is unavailable. Check DATABASE_URL. Nothing was opened for sale.</p>;

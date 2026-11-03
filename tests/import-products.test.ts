@@ -338,3 +338,13 @@ test("remote pattern entries quote every value", () => {
   assert.match(rendered, /hostname: "cdn\.example\.com\\", injected: true"/);
   assert.doesNotMatch(rendered, /\*/);
 });
+
+test("CGNAT, benchmarking, and multicast/reserved image hosts are refused", async () => {
+  const { blockedImageHost } = await import("../lib/import/image-hosts.ts");
+  for (const host of ["100.64.0.1", "100.127.255.254", "198.18.0.1", "198.19.255.255", "224.0.0.1", "240.0.0.1", "255.255.255.255", "::ffff:6440:1"]) {
+    assert.notEqual(blockedImageHost(host), null, host);
+  }
+  for (const host of ["100.128.0.1", "198.20.0.1", "223.255.255.255", "images.example.com"]) {
+    assert.equal(blockedImageHost(host), null, host);
+  }
+});
