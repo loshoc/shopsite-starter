@@ -433,9 +433,12 @@ Put Cloudflare (or your host’s WAF) in front of the production origin. The kit
 
 Suggested starting rules (tune to your traffic):
 
-- Rate-limit `/api/*`, `/admin`, and the checkout session create path.
+- Rate-limit `/admin`, `/api/admin/login`, and the checkout create routes: `/api/checkout` (Stripe), `/api/paypal/orders`, and `/api/paypal/orders/capture`.
 - Challenge or block abusive ASNs and obvious bot bursts on those routes.
+- Skip challenges, bot fight modes, and tight rate limits on `/api/webhooks/stripe` and `/api/webhooks/paypal`. Stripe and PayPal cannot pass a browser challenge, so a blocked webhook means a paid order that never records. The routes already reject unsigned calls.
 - Keep public catalogue pages usable for real buyers; tighten the money and admin paths first.
+
+Cloudflare proxied in front of Vercel changes the client IP the app sees. The admin login limiter (`lib/rate-limit.ts`) reads the first `x-forwarded-for` hop, so behind a proxy many visitors can share one bucket. Keep the edge limit on `/api/admin/login` as the main guard, or leave the record DNS-only and use the Vercel Firewall instead.
 
 Confirm the custom domain and `NEXT_PUBLIC_APP_URL` in [DEPLOY-CHECKLIST.md](DEPLOY-CHECKLIST.md) before you rely on edge rules.
 
@@ -443,7 +446,8 @@ Confirm the custom domain and `NEXT_PUBLIC_APP_URL` in [DEPLOY-CHECKLIST.md](DEP
 
 - A sample product photo from `public/products/` has no GPS/EXIF location when inspected.
 - Stripe/PayPal fraud settings are reviewed on the merchant accounts you use in production.
-- Edge rate limits cover `/api/*`, admin, and checkout session create.
+- Edge rate limits cover admin, `/api/admin/login`, and the checkout create routes.
+- A Stripe test webhook (Dashboard **Send test webhook**, or `stripe trigger`) still returns 2xx through the edge, with no challenge on `/api/webhooks/*`.
 - `/robots.txt` and GEO toggles still match **Search visibility** after any host change.
 
 ## Legal pages and footer
