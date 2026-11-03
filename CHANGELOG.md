@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- The public ShopSite core is MIT (Copyright (c) 2026 Kiwi Guo). Root `LICENSE` is the standard MIT text, and `package.json` `"license"` is `MIT`. The former paid-kit EULA is archived at `docs/legal/archive/EULA-KIT-LICENSE.md`.
+
 ## 1.1.2
 
 On main after #44 (`3f742b3`).

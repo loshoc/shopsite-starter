@@ -4,7 +4,7 @@ Release checklist for the buyer zip. Buyers deploy by unzipping this archive and
 
 `package.json` `"version"` is `1.1.2`, the same tag as [CHANGELOG.md](CHANGELOG.md).
 
-[LICENSE](LICENSE) is a proprietary notice (Copyright (c) 2026 [SELLER_ENTITY]. All rights reserved). The kit is licensed, not sold, under the ShopSite End-User License Agreement in [docs/legal/EULA-KIT-LICENSE.md](docs/legal/EULA-KIT-LICENSE.md). `package.json` `"license"` is `SEE LICENSE IN LICENSE`. Ship `LICENSE` with the zip.
+[LICENSE](LICENSE) is the MIT License (Copyright (c) 2026 Kiwi Guo). `package.json` `"license"` is `MIT`. Ship `LICENSE` and [SECURITY.md](SECURITY.md) with the zip. The former paid-kit EULA is archived at [docs/legal/archive/EULA-KIT-LICENSE.md](docs/legal/archive/EULA-KIT-LICENSE.md) and is not the current license.
 
 ## Buyer zip
 
@@ -19,6 +19,7 @@ Ship a clean archive of the `1.1.2` tree. Include application source and these r
 - `DEPLOY-CHECKLIST.md` (Vercel and Stripe steps; Start path and the playbook link here)
 - `LAUNCH-CHECKLIST.md` (buyer pass before go-live; the README, playbook, and deploy checklist link here)
 - `LICENSE`
+- `SECURITY.md`
 - `CHANGELOG.md`
 - `PACKAGING.md`
 - `.env.example`
